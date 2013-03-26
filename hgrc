@@ -1,0 +1,8 @@
+[ui]
+username = Heungsub Lee <sub@subl.ee>
+verbose = True
+merge = vimdiff
+
+[extensions]
+color =
+hgext.graphlog =
