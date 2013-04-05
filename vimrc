@@ -23,6 +23,10 @@ set ignorecase
 "Highlight searching keyword
 set hlsearch
 
+"Keep 80 columns.
+highlight OverLength ctermbg=red ctermfg=white
+match OverLength /\%81v.\+/
+
 "Some additional syntax highlighters.
 au! BufRead,BufNewFile *.wsgi setfiletype python
 au! BufRead,BufNewFile *.sass setfiletype sass
@@ -54,7 +58,3 @@ augroup END
 
 "English spelling checker.
 setlocal spelllang=en_us
-
-"Keep 80 columns.
-highlight OverLength ctermbg=red ctermfg=white
-match OverLength /\%81v.\+/
