@@ -24,8 +24,8 @@ set ignorecase
 set hlsearch
 
 "Keep 80 columns.
-highlight OverLength ctermbg=red ctermfg=white
-match OverLength /\%81v.\+/
+set colorcolumn=80
+highlight ColorColumn ctermbg=black
 
 "Some additional syntax highlighters.
 au! BufRead,BufNewFile *.wsgi setfiletype python
