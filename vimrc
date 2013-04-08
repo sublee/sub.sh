@@ -24,7 +24,7 @@ set ignorecase
 set hlsearch
 
 "Keep 80 columns.
-set colorcolumn=80
+let &colorcolumn=join(range(81, 999), ",")
 highlight ColorColumn ctermbg=black
 
 "Some additional syntax highlighters.
