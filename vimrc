@@ -26,6 +26,8 @@ set hlsearch
 "Keep 80 columns.
 let &colorcolumn=join(range(81, 999), ",")
 highlight ColorColumn ctermbg=black
+
+"Keep dense lines.
 highlight ExtraWhitespace ctermbg=red
 match ExtraWhitespace /\s\+$/
 autocmd WinEnter * match ExtraWhitespace /\s\+$/
