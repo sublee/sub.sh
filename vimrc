@@ -26,6 +26,9 @@ set hlsearch
 "Keep 80 columns.
 let &colorcolumn=join(range(81, 999), ",")
 highlight ColorColumn ctermbg=black
+highlight ExtraWhitespace ctermbg=red
+match ExtraWhitespace /\s\+$/
+autocmd WinEnter * match ExtraWhitespace /\s\+$/
 
 "Some additional syntax highlighters.
 au! BufRead,BufNewFile *.wsgi setfiletype python
