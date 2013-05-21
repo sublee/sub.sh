@@ -49,6 +49,7 @@ au FileType html       setl ts=2 sw=2 sts=2
 au FileType htmldjango setl ts=2 sw=2 sts=2
 au FileType lua        setl ts=2 sw=2 sts=2
 au FileType haml       setl ts=2 sw=2 sts=2
+au FileType css        setl ts=2 sw=2 sts=2
 au FileType sass       setl ts=2 sw=2 sts=2
 au FileType less       setl ts=2 sw=2 sts=2
 au Filetype rst        setl ts=3 sw=3 sts=3
