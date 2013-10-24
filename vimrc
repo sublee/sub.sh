@@ -5,10 +5,13 @@ syntax on
 set expandtab
 set tabstop=4 shiftwidth=4 sts=4
 set autoindent
+highlight HardTab cterm=underline
+autocmd BufWinEnter * 2 match HardTab /\t\+/
 
 "I dislike CRLF.
 set fileformat=unix
 
+"Make backspace works like most other applications.
 set backspace=2
 
 "Detect modeline hints.
@@ -23,14 +26,10 @@ set ignorecase
 "Highlight searching keyword
 set hlsearch
 
-"Keep 80 columns.
-let &colorcolumn=join(range(81, 999), ",")
-highlight ColorColumn cterm=inverse ctermbg=none
-
-"Keep dense lines.
-highlight ExtraWhitespace ctermbg=red
-match ExtraWhitespace /\s\+$/
-autocmd WinEnter * match ExtraWhitespace /\s\+$/
+"Keep 80 columns and dense lines.
+set colorcolumn=81
+highlight ColorColumn cterm=underline ctermbg=none
+autocmd BufWinEnter * match Error /\%>80v.\+\|\s\+$\|^\s*\n\+\%$/
 
 "Some additional syntax highlighters.
 au! BufRead,BufNewFile *.wsgi setfiletype python
