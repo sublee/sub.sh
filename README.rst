@@ -1,7 +1,7 @@
 rc
 ==
 
-I want to use same environment in my all computers.
+I want to use same environment in my all Linux systems.
 
 .. sourcecode:: bash
 
@@ -11,3 +11,6 @@ I want to use same environment in my all computers.
    $ ln -s `pwd`/rc/hgrc ~/.hgrc
    $ ln -s `pwd`/rc/matplotlibrc ~/.matplotlibrc
    $ sudo ln -s `pwd`/rc/limits.conf /etc/security/limits.conf
+
+.vimrc preview
+   .. image:: http://i.imgur.com/WiTKBfV.png
