@@ -66,8 +66,10 @@ augroup END
 "English spelling checker.
 setlocal spelllang=en_us
 
-"NERDTree
+"Pathogen
 silent! call pathogen#infect()
+
+"NERDTree
 if exists(':NERDTree:')
   map <C-n> :NERDTreeToggle<CR>
 endif

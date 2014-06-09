@@ -23,6 +23,8 @@ if [ ! -n "${DISPLAY}" ] && [ -f ~/.git-completion ]; then
     . ~/.git-completion
 fi
 
+export PYTHONSTARTUP=~/.pystartup
+
 # aliases
 alias rm="rm -i"
 alias ll="ls -l"
