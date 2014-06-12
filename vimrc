@@ -70,6 +70,7 @@ setlocal spelllang=en_us
 silent! call pathogen#infect()
 
 "NERDTree
-if exists(':NERDTree:')
-  map <C-n> :NERDTreeToggle<CR>
-endif
+autocmd VimEnter * if exists(':NERDTree') | map <C-n> :NERDTreeToggle<CR> | endif
+
+"Syntastic
+autocmd VimEnter * if exists(':SyntasticCheck') | let g:syntastic_python_checkers=['flake8'] | let g:syntastic_python_flake8_args='--ignore=E301' | cabbrev E Explore | endif
