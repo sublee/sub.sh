@@ -13,4 +13,6 @@ if [ ! -n "${DISPLAY}" ] && [ -f ~/.git-completion ]; then
     source "$HOME/.git-completion"
 fi
 
-source "$HOME/.env.sh"
+if [ -f "$HOME/.sublee-env.sh" ]; then
+    source "$HOME/.sublee-env.sh"
+fi
