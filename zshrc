@@ -1,7 +1,7 @@
 # oh-my-zsh
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="agnoster"
 plugins=(git)
+ZSH_THEME="sublee"
+export ZSH="$HOME/.oh-my-zsh"
 source "$ZSH/oh-my-zsh.sh"
 
 # bind keys: [Home] and [End]
