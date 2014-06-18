@@ -4,6 +4,7 @@ if [ -d "$HOME/bin" ] ; then
 fi
 export LANG=en_US.UTF-8
 export EDITOR=vim
+export LSCOLORS="exgxcxdxbxFxfxabagacad"
 
 # python
 if [ -f "$HOME/env/bin/activate" ]; then
