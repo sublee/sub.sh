@@ -14,3 +14,6 @@ export PYTHONSTARTUP="$HOME/.pystartup"
 # aliases
 alias rm="rm -i"
 alias ll="ls -l"
+alias vim="vim -b"
+alias vi="vim -b"
+alias ack="ack-grep"
