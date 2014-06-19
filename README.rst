@@ -12,6 +12,7 @@ I want to use same environment in my all Linux systems.
    $ ln -s `pwd`/rc/bash_profile ~/.bash_profile
    $ ln -s `pwd`/rc/zshrc ~/.zshrc
    $ ln -s `pwd`/rc/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
+   $ ln -s `pwd`/rc/python-startup ~/.python-startup
 
 .vimrc preview
    .. image:: http://i.imgur.com/WiTKBfV.png

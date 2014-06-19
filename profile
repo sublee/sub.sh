@@ -12,7 +12,8 @@ export EDITOR="vim"
 if [ -f "$HOME/env/bin/activate" ]; then
   source "$HOME/env/bin/activate"
 fi
-export PYTHONSTARTUP="$HOME/.pystartup"
+if [ -f "$HOME/.python-startup" ]; then
+export PYTHONSTARTUP="$HOME/.python-startup"
 
 # aliases
 alias rm="rm -i"
