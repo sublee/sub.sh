@@ -11,13 +11,8 @@ I want to use same environment in my all Linux systems.
    $ ln -s `pwd`/rc/profile ~/.profile
    $ ln -s `pwd`/rc/vimrc ~/.vimrc
 
-I prefer to use ZSH.
-
-.. sourcecode:: bash
-
-   $ mkdir ~/.oh-my-zsh/custom/themes
-   $ ln -s `pwd`/rc/sublee.zsh-theme ~/.oh-my-zsh/custom/themes/sublee.zsh-theme
-   $ ln -s `pwd`/rc/zshrc ~/.zshrc
+To use my ZSH theme, make a symbolic link of `sublee.zsh-theme` at
+`~/.oh-my-zsh/custom/sublee.zsh-theme` and set `ZSH_THEME` on your `.zshrc`.
 
 .vimrc preview
    .. image:: http://i.imgur.com/WiTKBfV.png
