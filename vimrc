@@ -1,37 +1,39 @@
-"Syntax highlighting.
+" vim:ft=vim:et:ts=2:sw=2:sts=2:
+
+" Syntax highlighting.
 syntax on
 
-"Softtab -- use spaces instead tabs.
+" Softtab -- use spaces instead tabs.
 set expandtab
 set tabstop=4 shiftwidth=4 sts=4
 set autoindent
 highlight HardTab cterm=underline
 autocmd BufWinEnter * 2 match HardTab /\t\+/
 
-"I dislike CRLF.
+" I dislike CRLF.
 set fileformat=unix
 
-"Make backspace works like most other applications.
+" Make backspace works like most other applications.
 set backspace=2
 
-"Detect modeline hints.
+" Detect modeline hints.
 set modeline
 
-"Prefer UTF-8.
+" Prefer UTF-8.
 set encoding=utf-8 fileencodings=ucs-bom,utf-8,cp949,korea,iso-2022-kr
 
-"Ignore case in searches.
+" Ignore case in searches.
 set ignorecase
 
-"Highlight searching keyword
+" Highlight searching keyword
 set hlsearch
 
-"Keep 80 columns and dense lines.
+" Keep 80 columns and dense lines.
 set colorcolumn=81
 highlight ColorColumn cterm=underline ctermbg=none
 autocmd BufWinEnter * match Error /\%>80v.\+\|\s\+$\|^\s*\n\+\%$/
 
-"Some additional syntax highlighters.
+" Some additional syntax highlighters.
 au! BufRead,BufNewFile *.wsgi setfiletype python
 au! BufRead,BufNewFile *.sass setfiletype sass
 au! BufRead,BufNewFile *.haml setfiletype haml
@@ -39,7 +41,7 @@ au! BufRead,BufNewFile *.less setfiletype less
 au! BufRead,BufNewFile *go setfiletype golang
 au! BufRead,BufNewFile *rc setfiletype conf
 
-"These languages have their own tab/indent settings.
+" These languages have their own tab/indent settings.
 au FileType cpp        setl ts=2 sw=2 sts=2
 au FileType javascript setl ts=2 sw=2 sts=2
 au FileType ruby       setl ts=2 sw=2 sts=2
@@ -56,21 +58,21 @@ au Filetype rst        setl ts=3 sw=3 sts=3
 au FileType golang     setl noet
 au FileType make       setl ts=4 sw=4 sts=4 noet
 
-"Markdown-related configurations.
+" Markdown-related configurations.
 augroup mkd
   autocmd BufRead *.markdown set formatoptions=tcroqn2 comments=n:> spell
   autocmd BufRead *.mkdn     set formatoptions=tcroqn2 comments=n:> spell
   autocmd BufRead *.mkd      set formatoptions=tcroqn2 comments=n:> spell
 augroup END
 
-"English spelling checker.
+" English spelling checker.
 setlocal spelllang=en_us
 
-"Pathogen
+" Pathogen
 silent! call pathogen#infect()
 
-"NERDTree
+" NERDTree
 autocmd VimEnter * if exists(':NERDTree') | map <C-n> :NERDTreeToggle<CR> | endif
 
-"Syntastic
+" Syntastic
 autocmd VimEnter * if exists(':SyntasticCheck') | let g:syntastic_python_checkers=['flake8'] | let g:syntastic_python_flake8_args='--ignore=E301' | cabbrev E Explore | endif
