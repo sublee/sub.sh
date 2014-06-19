@@ -13,7 +13,8 @@ if [ -f "$HOME/env/bin/activate" ]; then
   source "$HOME/env/bin/activate"
 fi
 if [ -f "$HOME/.python-startup" ]; then
-export PYTHONSTARTUP="$HOME/.python-startup"
+  export PYTHONSTARTUP="$HOME/.python-startup"
+fi
 
 # aliases
 alias rm="rm -i"
