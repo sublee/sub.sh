@@ -105,19 +105,17 @@ def setup():
         '.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
     sudo('chsh -s `which zsh`')
     # subleenv
-    require.git.working_copy(github('sublee', 'subleenv'), 'works/subleenv')
+    require.git.working_copy(github('sublee', 'subleenv'), '~/.subleenv')
     with backup('/etc/security/limits.conf', sudo):
-        sudo('ln -s `pwd`/works/subleenv/limits.conf '
-             '`pwd`/works/subleenv/limits.conf '
-             '/etc/security/limits.conf')
+        sudo('ln -s ~/.subleenv/limits.conf /etc/security/limits.conf')
     with backup('.profile'):
-        run('ln -s `pwd`/works/subleenv/profile .profile')
+        run('ln -s ~/.subleenv/profile .profile')
     with backup('.zshrc'):
-        run('ln -s `pwd`/works/subleenv/zshrc .zshrc')
+        run('ln -s ~/.subleenv/zshrc .zshrc')
     with backup('.vimrc'):
-        run('ln -s `pwd`/works/subleenv/vimrc .vimrc')
+        run('ln -s ~/.subleenv/vimrc .vimrc')
     with backup('.python-startup'):
-        run('ln -s `pwd`/works/subleenv/python-startup .python-startup')
+        run('ln -s ~/.subleenv/python-startup .python-startup')
     with backup('.oh-my-zsh/custom/sublee.zsh-theme'):
-        run('ln -s `pwd`/works/subleenv/sublee.zsh-theme '
+        run('ln -s ~/.subleenv/sublee.zsh-theme '
             '.oh-my-zsh/custom/sublee.zsh-theme')
