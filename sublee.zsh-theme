@@ -12,10 +12,13 @@ prompt_dir() {
   echo -n "%{$reset_color%}%~"
 }
 prompt_git() {
-  if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    if [[ -n $(parse_git_dirty) ]]; then
-      echo -n "%{$fg[yellow]%}★"
-    fi
+  git rev-parse 2>/dev/null || return
+  GIT_BRANCH=`git symbolic-ref -q --short HEAD 2>/dev/null`
+  GIT_COMMIT=`git show-ref --head -s --abbrev | head -n1`
+  if [[ -z $GIT_BRANCH ]]; then
+    echo -n "%{$fg[yellow]%}:$GIT_COMMIT"
+  elif [[ $GIT_BRANCH != "master" ]]; then
+    echo -n "%{$fg[blue]%}:$GIT_BRANCH"
   fi
 }
 prompt_end() {
