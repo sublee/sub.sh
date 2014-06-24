@@ -3,7 +3,7 @@
 
 # oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
-plugins=(git)
+plugins=(git zsh-syntax-highlighting)
 ZSH_THEME="sublee"
 source $ZSH/oh-my-zsh.sh
 
