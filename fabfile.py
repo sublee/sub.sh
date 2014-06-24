@@ -3,8 +3,8 @@ import filecmp
 import os
 
 from fabric.api import *
-from fabtools import require
 import fabtools
+from fabtools import require
 
 
 NAME = 'Heungsub Lee'
@@ -63,10 +63,11 @@ def backup(path, run=run):
 @task
 def setup():
     # I'm the sudoer!
-    require.files.file(
-        '/etc/sudoers.d/90-{0}'.format(env.user),
-        '{0} ALL=(ALL) NOPASSWD:ALL'.format(env.user),
-        use_sudo=True)
+    if fabtools.files.is_dir('/etc/sudoers.d'):
+        require.files.file(
+            '/etc/sudoers.d/90-{0}'.format(env.user),
+            '{0} ALL=(ALL) NOPASSWD:ALL'.format(env.user),
+            use_sudo=True)
     # apt
     require.deb.ppa('ppa:pypy/ppa')
     require.deb.uptodate_index()
@@ -100,8 +101,8 @@ def setup():
     require.git.working_copy(github('sublee', 'subleenv'), 'works/subleenv')
     with backup('/etc/security/limits.conf', sudo):
         sudo('ln -s `pwd`/works/subleenv/limits.conf /etc/security/limits.conf')
-    with backup('.profile.sh'):
-        run('ln -s `pwd`/works/subleenv/profile.sh .profile.sh')
+    with backup('.profile'):
+        run('ln -s `pwd`/works/subleenv/profile .profile')
     with backup('.zshrc'):
         run('ln -s `pwd`/works/subleenv/zshrc .zshrc')
     with backup('.vimrc'):
