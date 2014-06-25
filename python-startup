@@ -20,3 +20,7 @@ if os.path.exists(history_path):
 
 atexit.register(save_history)
 del os, atexit, readline, rlcompleter, save_history, history_path
+
+
+# pre-import pdb.pm() and pdb.set_trace() as PM(), B().
+from pdb import pm as PM, set_trace as B  # noqa
