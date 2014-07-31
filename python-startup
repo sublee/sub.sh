@@ -11,6 +11,7 @@ history_path = os.path.expanduser('~/.python-history')
 
 def save_history(history_path=history_path):
     import readline
+    readline.set_history_length(100)
     readline.write_history_file(history_path)
 
 
