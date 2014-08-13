@@ -1,8 +1,8 @@
+# -*- coding: utf-8 -*-
 from contextlib import contextmanager
-import filecmp
-import os
+import functools
 
-from fabric.api import *
+from fabric.api import cd, env, run, settings, sudo, task
 import fabtools
 from fabtools import require
 
@@ -60,7 +60,18 @@ def backup(path, run=run):
             run('rm -f {0}'.format(bak_path))
 
 
+def context(ctx):
+    def decorator(f):
+        @functools.wraps(f)
+        def wrapped(*args, **kwargs):
+            with ctx:
+                return f(*args, **kwargs)
+        return wrapped
+    return decorator
+
+
 @task
+@context(settings(sudo_prefix=env.sudo_prefix + ' -E'))  # preserve env on sudo
 def setup():
     # I'm the sudoer!
     if fabtools.files.is_dir('/etc/sudoers.d'):
@@ -82,14 +93,10 @@ def setup():
     require.python.virtualenv('env')
     pypy = run('which pypy')
     require.python.virtualenv('env-pypy', venv_python=pypy, python_cmd='pypy')
-    # syntastic
-    require.files.directory('.vim')
-    with cd('.vim'):
-        require.files.directories(['autoload', 'bundle'])
-        require.files.file(
-            'autoload/pathogen.vim', url='https://tpo.pe/pathogen.vim')
-        require.git.working_copy(
-            github('scrooloose', 'syntastic'), 'bundle/syntastic')
+    # vundle
+    require.files.directory('.vim/bundle')
+    with cd('.vim/bundle'):
+        require.git.working_copy(github('gmarik', 'Vundle.vim'), 'Vundle.vim')
     # oh-my-zsh
     require.deb.package('zsh')
     require.git.working_copy(github('robbyrussell', 'oh-my-zsh'), '.oh-my-zsh')
@@ -100,7 +107,9 @@ def setup():
     # subleenv
     require.git.working_copy(github('sublee', 'subleenv'), 'works/subleenv')
     with backup('/etc/security/limits.conf', sudo):
-        sudo('ln -s `pwd`/works/subleenv/limits.conf /etc/security/limits.conf')
+        sudo('ln -s `pwd`/works/subleenv/limits.conf '
+             '`pwd`/works/subleenv/limits.conf '
+             '/etc/security/limits.conf')
     with backup('.profile'):
         run('ln -s `pwd`/works/subleenv/profile .profile')
     with backup('.zshrc'):

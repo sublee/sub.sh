@@ -1,5 +1,35 @@
 " vim:ft=vim:et:ts=2:sw=2:sts=2:
 
+" vundle requires
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'gmarik/Vundle.vim'
+" plugins ---------------------------------------------------------------------
+
+" syntax highlighters
+Plugin 'plasticboy/vim-markdown'
+Plugin 'Jinja'
+Plugin 'othree/html5.vim'
+if version < 704
+  Plugin 'JulesWang/css.vim'
+endif
+Plugin 'cakebaker/scss-syntax.vim'
+Plugin 'stephpy/vim-yaml'
+
+" function extensions
+Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdtree'
+Plugin 'sjl/gundo.vim'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'rhysd/committia.vim'
+
+" -----------------------------------------------------------------------------
+" vundle requires
+call vundle#end()
+filetype plugin indent on
+
 " Syntax highlighting.
 syntax on
 
