@@ -106,3 +106,6 @@ autocmd VimEnter * if exists(':NERDTree') | map <C-n> :NERDTreeToggle<CR> | endi
 
 " Syntastic
 autocmd VimEnter * if exists(':SyntasticCheck') | let g:syntastic_python_checkers=['flake8'] | let g:syntastic_python_flake8_args='--ignore=E301' | cabbrev E Explore | endif
+
+" Gundo
+autocmd VimEnter * if exists(':Gundo') | nnoremap <F5> :GundoToggle<CR> | endif
