@@ -5,6 +5,9 @@
 if [ -d "$HOME/bin" ] ; then
   export PATH="$HOME/bin:$PATH"
 fi
+if [ -d "$HOME/.local/bin" ] ; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
 export LANG="en_US.UTF-8"
 export EDITOR="vim"
 
@@ -22,3 +25,4 @@ alias ll="ls -l"
 alias vim="vim -b"
 alias vi="vim -b"
 alias ack="ack-grep"
+alias sudo="sudo -E"

@@ -22,7 +22,6 @@ Plugin 'stephpy/vim-yaml'
 Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdtree'
 Plugin 'sjl/gundo.vim'
-Plugin 'davidhalter/jedi-vim'
 Plugin 'rhysd/committia.vim'
 
 " -----------------------------------------------------------------------------
