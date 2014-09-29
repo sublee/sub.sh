@@ -100,7 +100,7 @@ def setup():
     require.git.working_copy(
         github('zsh-users', 'zsh-syntax-highlighting'),
         '.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
-    sudo('chsh -s `which zsh`')
+    run('chsh -s `which zsh`')
     # subleenv
     require.git.working_copy(github('sublee', 'subleenv'), '~/.subleenv')
     with backup('/etc/security/limits.conf', sudo):
