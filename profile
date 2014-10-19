@@ -19,6 +19,11 @@ if [ -f "$HOME/.python-startup" ]; then
   export PYTHONSTARTUP="$HOME/.python-startup"
 fi
 
+# go
+if [ -d "$HOME/go" ]; then
+  export GOPATH="$HOME/go"
+fi
+
 # enable X11
 export DISPLAY=:0
 
