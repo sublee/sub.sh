@@ -23,6 +23,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdtree'
 Plugin 'sjl/gundo.vim'
 Plugin 'rhysd/committia.vim'
+Plugin 'davidhalter/jedi-vim'
 
 " -----------------------------------------------------------------------------
 " vundle requires
@@ -108,3 +109,7 @@ autocmd VimEnter * if exists(':SyntasticCheck') | let g:syntastic_python_checker
 
 " Gundo
 autocmd VimEnter * if exists(':Gundo') | nnoremap <F5> :GundoToggle<CR> | endif
+
+" Jedi
+let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = 0
