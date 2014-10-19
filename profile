@@ -24,9 +24,6 @@ if [ -d "$HOME/go" ]; then
   export GOPATH="$HOME/go"
 fi
 
-# enable X11
-export DISPLAY=:0
-
 # aliases
 alias rm="rm -i"
 alias ll="ls -l"
