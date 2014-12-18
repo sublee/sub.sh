@@ -20,7 +20,8 @@ Plugin 'stephpy/vim-yaml'
 
 " function extensions
 Plugin 'scrooloose/syntastic'
-Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-vinegar'
+Plugin 'tpope/vim-commentary'
 Plugin 'sjl/gundo.vim'
 Plugin 'rhysd/committia.vim'
 Plugin 'davidhalter/jedi-vim'

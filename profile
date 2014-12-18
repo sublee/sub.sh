@@ -19,9 +19,6 @@ if [ -f "$HOME/.python-startup" ]; then
   export PYTHONSTARTUP="$HOME/.python-startup"
 fi
 
-# enable X11
-export DISPLAY=:0
-
 # aliases
 alias rm="rm -i"
 alias ll="ls -l"
