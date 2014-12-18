@@ -102,9 +102,6 @@ setlocal spelllang=en_us
 " Pathogen
 silent! call pathogen#infect()
 
-" NERDTree
-autocmd VimEnter * if exists(':NERDTree') | map <C-n> :NERDTreeToggle<CR> | endif
-
 " Syntastic
 autocmd VimEnter * if exists(':SyntasticCheck') | let g:syntastic_python_checkers=['flake8'] | let g:syntastic_python_flake8_args='--ignore=E301' | cabbrev E Explore | endif
 
@@ -114,3 +111,6 @@ autocmd VimEnter * if exists(':Gundo') | nnoremap <F5> :GundoToggle<CR> | endif
 " Jedi
 let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 0
+
+" NetRW tree style listing
+let g:netrw_liststyle = 3
