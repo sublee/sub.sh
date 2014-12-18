@@ -80,9 +80,8 @@ def setup():
             '{0} ALL=(ALL) NOPASSWD:ALL'.format(env.user),
             use_sudo=True)
     # apt
-    require.deb.ppa('ppa:pypy/ppa')
     require.deb.uptodate_index()
-    require.deb.packages(['git', 'pypy', 'pypy-dev', 'ack-grep'])
+    require.deb.packages(['git', 'ack-grep'])
     # git configurations
     run('git config --global user.name "{0}"'.format(NAME))
     run('git config --global user.email "{0}"'.format(EMAIL))
@@ -91,8 +90,6 @@ def setup():
     # working directories
     require.files.directory('works')
     require.python.virtualenv('env')
-    pypy = run('which pypy')
-    require.python.virtualenv('env-pypy', venv_python=pypy, python_cmd='pypy')
     # vundle
     require.files.directory('.vim/bundle')
     with cd('.vim/bundle'):
@@ -103,7 +100,7 @@ def setup():
     require.git.working_copy(
         github('zsh-users', 'zsh-syntax-highlighting'),
         '.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
-    sudo('chsh -s `which zsh`')
+    run('chsh -s `which zsh`')
     # subleenv
     require.git.working_copy(github('sublee', 'subleenv'), '~/.subleenv')
     with backup('/etc/security/limits.conf', sudo):
@@ -119,3 +116,11 @@ def setup():
     with backup('.oh-my-zsh/custom/sublee.zsh-theme'):
         run('ln -s ~/.subleenv/sublee.zsh-theme '
             '.oh-my-zsh/custom/sublee.zsh-theme')
+
+
+@task
+def setup_pypy():
+    require.deb.ppa('ppa:pypy/ppa')
+    require.deb.packages(['pypy', 'pypy-dev'])
+    pypy = run('which pypy')
+    require.python.virtualenv('env-pypy', venv_python=pypy, python_cmd='pypy')

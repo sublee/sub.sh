@@ -19,6 +19,11 @@ if [ -f "$HOME/.python-startup" ]; then
   export PYTHONSTARTUP="$HOME/.python-startup"
 fi
 
+# go
+if [ -d "$HOME/go" ]; then
+  export GOPATH="$HOME/go"
+fi
+
 # aliases
 alias rm="rm -i"
 alias ll="ls -l"
