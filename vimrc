@@ -20,7 +20,6 @@ Plugin 'stephpy/vim-yaml'
 
 " function extensions
 Plugin 'scrooloose/syntastic'
-Plugin 'tpope/vim-vinegar'
 Plugin 'tpope/vim-commentary'
 Plugin 'sjl/gundo.vim'
 Plugin 'rhysd/committia.vim'
