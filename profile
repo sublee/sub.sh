@@ -33,14 +33,14 @@ alias ack="ack-grep"
 alias sudo="sudo -E"
 
 # monitor by process name
-function pid_of() {
+function pid-of() {
   ps -C $1 -o pid |
     sed 1d | sort -h | tr '\n' ' ' | sed 's/ \+/ /g' |
     sed 's/^ \+//g' | sed 's/.$/\n/g'
 }
-function top_of() {
-  top -p `pid_of $1 | tr ' ' ','`
+function top-of() {
+  top -p `pid-of $1 | tr ' ' ','`
 }
-function htop_of() {
-  htop -p `pid_of $1 | tr ' ' ','`
+function htop-of() {
+  htop -p `pid-of $1 | tr ' ' ','`
 }
