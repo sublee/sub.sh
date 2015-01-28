@@ -83,6 +83,7 @@ def setup():
     require.deb.uptodate_index()
     require.deb.packages(['git', 'ack-grep'])
     # git configurations
+    # TODO: disable by option.
     run('git config --global user.name "{0}"'.format(NAME))
     run('git config --global user.email "{0}"'.format(EMAIL))
     # python configurations
@@ -90,6 +91,9 @@ def setup():
     # working directories
     require.files.directory('works')
     require.python.virtualenv('env')
+    # pathogen
+    require.files.directory('.vim/autoload')
+    run('curl -LSso .vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim')
     # vundle
     require.files.directory('.vim/bundle')
     with cd('.vim/bundle'):
@@ -100,6 +104,7 @@ def setup():
     require.git.working_copy(
         github('zsh-users', 'zsh-syntax-highlighting'),
         '.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
+    # NOTE: can ask the password.
     run('chsh -s `which zsh`')
     # subleenv
     require.git.working_copy(github('sublee', 'subleenv'), '~/.subleenv')
