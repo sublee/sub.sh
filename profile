@@ -34,11 +34,13 @@ alias sudo="sudo -E"
 
 # monitor by process name
 function pid_of() {
-  ps -C $1 -o pid | sed 1d | tr '\n' ' ' | sed 's/.$/\n/g'
+  ps -C $1 -o pid |
+    sed 1d | sort -h | tr '\n' ' ' | sed 's/ \+/ /g' |
+    sed 's/^ \+//g' | sed 's/.$/\n/g'
 }
 function top_of() {
- top -p `pid_of $1 | tr ' ' ','`
+  top -p `pid_of $1 | tr ' ' ','`
 }
 function htop_of() {
- htop -p `pid_of $1 | tr ' ' ','`
+  htop -p `pid_of $1 | tr ' ' ','`
 }
