@@ -31,3 +31,14 @@ alias vim="vim -b"
 alias vi="vim -b"
 alias ack="ack-grep"
 alias sudo="sudo -E"
+
+# monitor by process name
+function pid_of() {
+  ps -C $1 -o pid | sed 1d | tr '\n' ',' | sed s/.$//g
+}
+function top_of() {
+ top -p `pid_of $1`
+}
+function htop_of() {
+ htop -p `pid_of $1`
+}
