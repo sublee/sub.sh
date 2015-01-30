@@ -72,20 +72,20 @@ def context(ctx):
 
 @task
 @context(settings(sudo_prefix=env.sudo_prefix + ' -E'))  # preserve env on sudo
-def setup():
+def terraform(name=NAME, email=EMAIL):
     # I'm the sudoer!
     if fabtools.files.is_dir('/etc/sudoers.d'):
-        require.files.file(
-            '/etc/sudoers.d/90-{0}'.format(env.user),
-            '{0} ALL=(ALL) NOPASSWD:ALL'.format(env.user),
-            use_sudo=True)
+        require.files.file('/etc/sudoers.d/90-{0}'.format(env.user),
+                           '{0} ALL=(ALL) NOPASSWD:ALL'.format(env.user),
+                           use_sudo=True)
     # apt
     require.deb.uptodate_index()
-    require.deb.packages(['git', 'ack-grep'])
+    require.deb.packages(['git', 'htop', 'ack-grep'])
     # git configurations
-    # TODO: disable by option.
-    run('git config --global user.name "{0}"'.format(NAME))
-    run('git config --global user.email "{0}"'.format(EMAIL))
+    if not run('git config --global user.name'):
+        run('git config --global user.name "{0}"'.format(name))
+    if not run('git config --global user.email'):
+        run('git config --global user.email "{0}"'.format(email))
     # python configurations
     require.files.file('.pystartup', pystartup)
     # working directories
@@ -105,7 +105,7 @@ def setup():
         github('zsh-users', 'zsh-syntax-highlighting'),
         '.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
     # NOTE: can ask the password.
-    run('chsh -s `which zsh`')
+    run('chsh -s `which zsh`', timeout=5)
     # subleenv
     require.git.working_copy(github('sublee', 'subleenv'), '~/.subleenv')
     with backup('/etc/security/limits.conf', sudo):
