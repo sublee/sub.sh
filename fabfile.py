@@ -2,7 +2,10 @@
 from contextlib import contextmanager
 import functools
 
+from fabric import colors
 from fabric.api import cd, env, run, settings, sudo, task
+from fabric.exceptions import CommandTimeout
+from fabric.operations import prompt
 import fabtools
 from fabtools import require
 
@@ -22,6 +25,11 @@ atexit.register(save_history)
 del atexit, os, readline, rlcompleter
 del save_history, history
 '''
+
+
+def warn(text, *args, **kwargs):
+    text = text.format(*args, **kwargs)
+    print(colors.yellow(text))
 
 
 def github(user, repo):
@@ -82,10 +90,15 @@ def terraform(name=NAME, email=EMAIL):
     require.deb.uptodate_index()
     require.deb.packages(['git', 'htop', 'ack-grep'])
     # git configurations
-    if not run('git config --global user.name'):
-        run('git config --global user.name "{0}"'.format(name))
-    if not run('git config --global user.email'):
-        run('git config --global user.email "{0}"'.format(email))
+    if run('git config --global user.name', quiet=True).failed:
+        yn = prompt('There is no Git user name and e-mail address.\n'
+                    'Are you sure you want to set as "{0}" <{1}>? [y/N] '
+                    ''.format(name, email))
+        if yn.lower() == 'y':
+            run('git config --global user.name "{0}"'.format(name))
+            run('git config --global user.email "{0}"'.format(email))
+        else:
+            warn('Git user setting skipped.')
     # python configurations
     require.files.file('.pystartup', pystartup)
     # working directories
@@ -104,8 +117,11 @@ def terraform(name=NAME, email=EMAIL):
     require.git.working_copy(
         github('zsh-users', 'zsh-syntax-highlighting'),
         '.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
-    # NOTE: can ask the password.
-    run('chsh -s `which zsh`', timeout=5)
+    try:
+        run('chsh -s `which zsh`', timeout=5)
+    except CommandTimeout:
+        # chsh can ask the password.
+        warn('timed out.')
     # subleenv
     require.git.working_copy(github('sublee', 'subleenv'), '~/.subleenv')
     with backup('/etc/security/limits.conf', sudo):
