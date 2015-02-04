@@ -4,7 +4,6 @@ import functools
 
 from fabric import colors
 from fabric.api import cd, env, run, settings, sudo, task
-from fabric.exceptions import CommandTimeout
 from fabric.operations import prompt
 import fabtools
 from fabtools import require
@@ -117,11 +116,7 @@ def terraform(name=NAME, email=EMAIL):
     require.git.working_copy(
         github('zsh-users', 'zsh-syntax-highlighting'),
         '.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
-    try:
-        run('chsh -s `which zsh`', timeout=5)
-    except CommandTimeout:
-        # chsh can ask the password.
-        warn('timed out.')
+    sudo('chsh -s `which zsh` {0}'.format(env.user))
     # subleenv
     require.git.working_copy(github('sublee', 'subleenv'), '~/.subleenv')
     with backup('/etc/security/limits.conf', sudo):
