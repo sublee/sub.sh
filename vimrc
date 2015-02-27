@@ -23,7 +23,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-commentary'
 Plugin 'sjl/gundo.vim'
 Plugin 'rhysd/committia.vim'
-Plugin 'davidhalter/jedi-vim'
+Plugin 'Valloric/YouCompleteMe'
 
 " -----------------------------------------------------------------------------
 " vundle requires
@@ -116,9 +116,12 @@ autocmd VimEnter *
 \|  nnoremap <F5> :GundoToggle<CR>
 \|endif
 
-" Jedi
-let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = 0
+" YouCompleteMe
+autocmd VimEnter *
+\ if exists('g:ycm_goto_buffer_command')
+\|  let g:ycm_goto_buffer_command = 'new-tab'
+\|  nnoremap <F12> :YcmCompleter GoToDefinition<CR>
+\|endif
 
 " NetRW tree style listing
 let g:netrw_liststyle = 3

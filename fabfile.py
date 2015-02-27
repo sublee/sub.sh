@@ -79,7 +79,7 @@ def context(ctx):
 
 @task
 @context(settings(sudo_prefix=env.sudo_prefix + ' -E'))  # preserve env on sudo
-def terraform(name=NAME, email=EMAIL):
+def terraform(name=NAME, email=EMAIL, mkdirs=True):
     # I'm the sudoer!
     if fabtools.files.is_dir('/etc/sudoers.d'):
         require.files.file('/etc/sudoers.d/90-{0}'.format(env.user),
@@ -101,8 +101,9 @@ def terraform(name=NAME, email=EMAIL):
     # python configurations
     require.files.file('.pystartup', pystartup)
     # working directories
-    require.files.directory('works')
-    require.python.virtualenv('env')
+    if mkdirs:
+        require.files.directory('works')
+        require.python.virtualenv('env')
     # pathogen
     require.files.directory('.vim/autoload')
     run('curl -LSso .vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim')
