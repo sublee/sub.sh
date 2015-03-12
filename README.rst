@@ -7,7 +7,7 @@ Run fab if you are me.
 
 .. sourcecode:: bash
 
-   $ fab -H <host> setup
+   $ fab -H <host> terraform
 
 If you aren't, do manually.
 
