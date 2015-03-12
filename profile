@@ -25,14 +25,14 @@ if [ -d "$HOME/go" ]; then
 fi
 
 # aliases
+alias sudo="sudo -E"
 alias rm="rm -i"
 alias ll="ls -l"
 alias vim="vim -b"
 alias vi="vim -b"
 alias ack="ack-grep --ignore-file=ext:map --ignore-file=ext:svg"
-alias sudo="sudo -E"
 
-# monitor by process name
+# monitor by process name.
 function pid-of() {
   ps -C $1 -o pid |
     sed 1d | sort -h | tr '\n' ' ' | sed 's/ \+/ /g' |
@@ -43,4 +43,10 @@ function top-of() {
 }
 function htop-of() {
   htop -p `pid-of $1 | tr ' ' ','`
+}
+
+# remove temporary files such as Vim swap or pyc.
+function rm-tmp() {
+  REGEX=".*\.(sw[ponml]|pyc)$"
+  find . -regextype posix-egrep -regex $REGEX -delete -print
 }
