@@ -84,7 +84,7 @@ def terraform(name=NAME, email=EMAIL, mkdirs=True):
     if fabtools.files.is_dir('/etc/sudoers.d'):
         require.files.file('/etc/sudoers.d/90-{0}'.format(env.user),
                            '{0} ALL=(ALL) NOPASSWD:ALL'.format(env.user),
-                           use_sudo=True)
+                           use_sudo=True, owner='root')
     # apt
     require.deb.uptodate_index()
     require.deb.packages(['git', 'htop', 'ack-grep'])
