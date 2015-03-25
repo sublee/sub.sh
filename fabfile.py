@@ -119,7 +119,7 @@ def terraform(name=NAME, email=EMAIL, mkdirs=True):
         '.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
     sudo('chsh -s `which zsh` {0}'.format(env.user))
     # subleenv
-    require.git.working_copy(github('sublee', 'subleenv'), '~/.subleenv')
+    require.git.working_copy(github('sublee', 'subleenv'), '.subleenv')
     with backup('/etc/security/limits.conf', sudo):
         sudo('ln -s ~/.subleenv/limits.conf /etc/security/limits.conf')
     with backup('.profile'):
