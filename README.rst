@@ -1,5 +1,5 @@
-rc
-==
+Subleenv
+~~~~~~~~
 
 I want to use same environment in my all Linux systems.
 
@@ -7,7 +7,7 @@ If you trust me, just do it on your Linux system:
 
 .. sourcecode:: bash
 
-   $ curl sub.sh | bash
+   $ curl -L sub.sh | bash
 
 If not, do manually:
 
