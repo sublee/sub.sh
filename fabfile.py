@@ -82,7 +82,7 @@ def context(ctx):
 def terraform(name=NAME, email=EMAIL, mkdirs=True):
     # I'm the sudoer!
     if fabtools.files.is_dir('/etc/sudoers.d'):
-        require.files.file('/etc/sudoers.d/91-{0}'.format(env.user),
+        require.files.file('/etc/sudoers.d/90-{0}'.format(env.user),
                            '{0} ALL=(ALL) NOPASSWD:ALL'.format(env.user),
                            use_sudo=True)
     # apt
