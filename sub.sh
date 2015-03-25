@@ -8,7 +8,7 @@
 set -e; function _ {
 
 # make a sandbox directory.
-SANDBOX=$(mktemp -d)
+SANDBOX=$(mktemp -d /tmp/sub.sh.XXXXXX)
 trap "rm -rf $SANDBOX" EXIT
 
 # try to authorize the default SSH key at this host.
