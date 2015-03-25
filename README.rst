@@ -3,13 +3,13 @@ rc
 
 I want to use same environment in my all Linux systems.
 
-Run fab if you are me.
+If you trust me, just do it on your Linux system:
 
 .. sourcecode:: bash
 
-   $ fab -H <host> terraform
+   $ curl sub.sh | bash
 
-If you aren't, do manually.
+If not, do manually:
 
 .. sourcecode:: bash
 
