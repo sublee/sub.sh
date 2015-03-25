@@ -16,5 +16,5 @@ script:
   git config user.name "Heungsub Lee"
   git config user.email "sub@subl.ee"
   git add .
-  git commit -m "deploy sub.sh"
+  git commit -m "deploy sub.sh of subleenv-$TRAVIS_COMMIT"
   git push -qf $REPO master:gh-pages > /dev/null 2>&1
