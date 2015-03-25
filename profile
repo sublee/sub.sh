@@ -2,26 +2,26 @@
 # vim:ft=sh:et:ts=2:sw=2:sts=2:
 
 # system
-if [ -d "$HOME/bin" ] ; then
-  export PATH="$HOME/bin:$PATH"
+if [ -d $HOME/bin ] ; then
+  export PATH=$HOME/bin:$PATH
 fi
-if [ -d "$HOME/.local/bin" ] ; then
-  export PATH="$HOME/.local/bin:$PATH"
+if [ -d $HOME/.local/bin ] ; then
+  export PATH=$HOME/.local/bin:$PATH
 fi
 export LANG="en_US.UTF-8"
 export EDITOR="vim"
 
 # python
-if [ -f "$HOME/env/bin/activate" ]; then
-  source "$HOME/env/bin/activate"
+if [ -f $HOME/env/bin/activate ]; then
+  source $HOME/env/bin/activate
 fi
-if [ -f "$HOME/.python-startup" ]; then
-  export PYTHONSTARTUP="$HOME/.python-startup"
+if [ -f $HOME/.python-startup ]; then
+  export PYTHONSTARTUP=$HOME/.python-startup
 fi
 
 # go
-if [ -d "$HOME/go" ]; then
-  export GOPATH="$HOME/go"
+if [ -d $HOME/go ]; then
+  export GOPATH=$HOME/go
 fi
 
 # aliases
@@ -50,3 +50,10 @@ function rm-tmp() {
   REGEX=".*\.(sw[ponml]|pyc)$"
   find . -regextype posix-egrep -regex $REGEX -delete -print
 }
+
+# include files in ~/.profile.d
+if [ -d $HOME/.profile.d ]; then
+  for f in $HOME/.profile.d/*; do
+    source $f
+  done
+fi

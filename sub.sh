@@ -1,5 +1,8 @@
 #!/bin/bash
-# vim: et:ts=2:sts=2:sw=2:
+# vim:ft=sh:et:ts=2:sw=2:sts=2:
+#
+# sub.sh
+# ~~~~~~
 #
 # Shortest way to terraform a Linux environment as for my taste:
 #
