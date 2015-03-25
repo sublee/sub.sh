@@ -1,6 +1,6 @@
 language: c
 env:
-- secure: "BROwSqbfvFmIHWp6ncFBWR4tSWGlhuDxKp/VWcswhevWbsgiLgy9vTr7ZtVA5YtSUGkluJKEAdxply5U2syqcEdtC42Qy/hhFkjnycU1p1DKUkMPf/5G3+ILbkRw8CByfdDmQrZ0U+hvi30z2VLKp0DW0BX8rjDXkTKDq3+S3YA="
+- secure: "tAbUBMNusAs14BegrQMjfRtqndfveAruw3kTD2QcUMFyxgWuORj3tuiigjvkr4Uk+VwY6NYHFWZycqxSJu0uBVwpWpvTgl9sInNMlLSXBEXSobtxLiDlOrDFudB5duu0VNYbSZOVOAKyeVvn7mAUjOvS6ZrKa15AYWye+qYCYj4="
 script:
 - |
   rm -rf _sub.sh
@@ -11,9 +11,10 @@ script:
   touch .nojekyll
   cp ../sub.sh index.html
 - |
+  export REPO="https://$GITHUB_TOKEN@github.com/sublee/sub.sh"
   git init
   git config user.name "Heungsub Lee"
   git config user.email "sub@subl.ee"
   git add .
   git commit -m "deploy sub.sh"
-  git push -f "https://$GITHUB_TOKEN@github.com/sublee/sub.sh" master:gh-pages
+  git push -qf $REPO master:gh-pages > /dev/null 2>&1
