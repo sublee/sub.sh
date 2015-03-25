@@ -7,15 +7,13 @@
 #
 set -e
 
-echo $1
-
 # make a sandbox directory.
-SANDBOX="$(mktemp -d)"
+SANDBOX=$(mktemp -d)
 trap "rm -rf $SANDBOX" EXIT
 
 # ensure that fab exists.
 if ! [ -x "$(command -v fab)" ]; then
-  virtualenv $SANDBOX/env
+  virtualenv -p $(which python2) $SANDBOX/env
   source $SANDBOX/env/bin/activate
   pip install fabric fabtools
 fi
