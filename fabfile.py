@@ -87,7 +87,7 @@ def terraform(name=NAME, email=EMAIL, mkdirs=True):
                            use_sudo=True)
     # apt
     require.deb.uptodate_index()
-    require.deb.packages(['git', 'htop', 'ack-grep'])
+    require.deb.packages(['git', 'htop', 'ack-grep', 'cmake'])
     # git configurations
     if run('git config --global user.name', quiet=True).failed:
         yn = prompt('There is no Git user name and e-mail address.\n'
