@@ -125,3 +125,6 @@ autocmd VimEnter *
 
 " NetRW tree style listing
 let g:netrw_liststyle = 3
+
+" Disable Markdown folding.
+let g:vim_markdown_folding_disabled=1
