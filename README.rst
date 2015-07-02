@@ -15,6 +15,7 @@ If not, do manually:
 
    $ git clone git://github.com/sublee/subleenv.git
    $ sudo ln -s `pwd`/subleenv/limits.conf /etc/security/limits.conf
+   $ git config --global include.path `pwd`/subleenv/git-aliases
    $ ln -s `pwd`/subleenv/vimrc ~/.vimrc
    $ ln -s `pwd`/subleenv/profile ~/.profile
    $ ln -s `pwd`/subleenv/bash_profile ~/.bash_profile
