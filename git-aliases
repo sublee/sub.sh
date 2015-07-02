@@ -1,0 +1,12 @@
+# vim:ft=gitconfig:et:ts=2:sw=2:sts=2:
+
+[alias]
+st = status -uno --ignore-submodule=none
+lg = log --graph --all --format=format:\
+'%C(yellow)%h %C(green)%ar%C(reset) - %s - %C(magenta)%an%C(blue)%d%C(reset)'
+ff = merge --ff-only
+up = "!_() { \
+  git fetch $1; \
+  git rebase $1/$2 --committer-date-is-author-date; \
+}; _"
+up-sub = "!_() { git -C $1 pull; git add $1; }; _"
