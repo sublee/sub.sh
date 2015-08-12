@@ -19,6 +19,7 @@ Plugin 'cakebaker/scss-syntax.vim'
 Plugin 'stephpy/vim-yaml'
 
 " function extensions
+Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-commentary'
 Plugin 'sjl/gundo.vim'
@@ -55,7 +56,7 @@ set encoding=utf-8 fileencodings=ucs-bom,utf-8,cp949,korea,iso-2022-kr
 " Ignore case in searches.
 set ignorecase
 
-" Highlight searching keyword
+" Highlight searching keyword.
 set hlsearch
 
 " Keep 80 columns and dense lines.
@@ -107,7 +108,6 @@ autocmd VimEnter *
 \|  let g:syntastic_cpp_compiler_options = ' -std=c++11'
 \|  let g:syntastic_python_checkers=['flake8']
 \|  let g:syntastic_python_flake8_args='--ignore=E301'
-\|  cabbrev E Explore
 \|endif
 
 " Gundo
@@ -123,8 +123,8 @@ autocmd VimEnter *
 \|  nnoremap <F12> :YcmCompleter GoToDefinition<CR>
 \|endif
 
-" NetRW tree style listing
-let g:netrw_liststyle = 3
+" Explore the directory of the current file by `:E`.
+cabbrev E e %:p:h
 
 " Disable Markdown folding.
 let g:vim_markdown_folding_disabled=1
