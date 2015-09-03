@@ -10,6 +10,7 @@ if [ -d $HOME/.local/bin ] ; then
 fi
 export LANG="en_US.UTF-8"
 export EDITOR="vim"
+set -o ignoreeof  # don't be exited by ^D.
 
 # python
 if [ -f $HOME/env/bin/activate ]; then
