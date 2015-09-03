@@ -32,6 +32,7 @@ alias ll="ls -l"
 alias vim="vim -b"
 alias vi="vim -b"
 alias ack="ack-grep --ignore-file=ext:map --ignore-file=ext:svg"
+alias pt="ptpython"
 
 # monitor by process name.
 function pid-of() {
