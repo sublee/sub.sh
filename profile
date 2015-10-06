@@ -8,8 +8,9 @@ fi
 if [ -d $HOME/.local/bin ] ; then
   export PATH=$HOME/.local/bin:$PATH
 fi
-export LANG="en_US.UTF-8"
 export EDITOR="vim"
+export LANG="en_US.UTF-8"
+export LC_ALL=$LANG
 set -o ignoreeof  # don't be exited by ^D.
 
 # python
