@@ -71,6 +71,7 @@ au! BufRead,BufNewFile *.haml setfiletype haml
 au! BufRead,BufNewFile *.less setfiletype less
 au! BufRead,BufNewFile *go setfiletype golang
 au! BufRead,BufNewFile *rc setfiletype conf
+au! BufRead,BufNewFile *.*_t setfiletype jinja
 
 " These languages have their own tab/indent settings.
 au FileType cpp        setl ts=2 sw=2 sts=2
@@ -128,3 +129,6 @@ cabbrev E e %:p:h
 
 " Disable Markdown folding.
 let g:vim_markdown_folding_disabled=1
+
+" Customize colors for Jinja syntax.
+hi def link jinjaVarBlock Comment
