@@ -17,6 +17,8 @@ if version < 704
 endif
 Plugin 'cakebaker/scss-syntax.vim'
 Plugin 'stephpy/vim-yaml'
+Plugin 'cespare/vim-toml'
+Plugin 'rust-lang/rust.vim'
 
 " function extensions
 Plugin 'scrooloose/nerdtree'
