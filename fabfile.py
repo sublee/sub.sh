@@ -4,13 +4,8 @@ import functools
 
 from fabric import colors
 from fabric.api import cd, env, run, settings, sudo, task
-from fabric.operations import prompt
 import fabtools
 from fabtools import require
-
-
-NAME = 'Heungsub Lee'
-EMAIL = 'sub@subl.ee'
 
 
 pystartup = b'''
@@ -79,7 +74,7 @@ def context(ctx):
 
 @task
 @context(settings(sudo_prefix=env.sudo_prefix + ' -E'))  # preserve env on sudo
-def terraform(name=NAME, email=EMAIL, mkdirs=True):
+def terraform(mkdirs=True):
     # I'm the sudoer!
     if fabtools.files.is_dir('/etc/sudoers.d'):
         require.files.file('/etc/sudoers.d/90-{0}'.format(env.user),
@@ -88,16 +83,6 @@ def terraform(name=NAME, email=EMAIL, mkdirs=True):
     # apt
     require.deb.uptodate_index()
     require.deb.packages(['git', 'htop', 'ack-grep', 'cmake'])
-    # git configurations
-    if run('git config --global user.name', quiet=True).failed:
-        yn = prompt('There is no Git user name and e-mail address.\n'
-                    'Are you sure you want to set as "{0}" <{1}>? [y/N] '
-                    ''.format(name, email))
-        if yn.lower() == 'y':
-            run('git config --global user.name "{0}"'.format(name))
-            run('git config --global user.email "{0}"'.format(email))
-        else:
-            warn('Git user setting skipped.')
     # python configurations
     require.files.file('.pystartup', pystartup)
     # working directories
