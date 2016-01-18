@@ -19,6 +19,7 @@ Plugin 'cakebaker/scss-syntax.vim'
 Plugin 'stephpy/vim-yaml'
 Plugin 'cespare/vim-toml'
 Plugin 'rust-lang/rust.vim'
+Plugin 'ekalinin/Dockerfile.vim'
 
 " function extensions
 Plugin 'scrooloose/nerdtree'
@@ -110,7 +111,6 @@ autocmd VimEnter *
 \ if exists(':SyntasticCheck')
 \|  let g:syntastic_cpp_compiler_options = ' -std=c++11'
 \|  let g:syntastic_python_checkers=['flake8']
-\|  let g:syntastic_python_flake8_args='--ignore=E301'
 \|endif
 
 " Gundo
