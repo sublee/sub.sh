@@ -73,37 +73,42 @@ def context(ctx):
 
 
 @task
-@context(settings(sudo_prefix=env.sudo_prefix + ' -E'))  # preserve env on sudo
+@context(settings(
+    sudo_prefix=env.sudo_prefix + ' -E'  # Preserve env on sudo.
+))
 def terraform(mkdirs=True):
     # I'm the sudoer!
     if fabtools.files.is_dir('/etc/sudoers.d'):
         require.files.file('/etc/sudoers.d/90-{0}'.format(env.user),
                            '{0} ALL=(ALL) NOPASSWD:ALL'.format(env.user),
                            use_sudo=True)
-    # apt
+    # Install Debian packages.
     require.deb.uptodate_index()
     require.deb.packages(['git', 'htop', 'ack-grep', 'cmake'])
-    # python configurations
+    # Config Python.
     require.files.file('.pystartup', pystartup)
-    # working directories
+    # Make working directories.
     if mkdirs:
         require.files.directory('works')
         require.python.virtualenv('env')
-    # pathogen
+    # Install Pathogen.
     require.files.directory('.vim/autoload')
     run('curl -LSso .vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim')
-    # vundle
+    # And Vundle.
     require.files.directory('.vim/bundle')
     with cd('.vim/bundle'):
         require.git.working_copy(github('gmarik', 'Vundle.vim'), 'Vundle.vim')
-    # oh-my-zsh
+    # Oh My Zsh!
     require.deb.package('zsh')
     require.git.working_copy(github('robbyrussell', 'oh-my-zsh'), '.oh-my-zsh')
     require.git.working_copy(
         github('zsh-users', 'zsh-syntax-highlighting'),
         '.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
+    require.git.working_copy(
+        github('zsh-users', 'zsh-autosuggestions'),
+        '.oh-my-zsh/custom/plugins/zsh-autosuggestions')
     sudo('chsh -s `which zsh` {0}'.format(env.user))
-    # subleenv
+    # Apply subleenv.
     require.git.working_copy(github('sublee', 'subleenv'), '.subleenv')
     with backup('/etc/security/limits.conf', sudo):
         sudo('ln -s ~/.subleenv/limits.conf /etc/security/limits.conf')

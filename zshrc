@@ -3,15 +3,15 @@
 
 # oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
-plugins=(git zsh-syntax-highlighting)
+plugins=(git git-flow-completion zsh-syntax-highlighting zsh-autosuggestions)
 ZSH_THEME="sublee"
 source $ZSH/oh-my-zsh.sh
 
-# bind keys: [Home] and [End]
+# Bind keys: [Home] and [End].
 bindkey "\e[1~" beginning-of-line
 bindkey "\e[4~" end-of-line
 
-# bind numpad keys
+# Bind numpad keys.
 bindkey -s "^[Op" "0"
 bindkey -s "^[Ol" "."
 bindkey -s "^[OM" "^M"
@@ -29,7 +29,12 @@ bindkey -s "^[Om" "-"
 bindkey -s "^[Oj" "*"
 bindkey -s "^[Oo" "/"
 
-# include .profile
+# Config zsh-autosuggestions.
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=4'
+bindkey '^ ' autosuggest-accept
+bindkey '\e' autosuggest-clear
+
+# Include .profile
 if [ -f "$HOME/.profile" ]; then
   source "$HOME/.profile"
 fi
