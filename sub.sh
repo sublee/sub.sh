@@ -82,8 +82,6 @@ function fatal {
   exit 1
 }
 
-fatal error
-
 function git-pull {
   # Clone a Git repository.  If the repository already exists,
   # just pull from the remote.
