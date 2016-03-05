@@ -58,7 +58,7 @@ function rm-tmp() {
   find . -regextype posix-egrep -regex $REGEX -delete -print
 }
 
-# Include files in ~/.profile.d
+# Include files in ~/.profile.d.
 if [ -d $HOME/.profile.d ]; then
   for f in $HOME/.profile.d/*; do
     source $f
