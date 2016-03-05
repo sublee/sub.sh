@@ -7,7 +7,7 @@ If you trust me, just do it on your Linux system:
 
 .. sourcecode:: bash
 
-   $ curl -L sub.sh | bash
+   $ curl -sL sub.sh | bash
 
 If not, do manually:
 

@@ -167,6 +167,7 @@ git-pull https://github.com/gmarik/Vundle.vim ~/.vim/bundle/Vundle.vim
 # Apply subenv.
 info "Linking dot files from sublenv..."
 git-pull https://github.com/sublee/subleenv $SUBENV
+git config --global include.path $SUBENV/git-aliases
 # sudo sym-link $SUBENV/limits.conf /etc/security/limits.conf
 sym-link $SUBENV/profile ~/.profile
 sym-link $SUBENV/vimrc ~/.vimrc
