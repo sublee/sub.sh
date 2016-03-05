@@ -38,7 +38,7 @@ alias vim="vim -b"
 alias vi="vim -b"
 alias ack="ack-grep --ignore-file=ext:map --ignore-file=ext:svg"
 alias pt="ptpython"
-alias sub.sh="curl sub.sh | bash -s -"
+alias sub.sh="curl -sL sub.sh | bash -s -"
 
 # Monitor by process name.
 function pid-of() {

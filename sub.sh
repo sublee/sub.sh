@@ -6,8 +6,8 @@
 #
 # Shortest way to terraform a Linux environment as for my taste:
 #
-#  $ curl -L sub.sh | bash [-s - OPTIONS]
-#  $ wget -O- sub.sh | bash [-s - OPTIONS]
+#  $ curl -sL sub.sh | bash [-s - OPTIONS]
+#  $ wget -qO- sub.sh | bash [-s - OPTIONS]
 #
 set -e; function _ {
 TIMESTAMP=$(date +%s)
@@ -24,7 +24,7 @@ APT_UPDATED_AT=~/.sub.sh-apt-updated-at
 
 function help {
   # Print the help message for --help.
-  echo "Usage: curl -L sub.sh | bash [-s - OPTIONS]"
+  echo "Usage: curl -sL sub.sh | bash [-s - OPTIONS]"
   echo
   echo "Options:"
   echo "  --help           Show this message and exit."
