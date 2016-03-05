@@ -27,10 +27,34 @@ function help {
   echo "Usage: curl -sL sub.sh | bash [-s - OPTIONS]"
   echo
   echo "Options:"
-  echo "  --help           Show this message and exit."
-  echo "  --no-python      Do not setup Python environment."
-  echo "  --no-apt-update  Do not update APT package lists."
+  echo "  --help              Show this message and exit."
+  echo "  --no-python         Do not setup Python environment."
+  echo "  --no-apt-update     Do not update APT package lists."
+  echo "  --force-apt-update  Update APT package lists on regardless of"
+  echo "                      updating period."
 }
+
+# Configure options.
+PYTHON=true
+APT_UPDATE=auto
+for i in "$@"; do
+  case $i in
+    --help)
+      help
+      exit;;
+    --no-python)
+      PYTHON=false
+      shift;;
+    --no-apt-update)
+      APT_UPDATE=false
+      shift;;
+    --force-apt-update)
+      APT_UPDATE=true
+      shift;;
+    *)
+      ;;
+  esac
+done
 
 function info {
   # Print an information log.
@@ -81,25 +105,6 @@ function failed {
 }
 trap failed ERR
 
-# Configure options.
-PYTHON=true
-APT_UPDATE=true
-for i in "$@"; do
-  case $i in
-    --help)
-      help
-      exit;;
-    --no-python)
-      PYTHON=false
-      shift;;
-    --no-apt-update)
-      APT_UPDATE=false
-      shift;;
-    *)
-      ;;
-  esac
-done
-
 # Go to the home directory.  A current working directory
 # may deny access from this user.
 cd ~
@@ -114,11 +119,10 @@ if ! >&/dev/null sudo -n true; then
 fi
 
 # Install packages from APT.
-if [[ "$APT_UPDATE" == true ]]; then
-  if [[ -f $APT_UPDATED_AT ]]; then
+if [[ "$APT_UPDATE" != false ]]; then
+  APT_UPDATED_BEFORE=$((UPDATE_APT_AFTER + 1))
+  if [[ "$APT_UPDATE" == auto && -f $APT_UPDATED_AT ]]; then
     APT_UPDATED_BEFORE=$(($TIMESTAMP - $(cat $APT_UPDATED_AT)))
-  else
-    APT_UPDATED_BEFORE=$((UPDATE_APT_AFTER + 1))
   fi
   if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
     info "Updating APT package lists..."
