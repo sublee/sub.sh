@@ -56,14 +56,24 @@ for i in "$@"; do
   esac
 done
 
+if [[ -z $TERM ]]; then
+  function secho {
+    echo "$2"
+  }
+else
+  function secho {
+    echo -e "$(tput setaf $1)$2$(tput sgr0)"
+  }
+fi
+
 function info {
   # Print an information log.
-  echo -e "$(tput setaf 7)$1$(tput sgr0)"
+  secho 7 "$1"
 }
 
 function err {
   # Print a red colored error message.
-  echo -e "$(tput setaf 1)$1$(tput sgr0)"
+  secho 1 "$1"
 }
 
 function fatal {
@@ -71,6 +81,8 @@ function fatal {
   err "$@"
   exit 1
 }
+
+fatal error
 
 function git-pull {
   # Clone a Git repository.  If the repository already exists,
