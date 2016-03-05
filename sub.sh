@@ -176,7 +176,7 @@ info "Terraformed successfully by sub.sh."
 if [[ -d $BAK ]]; then
   info "Backup files are stored in $BAK"
 fi
-if [[ $SHELL != $(which zsh) ]]; then
+if [[ $SHELL != $(which zsh) && -z $ZSH ]]; then
   info "To use terraformed ZSH, relogin or"
   echo
   info "  $ zsh"
