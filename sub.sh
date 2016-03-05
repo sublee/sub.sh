@@ -12,6 +12,8 @@
 set -e; function _ {
 TIMESTAMP=$(date +%s)
 USER=$(whoami)
+SUBENV=~/.subenv
+VIRTUALENV=~/env
 
 # Where some backup files to be stored.
 BAK=~/.sub.sh-bak-$TIMESTAMP
@@ -22,18 +24,10 @@ APT_UPDATED_AT=~/.sub.sh-apt-updated-at
 
 # Configure options.
 PYTHON=true
-DOCKER=true
-SELF_AUTH=true
 for i in "$@"; do
   case $i in
     --no-python)
       PYTHON=false
-      shift;;
-    --no-docker)
-      DOCKER=false
-      shift;;
-    --no-self-auth)
-      SELF_AUTH=false
       shift;;
     *)
       ;;
@@ -118,7 +112,7 @@ sudo apt-get install -y ack-grep aptitude curl git git-flow htop ntpdate vim
 
 # Authorize the local SSH key for connecting to
 # localhost without password.
-if [[ "$SELF_AUTH" = true ]] && ! ssh -qo BatchMode=yes localhost true; then
+if ! ssh -qo BatchMode=yes localhost true; then
   if [[ ! -f ~/.ssh/id_rsa ]]; then
     info "Generating new SSH key..."
     ssh-keygen -f ~/.ssh/id_rsa -N ''
@@ -140,7 +134,7 @@ git-pull https://github.com/zsh-users/zsh-syntax-highlighting \
          ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 git-pull https://github.com/zsh-users/zsh-autosuggestions \
          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-git-pull https://github.com/bobthecow/git-flow-completion
+git-pull https://github.com/bobthecow/git-flow-completion \
          ~/.oh-my-zsh/custom/plugins/git-flow-completion
 
 # Install Pathogen and Vundle for Vim.
@@ -153,25 +147,25 @@ git-pull https://github.com/gmarik/Vundle.vim ~/.vim/bundle/Vundle.vim
 
 # Apply subenv.
 info "Linking dot files from sublenv..."
-git-pull https://github.com/sublee/subleenv ~/.subenv
-# sudo sym-link ~/.subenv/limits.conf /etc/security/limits.conf
-sym-link ~/.subenv/profile ~/.profile
-sym-link ~/.subenv/vimrc ~/.vimrc
-sym-link ~/.subenv/zshrc ~/.zshrc
-sym-link ~/.subenv/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
+git-pull https://github.com/sublee/subleenv $SUBENV
+# sudo sym-link $SUBENV/limits.conf /etc/security/limits.conf
+sym-link $SUBENV/profile ~/.profile
+sym-link $SUBENV/vimrc ~/.vimrc
+sym-link $SUBENV/zshrc ~/.zshrc
+sym-link $SUBENV/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
 
 # Setup a Python environment.
 if [[ "$PYTHON" = true ]]; then
   info "Setting up the Python environment..."
   sudo apt-get install -y python python-dev python-setuptools
   sudo easy_install virtualenv
-  if [[ ! -d ~/env ]]; then
-    virtualenv ~/env
+  if [[ ! -d $VIRTUALENV ]]; then
+    virtualenv $VIRTUALENV
   fi
-  ~/env/bin/pip install -U pdbpp
-  sym-link ~/.subenv/python-startup.py .python-startup
-  sym-link ~/.subenv/python-debug.pth \
-           ~/env/lib/python2.7/site-packages/__debug__.pth
+  $VIRTUALENV/bin/pip install -U pdbpp
+  sym-link $SUBENV/python-startup.py ~/.python-startup
+  sym-link $SUBENV/python-debug.pth \
+           $VIRTUALENV/lib/python2.7/site-packages/__debug__.pth
 fi
 
 # Show my emblem and result.
