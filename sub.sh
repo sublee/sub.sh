@@ -18,21 +18,19 @@ VIRTUALENV=~/env
 # Where some backup files to be stored.
 BAK=~/.sub.sh-bak-$TIMESTAMP
 
-# Don't update APT if the last updated time is in a hour.
-UPDATE_APT_AFTER=3600
+# Don't update APT if the last updated time is in a day.
+UPDATE_APT_AFTER=86400
 APT_UPDATED_AT=~/.sub.sh-apt-updated-at
 
-# Configure options.
-PYTHON=true
-for i in "$@"; do
-  case $i in
-    --no-python)
-      PYTHON=false
-      shift;;
-    *)
-      ;;
-  esac
-done
+function help {
+  # Print the help message for --help.
+  echo "Usage: curl -L sub.sh | bash [-s - OPTIONS]"
+  echo
+  echo "Options:"
+  echo "  --help           Show this message and exit."
+  echo "  --no-python      Do not setup Python environment."
+  echo "  --no-apt-update  Do not update APT package lists."
+}
 
 function info {
   # Print an information log.
@@ -83,6 +81,25 @@ function failed {
 }
 trap failed ERR
 
+# Configure options.
+PYTHON=true
+APT_UPDATE=true
+for i in "$@"; do
+  case $i in
+    --help)
+      help
+      exit;;
+    --no-python)
+      PYTHON=false
+      shift;;
+    --no-apt-update)
+      APT_UPDATE=false
+      shift;;
+    *)
+      ;;
+  esac
+done
+
 # Go to the home directory.  A current working directory
 # may deny access from this user.
 cd ~
@@ -97,15 +114,17 @@ if ! >&/dev/null sudo -n true; then
 fi
 
 # Install packages from APT.
-if [[ -f $APT_UPDATED_AT ]]; then
-  APT_UPDATED_BEFORE=$(($TIMESTAMP - $(cat $APT_UPDATED_AT)))
-else
-  APT_UPDATED_BEFORE=$((UPDATE_APT_AFTER + 1))
-fi
-if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
-  info "Updating APT package lists..."
-  sudo apt-get update
-  echo $TIMESTAMP > $APT_UPDATED_AT
+if [[ "$APT_UPDATE" == true ]]; then
+  if [[ -f $APT_UPDATED_AT ]]; then
+    APT_UPDATED_BEFORE=$(($TIMESTAMP - $(cat $APT_UPDATED_AT)))
+  else
+    APT_UPDATED_BEFORE=$((UPDATE_APT_AFTER + 1))
+  fi
+  if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
+    info "Updating APT package lists..."
+    sudo apt-get update
+    echo $TIMESTAMP > $APT_UPDATED_AT
+  fi
 fi
 info "Installing packages from APT..."
 sudo apt-get install -y ack-grep aptitude curl git git-flow htop ntpdate vim
