@@ -1,3 +1,3 @@
 import __builtin__ as _; _.B = lambda i=__import__: i('pdb').Pdb().set_trace(i('sys')._getframe().f_back)
-import __builtin__ as _; _.PM = __import__('pdb').pm
+import __builtin__ as _; _.PM = lambda: __import__('pdb').pm()
 import __builtin__ as _; _.print_stack = __import__('traceback').print_stack
