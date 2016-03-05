@@ -1,9 +1,15 @@
 #!/bin/env zsh
 # vim:ft=sh:et:ts=2:sw=2:sts=2:
 
-# oh-my-zsh
+# Oh My ZSH!
 export ZSH=$HOME/.oh-my-zsh
-plugins=(git git-flow-completion zsh-syntax-highlighting zsh-autosuggestions)
+plugins=git
+for plugin_path in $ZSH/custom/plugins/*; do
+  plugin=$(basename $plugin_path)
+  if [[ -f "$plugin_path/$plugin.plugin.zsh" ]]; then
+    plugins=($plugins $plugin)
+  fi
+done
 ZSH_THEME="sublee"
 source $ZSH/oh-my-zsh.sh
 
@@ -34,7 +40,7 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=4'
 bindkey '^ ' autosuggest-accept
 bindkey '\e' autosuggest-clear
 
-# Include .profile
+# Include ~/.profile.
 if [ -f "$HOME/.profile" ]; then
   source "$HOME/.profile"
 fi
