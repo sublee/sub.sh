@@ -52,7 +52,7 @@ function err {
 
 function fatal {
   # Print a red colored error message and exit the script.
-  err $@
+  err "$@"
   exit 1
 }
 
@@ -84,6 +84,15 @@ function sym-link {
   ln -s $SRC $DEST
 }
 
+function failed {
+  fatal "Failed to terraform by sub.sh."
+}
+trap failed ERR
+
+# Go to the home directory.  A current working directory
+# may deny access from this user.
+cd ~
+
 # Check if sudo requires password.
 if ! >&/dev/null sudo -n true; then
   err "Make sure $USER can use sudo without password."
@@ -107,7 +116,8 @@ fi
 info "Installing packages from APT..."
 sudo apt-get install -y ack-grep aptitude curl git htop ntpdate vim
 
-# Authorize the local SSH key for connecting to localhost without password.
+# Authorize the local SSH key for connecting to
+# localhost without password.
 if [[ "$SELF_AUTH" = true ]] && ! ssh -qo BatchMode=yes localhost true; then
   if [[ ! -f ~/.ssh/id_rsa ]]; then
     info "Generating new SSH key..."
