@@ -114,7 +114,7 @@ if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
   echo $TIMESTAMP > $APT_UPDATED_AT
 fi
 info "Installing packages from APT..."
-sudo apt-get install -y ack-grep aptitude curl git htop ntpdate vim
+sudo apt-get install -y ack-grep aptitude curl git git-flow htop ntpdate vim
 
 # Authorize the local SSH key for connecting to
 # localhost without password.
@@ -128,7 +128,7 @@ if [[ "$SELF_AUTH" = true ]] && ! ssh -qo BatchMode=yes localhost true; then
   info "Authorized the SSH key to connect to localhost."
 fi
 
-# Install Zsh and Oh My Zsh!
+# Install ZSH and Oh My ZSH!
 if [[ ! -x "$(command -v zsh)" ]]; then
   info "Installing Zsh..."
   sudo apt-get install -y zsh
@@ -140,6 +140,8 @@ git-pull https://github.com/zsh-users/zsh-syntax-highlighting \
          ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 git-pull https://github.com/zsh-users/zsh-autosuggestions \
          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+git-pull https://github.com/bobthecow/git-flow-completion
+         ~/.oh-my-zsh/custom/plugins/git-flow-completion
 
 # Install Pathogen and Vundle for Vim.
 info "Setting up the Vim environment..."
@@ -181,7 +183,10 @@ if [[ -d $BAK ]]; then
   info "Backup files are stored in $BAK"
 fi
 if [[ $SHELL != $(which zsh) ]]; then
-  info "To use terraformed Zsh, relogin or $ zsh."
+  info "To use terraformed ZSH, relogin or"
+  echo
+  info "  $ zsh"
+  echo
 fi
 
 }; _ $@
