@@ -24,5 +24,5 @@ after_success:
   git config user.name "Heungsub Lee"
   git config user.email "sub@subl.ee"
   git add .
-  git commit -m "deploy sub.sh of subleenv-$TRAVIS_COMMIT"
+  git commit -m "Deploy sub.sh from subenv-$TRAVIS_COMMIT"
   git push -qf $REPO master:gh-pages > /dev/null 2>&1

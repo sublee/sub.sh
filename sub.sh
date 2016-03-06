@@ -203,9 +203,11 @@ if [[ "$PYTHON" = true ]]; then
 fi
 
 # Show my emblem and result.
-curl "$(echo https://gist.githubusercontent.com/sublee/ \
-        d22ddfdf3de690bb60ec/raw/01f399a82f34e37edaeda7 \
-        a017e0f8e9555fe9a2/sublee.txt | sed 's/ //g')"
+if [[ -n $TERM ]]; then
+  curl "$(echo https://gist.githubusercontent.com/sublee/ \
+          d22ddfdf3de690bb60ec/raw/01f399a82f34e37edaeda7 \
+          a017e0f8e9555fe9a2/sublee.txt | sed 's/ //g')"
+fi
 info "Terraformed successfully by sub.sh."
 if [[ -d $BAK ]]; then
   info "Backup files are stored in $BAK"
