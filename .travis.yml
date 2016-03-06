@@ -1,3 +1,5 @@
+language: python
+python: 2.7
 sudo: required
 services:
 - docker
@@ -17,7 +19,7 @@ after_success:
 - |
   echo sub.sh > CNAME
   touch .nojekyll
-  cp ../sub.sh index.html
+  python ../sub.sh-web/build.py _sub.sh
 - |
   export REPO="https://$GITHUB_TOKEN@github.com/sublee/sub.sh"
   git init
