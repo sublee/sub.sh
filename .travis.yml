@@ -7,7 +7,7 @@ env:
            OVOAKyeVvn7mAUjOvS6ZrKa15AYWye+qYCYj4="
 script:
 - |
-  docker run -it --name subenv -v sub.sh:/sub.sh ubuntu:14.04 /sub.sh
+  docker run -it --name subenv -v $PWD/sub.sh:/sub.sh ubuntu:14.04 /sub.sh
   docker start -ia subenv
 after_success:
 - |
