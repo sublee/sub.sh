@@ -1,0 +1,59 @@
+<script id="head" type="text/html">
+  <title>sub.sh</title>
+  <link rel="shortcut icon" type="image/icon" href="favicon.ico" />
+  <link rel="stylesheet" href="http://effy:8080/style-sublee-light.css" />
+  <style>
+    @import url(//fonts.googleapis.com/css?family=Ubuntu+Mono);
+    body {
+      margin-left: auto;
+      margin-right: auto;
+      transition: none;
+    }
+    pre {
+      position: relative;
+      font-size: 1.5rem;
+    }
+    pre code {
+      font-family: 'Ubuntu Mono', monospace;
+    }
+    pre b {
+      font-weight: inherit;
+    }
+    pre i {
+      color: #e56;
+      font-style: normal;
+    }
+  </style>
+</script>
+<script>$(document.head).html($('#head').text());</script>
+
+<h1>Linux settings of <a href="http://subl.ee/">Heungsub Lee</a></h1>
+
+<p>Terraform your Linux by my taste:</p>
+
+<pre>
+<code><i>$</i> <b>curl -sL sub.sh <i>|</i> bash</b></code>
+</pre>
+
+<p>Or customize by options:</p>
+
+<pre>
+<code><i>$</i> <b>curl -sL sub.sh <i>|</i> bash <i>-s -</i> --help</b></code>
+</pre>
+
+<script>
+  $.getScript('//cdn.jsdelivr.net/clipboard.js/1.5.8/clipboard.min.js')
+   .done(function() {
+    new Clipboard('pre', {
+      target: function(trigger) {
+        return $(trigger).find('b').get(0);
+      }
+    }).on('success', function(e) {
+      $trigger = $(e.trigger);
+      $trigger.removeClass('copied');
+      $trigger.width($trigger.width());
+      $trigger.addClass('copied');
+    });
+    $('pre').css('cursor', 'copy');
+  });
+</script>
