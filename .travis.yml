@@ -1,7 +1,15 @@
-language: c
+sudo: required
+services:
+- docker
 env:
-- secure: "tAbUBMNusAs14BegrQMjfRtqndfveAruw3kTD2QcUMFyxgWuORj3tuiigjvkr4Uk+VwY6NYHFWZycqxSJu0uBVwpWpvTgl9sInNMlLSXBEXSobtxLiDlOrDFudB5duu0VNYbSZOVOAKyeVvn7mAUjOvS6ZrKa15AYWye+qYCYj4="
+- secure: "tAbUBMNusAs14BegrQMjfRtqndfveAruw3kTD2QcUMFyxgWuORj3tuiigjvkr4Uk+Vw\
+           Y6NYHFWZycqxSJu0uBVwpWpvTgl9sInNMlLSXBEXSobtxLiDlOrDFudB5duu0VNYbSZ\
+           OVOAKyeVvn7mAUjOvS6ZrKa15AYWye+qYCYj4="
 script:
+- |
+  docker run -it --name subenv -v sub.sh:/sub.sh ubuntu:14.04 /sub.sh
+  docker start -ia subenv
+after_success:
 - |
   rm -rf _sub.sh
   mkdir _sub.sh
