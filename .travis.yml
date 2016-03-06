@@ -19,7 +19,7 @@ after_success:
 - |
   echo sub.sh > CNAME
   touch .nojekyll
-  python ../sub.sh-web/build.py _sub.sh
+  python ../sub.sh-web/build.py .
 - |
   export REPO="https://$GITHUB_TOKEN@github.com/sublee/sub.sh"
   git init
