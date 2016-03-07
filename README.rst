@@ -3,7 +3,7 @@ subenv
 
 I want to use same environment in my all Linux systems.
 
-If you trust me, just do it on your Linux system:
+If you trust me, just use `sub.sh <http://sub.sh/>`_ on your Linux system:
 
 .. sourcecode:: bash
 
