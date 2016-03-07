@@ -192,7 +192,9 @@ sym-link $SUBENV/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
 if [[ "$PYTHON" = true ]]; then
   info "Setting up the Python environment..."
   sudo apt-get install -y python python-dev python-setuptools
-  sudo easy_install virtualenv
+  if [[ ! -x "$(command -v virtualenv)" ]]; then
+    sudo easy_install virtualenv
+  fi
   if [[ ! -d $VIRTUALENV ]]; then
     virtualenv $VIRTUALENV
   fi
