@@ -150,7 +150,7 @@ if ! ssh -qo BatchMode=yes localhost true; then
     info "Generating new SSH key..."
     ssh-keygen -f ~/.ssh/id_rsa -N ''
   fi
-  ssh-keyscan -H localhost 2>/dev/null 1> ~/.ssh/known_hosts
+  ssh-keyscan -H localhost 2>/dev/null 1>> ~/.ssh/known_hosts
   cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
   info "Authorized the SSH key to connect to localhost."
 fi
