@@ -68,7 +68,7 @@ fi
 
 function info {
   # Print an information log.
-  secho 2 "$1"
+  secho 6 "$1"
 }
 
 function err {
