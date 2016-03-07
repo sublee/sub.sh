@@ -1,17 +1,22 @@
 <script id="head" type="text/html">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=480" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>sub.sh</title>
   <link rel="shortcut icon" type="image/icon" href="favicon.ico" />
   <link rel="stylesheet" href="http://subl.ee/style-sublee-light.css" />
   <style>
     @import url(//fonts.googleapis.com/css?family=Ubuntu+Mono);
     body {
-      margin-left: auto;
-      margin-right: auto;
+      max-width: 30rem;
       transition: none;
+    }
+    h1 {
+      font-size: 1.75em;
     }
     pre {
       position: relative;
-      font-size: 1.5rem;
+      font-size: 1.5em;
     }
     pre code {
       font-family: 'Ubuntu Mono', monospace;
@@ -25,11 +30,22 @@
     }
   </style>
 </script>
-<script>$(document.head).html($('#head').text());</script>
+<script>
+  $(document.head).html($('#head').text());
+</script>
 
-<h1>Linux settings of <a href="http://subl.ee/">Heungsub Lee</a></h1>
+<header>
+  <h1>Linux settings of <a href="http://subl.ee/">Heungsub Lee</a></h1>
+</header>
 
-<p>Make your Linux follow my taste:</p>
+<p>
+  <code>sub.sh</code> is a shell script to terraform a Linux environment as
+  for <a href="https://github.com/sublee/subenv">my taste</a>.  The script
+  aims ZSH on Ubuntu what I feel comfortable.  It also configures Vim and
+  Python environments to maximize my productivity.
+</p>
+
+<p>Take my settings for your Linux environment:</p>
 
 <pre>
 <code><i>$</i> <b>curl -sL sub.sh <i>|</i> bash</b></code>
@@ -40,6 +56,12 @@
 <pre>
 <code><i>$</i> <b>curl -sL sub.sh <i>|</i> bash <i>-s -</i> --help</b></code>
 </pre>
+
+<footer>
+  <p class="copyright">
+    &copy; <span class="year">2016</span> Heungsub Lee
+  </p>
+</footer>
 
 <script>
   $.getScript('//cdn.jsdelivr.net/clipboard.js/1.5.8/clipboard.min.js')
@@ -57,13 +79,6 @@
     $('pre').css('cursor', 'copy');
   });
 </script>
-
-
-<footer>
-  <p class="copyright">
-    &copy; <span class="year">2016</span> Heungsub Lee
-  </p>
-</footer>
 
 <script>
   var _gaq = [
