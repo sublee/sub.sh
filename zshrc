@@ -7,7 +7,7 @@ plugins=git
 for plugin_path in $ZSH/custom/plugins/*; do
   plugin=$(basename $plugin_path)
   if [[ -f "$plugin_path/$plugin.plugin.zsh" ]]; then
-    plugins=($plugins $plugin)
+    plugins+=($plugin)
   fi
 done
 ZSH_THEME="sublee"
@@ -36,9 +36,7 @@ bindkey -s "^[Oj" "*"
 bindkey -s "^[Oo" "/"
 
 # Config zsh-autosuggestions.
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=4'
-bindkey '^ ' autosuggest-accept
-bindkey '\e' autosuggest-clear
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=6'
 
 # Include ~/.profile.
 if [ -f "$HOME/.profile" ]; then
