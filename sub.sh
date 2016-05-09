@@ -200,8 +200,9 @@ if [[ "$PYTHON" = true ]]; then
   fi
   $VIRTUALENV/bin/pip install -U pdbpp
   sym-link $SUBENV/python-startup.py ~/.python-startup
-  sym-link $SUBENV/python-debug.pth \
-           $VIRTUALENV/lib/python2.7/site-packages/__debug__.pth
+  SITE_PACKAGES=$($VIRTUALENV/bin/python -c \
+    "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+  sym-link $SUBENV/python-debug.pth $SITE_PACKAGES/__debug__.pth
 fi
 
 # Show my emblem and result.
