@@ -24,8 +24,8 @@ Plugin 'ekalinin/Dockerfile.vim'
 " function extensions
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
+Plugin 'simnalamburt/vim-mundo'
 Plugin 'tpope/vim-commentary'
-Plugin 'sjl/gundo.vim'
 Plugin 'rhysd/committia.vim'
 Plugin 'Valloric/YouCompleteMe'
 
@@ -113,10 +113,10 @@ autocmd VimEnter *
 \|  let g:syntastic_python_checkers=['flake8']
 \|endif
 
-" Gundo
+" Mundo
 autocmd VimEnter *
-\ if exists(':Gundo')
-\|  nnoremap <F5> :GundoToggle<CR>
+\ if exists(':Mundo')
+\|  nnoremap <F5> :MundoToggle<CR>
 \|endif
 
 " YouCompleteMe
