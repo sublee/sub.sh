@@ -27,6 +27,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'simnalamburt/vim-mundo'
 Plugin 'tpope/vim-commentary'
 Plugin 'rhysd/committia.vim'
+Plugin 'tpope/vim-sensible'
 Plugin 'Valloric/YouCompleteMe'
 
 " -----------------------------------------------------------------------------
@@ -61,10 +62,11 @@ set ignorecase
 
 " Highlight searching keyword.
 set hlsearch
+highlight Search term=inverse cterm=none ctermbg=cyan
 
 " Keep 80 columns and dense lines.
 set colorcolumn=81
-highlight ColorColumn cterm=underline ctermbg=none
+highlight ColorColumn term=underline cterm=underline ctermbg=none
 autocmd BufWinEnter * match Error /\%>80v.\+\|\s\+$\|^\s*\n\+\%$/
 
 " Some additional syntax highlighters.
