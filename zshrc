@@ -42,3 +42,5 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=6'
 if [ -f "$HOME/.profile" ]; then
   source "$HOME/.profile"
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
