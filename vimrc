@@ -22,11 +22,12 @@ Plugin 'rust-lang/rust.vim'
 Plugin 'ekalinin/Dockerfile.vim'
 
 " function extensions
+Plugin 'rhysd/committia.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'simnalamburt/vim-mundo'
+Plugin 'tmhedberg/matchit'
 Plugin 'tpope/vim-commentary'
-Plugin 'rhysd/committia.vim'
 Plugin 'tpope/vim-sensible'
 Plugin 'Valloric/YouCompleteMe'
 
@@ -44,6 +45,13 @@ set tabstop=4 shiftwidth=4 sts=4
 set autoindent
 highlight HardTab cterm=underline
 autocmd BufWinEnter * 2 match HardTab /\t\+/
+
+" Prefer "very magic" regex.
+nnoremap / /\v
+cnoremap %s/ %s/\v
+
+" Search for visually selected text by //.
+vnoremap // y/<C-R>"<CR>
 
 " I dislike CRLF.
 set fileformat=unix
