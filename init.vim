@@ -29,6 +29,8 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 " -----------------------------------------------------------------------------
 call plug#end()
 
+set timeoutlen=1000 ttimeoutlen=0
+
 " Syntax highlighting.
 syntax on
 
@@ -66,7 +68,7 @@ set ignorecase
 
 " Highlight searching keyword.
 set hlsearch
-highlight Search term=inverse cterm=none ctermbg=cyan
+highlight Search term=inverse cterm=none ctermfg=black ctermbg=darkcyan
 
 " Keep 80 columns and dense lines.
 set colorcolumn=81
@@ -130,6 +132,7 @@ autocmd VimEnter *
 \ if exists('g:ycm_goto_buffer_command')
 \|  let g:ycm_goto_buffer_command = 'new-tab'
 \|  nnoremap <F12> :YcmCompleter GoToDefinition<CR>
+\|  highlight Pmenu ctermfg=black ctermbg=magenta
 \|endif
 
 " Explore the directory of the current file by `:E`.
