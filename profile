@@ -40,19 +40,6 @@ alias ack="ack-grep --ignore-file=ext:map --ignore-file=ext:svg"
 alias pt="ptpython"
 alias sub.sh="curl -sL sub.sh | bash -s -"
 
-# Monitor by process name.
-function pid-of() {
-  ps -C $1 -o pid |
-    sed 1d | sort -h | tr '\n' ' ' | sed 's/ \+/ /g' |
-    sed 's/^ \+//g' | sed 's/.$/\n/g'
-}
-function top-of() {
-  top -p `pid-of $1 | tr ' ' ','`
-}
-function htop-of() {
-  htop -p `pid-of $1 | tr ' ' ','`
-}
-
 # Remove temporary files such as Vim swap or pyc.
 function rm-tmp() {
   REGEX=".*\.(sw[ponml]|pyc)$"
