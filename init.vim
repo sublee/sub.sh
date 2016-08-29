@@ -29,7 +29,8 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 " -----------------------------------------------------------------------------
 call plug#end()
 
-set timeoutlen=1000 ttimeoutlen=0
+" Eliminate delays on ESC.
+autocmd VimEnter * set timeoutlen=1000 ttimeoutlen=0
 
 " Syntax highlighting.
 syntax on
