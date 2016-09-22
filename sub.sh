@@ -184,8 +184,8 @@ info "Setting up the tmux environment..."
 git-pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # Apply subenv.
-info "Linking dot files from sublenv..."
-git-pull https://github.com/sublee/subleenv $SUBENV
+info "Linking dot files from subenv..."
+git-pull https://github.com/sublee/subenv $SUBENV
 git config --global include.path $SUBENV/git-aliases
 # sudo sym-link $SUBENV/limits.conf /etc/security/limits.conf
 sym-link $SUBENV/profile ~/.profile
