@@ -16,10 +16,11 @@ If not, do manually:
    $ git clone git://github.com/sublee/subenv.git
    $ sudo ln -sr subenv/limits.conf /etc/security/limits.conf
    $ git config --global include.path $(pwd)/subenv/git-aliases
-   $ ln -sr subenv/vimrc ~/.vimrc
    $ ln -sr subenv/profile ~/.profile
    $ ln -sr subenv/zshrc ~/.zshrc
    $ ln -sr subenv/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
+   $ ln -sr subenv/vimrc ~/.vimrc
+   $ ln -sr subenv/tmux.conf ~/.tmux.conf
    $ ln -sr subenv/python-startup.py ~/.python-startup
    $ ln -sr subenv/python-debug.pth \
             $VIRTUAL_ENV/lib/python2.7/site-packages/__debug__.pth

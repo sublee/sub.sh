@@ -141,7 +141,8 @@ if [[ "$APT_UPDATE" != false ]]; then
   fi
 fi
 info "Installing packages from APT..."
-sudo apt-get install -y ack-grep aptitude curl git git-flow htop ntpdate vim
+sudo apt-get install -y \
+  ack-grep aptitude curl git git-flow htop ntpdate tmux vim
 
 # Authorize the local SSH key for connecting to
 # localhost without password.
@@ -184,9 +185,10 @@ git-pull https://github.com/sublee/subleenv $SUBENV
 git config --global include.path $SUBENV/git-aliases
 # sudo sym-link $SUBENV/limits.conf /etc/security/limits.conf
 sym-link $SUBENV/profile ~/.profile
-sym-link $SUBENV/vimrc ~/.vimrc
 sym-link $SUBENV/zshrc ~/.zshrc
 sym-link $SUBENV/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
+sym-link $SUBENV/vimrc ~/.vimrc
+sym-link $SUBENV/tmux.conf ~/.tmux.conf
 
 # Setup a Python environment.
 if [[ "$PYTHON" = true ]]; then
