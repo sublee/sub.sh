@@ -179,6 +179,10 @@ if [[ ! -f ~/.vim/autoload/pathogen.vim ]]; then
 fi
 git-pull https://github.com/gmarik/Vundle.vim ~/.vim/bundle/Vundle.vim
 
+# Install TPM.
+info "Setting up the tmux environment..."
+git-pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 # Apply subenv.
 info "Linking dot files from sublenv..."
 git-pull https://github.com/sublee/subleenv $SUBENV
@@ -188,7 +192,7 @@ sym-link $SUBENV/profile ~/.profile
 sym-link $SUBENV/zshrc ~/.zshrc
 sym-link $SUBENV/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
 sym-link $SUBENV/vimrc ~/.vimrc
-sym-link $SUBENV/tmux.conf ~/.tmux.conf
+sym-link $SUBENV/tmux.conf ~/.tmux.conf && tmux source ~/.tmux.conf
 
 # Setup a Python environment.
 if [[ "$PYTHON" = true ]]; then
