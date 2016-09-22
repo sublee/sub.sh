@@ -192,7 +192,7 @@ sym-link $SUBENV/profile ~/.profile
 sym-link $SUBENV/zshrc ~/.zshrc
 sym-link $SUBENV/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
 sym-link $SUBENV/vimrc ~/.vimrc
-sym-link $SUBENV/tmux.conf ~/.tmux.conf && tmux source ~/.tmux.conf
+sym-link $SUBENV/tmux.conf ~/.tmux.conf && tmux source ~/.tmux.conf || true
 
 # Setup a Python environment.
 if [[ "$PYTHON" = true ]]; then
