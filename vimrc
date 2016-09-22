@@ -43,7 +43,7 @@ syntax on
 set expandtab
 set tabstop=4 shiftwidth=4 sts=4
 set autoindent
-highlight HardTab cterm=underline
+highlight HardTab term=underline cterm=underline
 autocmd BufWinEnter * 2 match HardTab /\t\+/
 
 " Prefer "very magic" regex.
