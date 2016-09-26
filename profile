@@ -2,24 +2,25 @@
 # vim:ft=sh:et:ts=2:sw=2:sts=2:
 
 # Configure the system.
-if [ -d $HOME/bin ] ; then
-  export PATH=$HOME/bin:$PATH
-fi
-if [ -d $HOME/.local/bin ] ; then
-  export PATH=$HOME/.local/bin:$PATH
-fi
 export EDITOR="vim"
 export LANG="en_US.UTF-8"
 export LC_ALL=$LANG
+
+# Set $PATH.
+function prepend_path {
+  [[ -d "$@" ]] && export PATH="$@:$PATH"
+}
+prepend_path $HOME/bin
+prepend_path $HOME/.local/bin
+prepend_path $HOME/.linuxbrew/bin
+prepend_path $HOME/.cargo/bin
 
 # Don't quit by ^D.
 set -o ignoreeof
 
 # Python environment.
 if [ -f $HOME/env/bin/activate ]; then
-  VIRTUAL_ENV_DISABLE_PROMPT=x
   source $HOME/env/bin/activate
-  export PS1="(`basename \"$VIRTUAL_ENV\"`)$PS1"
 fi
 if [ -f $HOME/.python-startup ]; then
   export PYTHONSTARTUP=$HOME/.python-startup

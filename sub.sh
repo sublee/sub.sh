@@ -110,6 +110,10 @@ function sym-link {
   ln -s $SRC $DEST
 }
 
+function dense {
+  echo $@ | sed 's/ //g'
+}
+
 function failed {
   fatal "Failed to terraform by sub.sh."
 }
@@ -141,8 +145,19 @@ if [[ "$APT_UPDATE" != false ]]; then
   fi
 fi
 info "Installing packages from APT..."
-sudo apt-get install -y \
-  ack-grep aptitude curl git git-flow htop ntpdate tmux vim
+sudo apt-get install -y aptitude curl git git-flow htop ntpdate tmux vim
+
+# Install Linuxbrew.
+info "Installing packages from Linuxbrew..."
+if [[ ! -f $HOME/.linuxbrew/bin/brew ]]; then
+  ruby -e "$(curl -fsSL \
+    https://raw.githubusercontent.com/Linuxbrew/install/master/install)"
+fi
+PATH="$HOME/.linuxbrew/bin:$PATH"
+brew install "$(dense \
+  https://raw.githubusercontent.com/ \
+  BurntSushi/ripgrep/master/pkg/brew/ripgrep.rb
+)"
 
 # Authorize the local SSH key for connecting to
 # localhost without password.
@@ -213,9 +228,10 @@ fi
 
 # Show my emblem and result.
 if [[ -n $TERM ]]; then
-  curl "$(echo https://gist.githubusercontent.com/sublee/ \
-          d22ddfdf3de690bb60ec/raw/01f399a82f34e37edaeda7 \
-          a017e0f8e9555fe9a2/sublee.txt | sed 's/ //g')"
+  curl "$(dense \
+    https://gist.githubusercontent.com/sublee/d22ddfdf3de690bb60ec/raw/ \
+    01f399a82f34e37edaeda7a017e0f8e9555fe9a2/sublee.txt
+  )"
 fi
 info "Terraformed successfully by sub.sh."
 if [[ -d $BAK ]]; then
