@@ -132,6 +132,18 @@ if ! >&/dev/null sudo -n true; then
   exit 1
 fi
 
+# Authorize the local SSH key for connecting to
+# localhost without password.
+if ! ssh -qo BatchMode=yes localhost true; then
+  if [[ ! -f ~/.ssh/id_rsa ]]; then
+    info "Generating new SSH key..."
+    ssh-keygen -f ~/.ssh/id_rsa -N ''
+  fi
+  ssh-keyscan -H localhost 2>/dev/null 1>> ~/.ssh/known_hosts
+  cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+  info "Authorized the SSH key to connect to localhost."
+fi
+
 # Install packages from APT.
 if [[ "$APT_UPDATE" != false ]]; then
   APT_UPDATED_BEFORE=$((UPDATE_APT_AFTER + 1))
@@ -146,31 +158,6 @@ if [[ "$APT_UPDATE" != false ]]; then
 fi
 info "Installing packages from APT..."
 sudo apt-get install -y aptitude curl git git-flow htop ntpdate tmux vim
-
-# Install Linuxbrew.
-info "Installing packages from Linuxbrew..."
-if [[ ! -f $HOME/.linuxbrew/bin/brew ]]; then
-  sudo apt-get install -y ruby
-  ruby -e "$(curl -fsSL \
-    https://raw.githubusercontent.com/Linuxbrew/install/master/install)"
-fi
-PATH="$HOME/.linuxbrew/bin:$PATH"
-brew install "$(dense \
-  https://raw.githubusercontent.com/ \
-  BurntSushi/ripgrep/master/pkg/brew/ripgrep.rb
-)"
-
-# Authorize the local SSH key for connecting to
-# localhost without password.
-if ! ssh -qo BatchMode=yes localhost true; then
-  if [[ ! -f ~/.ssh/id_rsa ]]; then
-    info "Generating new SSH key..."
-    ssh-keygen -f ~/.ssh/id_rsa -N ''
-  fi
-  ssh-keyscan -H localhost 2>/dev/null 1>> ~/.ssh/known_hosts
-  cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-  info "Authorized the SSH key to connect to localhost."
-fi
 
 # Install ZSH and Oh My ZSH!
 if [[ ! -x "$(command -v zsh)" ]]; then
