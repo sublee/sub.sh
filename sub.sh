@@ -150,6 +150,7 @@ sudo apt-get install -y aptitude curl git git-flow htop ntpdate tmux vim
 # Install Linuxbrew.
 info "Installing packages from Linuxbrew..."
 if [[ ! -f $HOME/.linuxbrew/bin/brew ]]; then
+  sudo apt-get install -y ruby
   ruby -e "$(curl -fsSL \
     https://raw.githubusercontent.com/Linuxbrew/install/master/install)"
 fi
