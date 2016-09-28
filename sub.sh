@@ -200,7 +200,7 @@ else
   RIPGREP_ARCHIVE=$(basename $RIPGREP_URL)
   pushd /usr/local
   if [[ ! -f /usr/local/src/$RIPGREP_ARCHIVE ]]; then
-    sudo wget $RIPGREP_URL -o src/~$RIPGREP_ARCHIVE
+    curl -L $RIPGREP_URL | sudo tee src/~$RIPGREP_ARCHIVE > /dev/null
     sudo mv src/~$RIPGREP_ARCHIVE src/$RIPGREP_ARCHIVE
   fi
   sudo tar xvzf src/$RIPGREP_ARCHIVE -C src
