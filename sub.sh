@@ -186,6 +186,29 @@ git-pull https://github.com/gmarik/Vundle.vim ~/.vim/bundle/Vundle.vim
 info "Setting up the tmux environment..."
 git-pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
+# Install ripgrep.
+RIPGREP_RELEASE=$(
+  curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)
+RIPGREP_VERSION=$(echo "$RIPGREP_RELEASE" | grep tag_name | cut -d '"' -f4)
+info "Installing ripgrep-${RIPGREP_VERSION}..."
+if command -v rg &>/dev/null && [[ $(rg --version) == $RIPGREP_VERSION ]]; then
+  echo "Already up-to-date."
+else
+  RIPGREP_URL=$(echo "$RIPGREP_RELEASE" | \
+                grep -e 'browser_download_url.\+x86_64.\+linux' | \
+                cut -d'"' -f4)
+  RIPGREP_ARCHIVE=$(basename $RIPGREP_URL)
+  pushd /usr/local
+  if [[ ! -f /usr/local/src/$RIPGREP_ARCHIVE ]]; then
+    sudo wget $RIPGREP_URL -o src/~$RIPGREP_ARCHIVE
+    sudo mv src/~$RIPGREP_ARCHIVE src/$RIPGREP_ARCHIVE
+  fi
+  sudo tar xvzf src/$RIPGREP_ARCHIVE -C src
+  sudo cp "src/${RIPGREP_ARCHIVE%.*.*}/rg" bin/rg
+  popd
+  echo "Installed at $(which rg)."
+fi
+
 # Apply subenv.
 info "Linking dot files from subenv..."
 git-pull https://github.com/sublee/subenv $SUBENV
