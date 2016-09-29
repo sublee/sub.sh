@@ -37,7 +37,6 @@ alias rm="rm -i"
 alias ll="ls -l"
 alias vim="vim -b"
 alias vi="vim -b"
-alias ack="ack-grep --ignore-file=ext:map --ignore-file=ext:svg"
 alias pt="ptpython"
 alias sub.sh="curl -sL sub.sh | bash -s -"
 
