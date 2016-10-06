@@ -174,16 +174,10 @@ git-pull https://github.com/zsh-users/zsh-autosuggestions \
 git-pull https://github.com/bobthecow/git-flow-completion \
          ~/.oh-my-zsh/custom/plugins/git-flow-completion
 
-# Install Pathogen and Vundle for Vim.
-info "Setting up the Vim environment..."
-if [[ ! -f ~/.vim/autoload/pathogen.vim ]]; then
-  mkdir -p ~/.vim/autoload
-  curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
-fi
-git-pull https://github.com/gmarik/Vundle.vim ~/.vim/bundle/Vundle.vim
-
-# Install TPM.
-info "Setting up the tmux environment..."
+# Install plugin managers for Vim and tmux.
+info "Setting up the Vim and tmux environment..."
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 git-pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # Install ripgrep.
@@ -219,6 +213,9 @@ sym-link $SUBENV/zshrc ~/.zshrc
 sym-link $SUBENV/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
 sym-link $SUBENV/vimrc ~/.vimrc
 sym-link $SUBENV/tmux.conf ~/.tmux.conf && tmux source ~/.tmux.conf || true
+
+# Install Vim plugins.
+vim -c PlugInstall -c qa
 
 # Setup a Python environment.
 if [[ "$PYTHON" = true ]]; then

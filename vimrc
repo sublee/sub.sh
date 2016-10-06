@@ -1,40 +1,34 @@
 " vim:ft=vim:et:ts=2:sw=2:sts=2:
 
-" vundle requires
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'gmarik/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 " plugins ---------------------------------------------------------------------
 
 " syntax highlighters
-Plugin 'plasticboy/vim-markdown'
-Plugin 'Jinja'
-Plugin 'othree/html5.vim'
+Plug 'plasticboy/vim-markdown'
+Plug 'Jinja'
+Plug 'othree/html5.vim'
 if version < 704
-  Plugin 'JulesWang/css.vim'
+  Plug 'JulesWang/css.vim'
 endif
-Plugin 'cakebaker/scss-syntax.vim'
-Plugin 'stephpy/vim-yaml'
-Plugin 'cespare/vim-toml'
-Plugin 'rust-lang/rust.vim'
-Plugin 'ekalinin/Dockerfile.vim'
+Plug 'cakebaker/scss-syntax.vim'
+Plug 'stephpy/vim-yaml'
+Plug 'cespare/vim-toml'
+Plug 'rust-lang/rust.vim'
+Plug 'ekalinin/Dockerfile.vim'
 
 " function extensions
-Plugin 'rhysd/committia.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'simnalamburt/vim-mundo'
-Plugin 'tmhedberg/matchit'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-sensible'
-Plugin 'Valloric/YouCompleteMe'
+Plug 'rhysd/committia.vim'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'scrooloose/syntastic'
+Plug 'simnalamburt/vim-mundo'
+Plug 'tmhedberg/matchit'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-unimpaired'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 " -----------------------------------------------------------------------------
-" vundle requires
-call vundle#end()
-filetype plugin indent on
+call plug#end()
 
 " Syntax highlighting.
 syntax on
@@ -120,7 +114,8 @@ silent! call pathogen#infect()
 autocmd VimEnter *
 \ if exists(':SyntasticCheck')
 \|  let g:syntastic_cpp_compiler_options = ' -std=c++11'
-\|  let g:syntastic_python_checkers=['flake8']
+\|  let g:syntastic_python_checkers = ['flake8']
+\|  let g:syntastic_always_populate_loc_list = 1
 \|endif
 
 " Mundo
