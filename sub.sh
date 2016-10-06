@@ -174,12 +174,6 @@ git-pull https://github.com/zsh-users/zsh-autosuggestions \
 git-pull https://github.com/bobthecow/git-flow-completion \
          ~/.oh-my-zsh/custom/plugins/git-flow-completion
 
-# Install plugin managers for Vim and tmux.
-info "Setting up the Vim and tmux environment..."
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-git-pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
 # Install ripgrep.
 RIPGREP_RELEASE=$(
   curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)
@@ -203,6 +197,12 @@ else
   echo "Installed at $(which rg)."
 fi
 
+# Install plugin managers for Vim and tmux.
+info "Setting up the Vim and tmux environment..."
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+git-pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 # Apply subenv.
 info "Linking dot files from subenv..."
 git-pull https://github.com/sublee/subenv $SUBENV
@@ -214,8 +214,10 @@ sym-link $SUBENV/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
 sym-link $SUBENV/vimrc ~/.vimrc
 sym-link $SUBENV/tmux.conf ~/.tmux.conf && tmux source ~/.tmux.conf || true
 
-# Install Vim plugins.
+# Install Vim and tmux plugins.
+info "Installing plugins for Vim and tmux..."
 vim -c PlugInstall -c qa
+~/.tmux/plugins/tpm/scripts/install_plugins.sh
 
 # Setup a Python environment.
 if [[ "$PYTHON" = true ]]; then
