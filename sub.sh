@@ -217,6 +217,7 @@ sym-link $SUBENV/tmux.conf ~/.tmux.conf && tmux source ~/.tmux.conf || true
 # Install Vim and tmux plugins.
 info "Installing plugins for Vim and tmux..."
 vim --noplugin -c PlugInstall -c qa
+stty sane
 ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 
 # Setup a Python environment.
