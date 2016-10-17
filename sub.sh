@@ -85,7 +85,7 @@ function fatal {
 function add-ppa {
   SRC="$1"
   if ! grep -h "^deb.*$SRC" /etc/apt/sources.list.d/* > /dev/null 2>&1; then
-    sudo add-apt-repository -y ppa:$SRC
+    sudo add-apt-repository -yu ppa:$SRC
   fi
 }
 
@@ -147,8 +147,11 @@ if [[ "$APT_UPDATE" != false ]]; then
   fi
   if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
     info "Updating APT package lists..."
-    add-ppa git-core/ppa  # Prefer the latest version of Git.
     sudo apt-get update
+    # Require to add PPAs.
+    sudo apt-get install -y software-properties-common
+    # Prefer the latest version of Git.
+    add-ppa git-core/ppa
     echo $TIMESTAMP > $APT_UPDATED_AT
   fi
 fi
