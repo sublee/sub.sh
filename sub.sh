@@ -84,8 +84,7 @@ function fatal {
 
 function add-ppa {
   SRC="$1"
-  grep -h "^deb.*$SRC" /etc/apt/sources.list.d/* > /dev/null 2>&1
-  if [[ $? -ne 0 ]]; then
+  if ! grep -h "^deb.*$SRC" /etc/apt/sources.list.d/* > /dev/null 2>&1; then
     sudo add-apt-repository -y ppa:$SRC
   fi
 }
