@@ -167,8 +167,8 @@ then
   fi
 fi
 info "Installing packages from APT..."
-sudo apt-get install -y \
-  aptitude curl git git-flow htop ntpdate shellcheck tmux vim
+sudo apt-get install -y aptitude curl git git-flow htop ntpdate tmux vim
+sudo apt-get install -y shellcheck || true
 
 # Authorize the local SSH key for connecting to
 # localhost without password.
