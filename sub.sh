@@ -87,7 +87,7 @@ function add-ppa {
   SRC="$1"
   if ! grep -h "^deb.*$SRC" /etc/apt/sources.list.d/*.list > /dev/null 2>&1
   then
-    sudo add-apt-repository -y ppa:$SRC
+    sudo add-apt-repository -y "ppa:$SRC"
   fi
 }
 
@@ -167,7 +167,8 @@ then
   fi
 fi
 info "Installing packages from APT..."
-sudo apt-get install -y aptitude curl git git-flow htop ntpdate tmux vim
+sudo apt-get install -y \
+  aptitude curl git git-flow htop ntpdate shellcheck tmux vim
 
 # Authorize the local SSH key for connecting to
 # localhost without password.
