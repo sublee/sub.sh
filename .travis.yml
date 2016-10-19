@@ -8,8 +8,10 @@ env:
            Y6NYHFWZycqxSJu0uBVwpWpvTgl9sInNMlLSXBEXSobtxLiDlOrDFudB5duu0VNYbSZ\
            OVOAKyeVvn7mAUjOvS6ZrKa15AYWye+qYCYj4="
 script:
-- docker run -it --name subenv -v $PWD/sub.sh:/sub.sh ubuntu:14.04 /sub.sh
-- docker start -ia subenv
+- docker run -it --name xenial -v "$PWD/sub.sh:/sub.sh" ubuntu:16.04 /sub.sh
+- docker start -ia xenial
+- docker run -it --name trusty -v "$PWD/sub.sh:/sub.sh" ubuntu:14.04 /sub.sh
+- docker start -ia trusty
 after_success:
 - |
   rm -rf _sub.sh
