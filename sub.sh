@@ -259,6 +259,10 @@ if [[ -n "$TERM" ]]; then
   )"
 fi
 info "Terraformed successfully by sub.sh."
+echo "subenv: $(git -C "$SUBENV" rev-parse --short HEAD)"
+echo "vim: $(vim --version | awk '{ print $5; exit }')"
+echo "git: $(git --version | awk '{ print $3 }')"
+echo "rg: $(rg --version)"
 if [[ -d "$BAK" ]]; then
   info "Backup files are stored in $BAK"
 fi
