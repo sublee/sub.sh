@@ -136,6 +136,11 @@ trap failed ERR
 cd ~
 
 # Check if sudo requires password.
+if [[ ! -x "$(command -v sudo)" ]]
+then
+  apt-get update
+  apt-get install -y sudo
+fi
 if ! >&/dev/null sudo -n true
 then
   err "Make sure $USER can use sudo without password."
