@@ -276,11 +276,11 @@ then
     01f399a82f34e37edaeda7a017e0f8e9555fe9a2/sublee.txt
   )"
 fi
-info "Terraformed successfully by sub.sh."
 echo "subenv: $(git -C "$SUBENV" rev-parse --short HEAD)"
 echo "vim: $(vim --version | awk '{ print $5; exit }')"
 echo "git: $(git --version | awk '{ print $3 }')"
 echo "rg: $(rg --version)"
+info "Terraformed successfully by sub.sh."
 if [[ -d "$BAK" ]]
 then
   info "Backup files are stored in $BAK"
