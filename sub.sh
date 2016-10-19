@@ -10,8 +10,8 @@
 #  $ wget -qO- sub.sh | bash [-s - OPTIONS]
 #
 set -e; function _ {
-TIMESTAMP=$(date +%s)
-USER=$(whoami)
+TIMESTAMP="$(date +%s)"
+USER="$(whoami)"
 SUBENV=~/.subenv
 VIRTUALENV=~/env
 
@@ -62,7 +62,7 @@ if [[ -z $TERM ]]; then
   }
 else
   function secho {
-    echo -e "$(tput setaf $1)$2$(tput sgr0)"
+    echo -e "$(tput setaf "$1")$2$(tput sgr0)"
   }
 fi
 
@@ -94,11 +94,11 @@ function git-pull {
   # just pull from the remote.
   SRC="$1"
   DEST="$2"
-  if [[ ! -d $DEST ]]; then
-    mkdir -p $DEST
-    git clone $SRC $DEST
+  if [[ ! -d "$DEST" ]]; then
+    mkdir -p "$DEST"
+    git clone "$SRC" "$DEST"
   else
-    git -C $DEST pull
+    git -C "$DEST" pull
   fi
 }
 
@@ -108,17 +108,17 @@ function sym-link {
   SRC="$1"
   DEST="$2"
   if [[ -e $DEST || -L $DEST ]]; then
-    if [[ "$(readlink -f $SRC)" == "$(readlink -f $DEST)" ]]; then
+    if [[ "$(readlink -f "$SRC")" == "$(readlink -f "$DEST")" ]]; then
       return
     fi
-    mkdir -p $BAK
-    mv $DEST $BAK
+    mkdir -p "$BAK"
+    mv "$DEST" "$BAK"
   fi
-  ln -s $SRC $DEST
+  ln -s "$SRC" "$DEST"
 }
 
 function dense {
-  echo $@ | sed 's/ //g'
+  echo "${*// }"
 }
 
 function failed {
@@ -141,9 +141,9 @@ fi
 
 # Install packages from APT.
 if [[ "$APT_UPDATE" != false ]]; then
-  APT_UPDATED_BEFORE=$((UPDATE_APT_AFTER + 1))
+  APT_UPDATED_BEFORE="$((UPDATE_APT_AFTER + 1))"
   if [[ "$APT_UPDATE" == auto && -f $APT_UPDATED_AT ]]; then
-    APT_UPDATED_BEFORE=$(($TIMESTAMP - $(cat $APT_UPDATED_AT)))
+    APT_UPDATED_BEFORE="$((TIMESTAMP - $(cat "$APT_UPDATED_AT")))"
   fi
   if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
     info "Updating APT package lists..."
@@ -154,7 +154,7 @@ if [[ "$APT_UPDATE" != false ]]; then
     add-ppa git-core/ppa
     # Update the APT package lists.
     sudo apt-get update
-    echo $TIMESTAMP > $APT_UPDATED_AT
+    echo "$TIMESTAMP" > "$APT_UPDATED_AT"
   fi
 fi
 info "Installing packages from APT..."
@@ -178,7 +178,7 @@ if [[ ! -x "$(command -v zsh)" ]]; then
   sudo apt-get install -y zsh
 fi
 info "Setting up the Zsh environment..."
-sudo chsh -s `which zsh` $USER
+sudo chsh -s "$(which zsh)" "$USER"
 git-pull https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
 git-pull https://github.com/zsh-users/zsh-syntax-highlighting \
          ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
@@ -188,24 +188,24 @@ git-pull https://github.com/bobthecow/git-flow-completion \
          ~/.oh-my-zsh/custom/plugins/git-flow-completion
 
 # Install ripgrep.
-RIPGREP_RELEASE=$(
-  curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)
-RIPGREP_VERSION=$(echo "$RIPGREP_RELEASE" | grep tag_name | cut -d '"' -f4)
-info "Installing ripgrep-${RIPGREP_VERSION}..."
-if command -v rg &>/dev/null && [[ $(rg --version) == $RIPGREP_VERSION ]]; then
+RG_RELEASE="$(curl -s \
+              https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)"
+RG_VERSION="$(echo "$RG_RELEASE" | grep tag_name | cut -d '"' -f4)"
+info "Installing ripgrep-${RG_VERSION}..."
+if command -v rg &>/dev/null && [[ "$(rg --version)" == "$RG_VERSION" ]]; then
   echo "Already up-to-date."
 else
-  RIPGREP_URL=$(echo "$RIPGREP_RELEASE" | \
-                grep -e 'browser_download_url.\+x86_64.\+linux' | \
-                cut -d'"' -f4)
-  RIPGREP_ARCHIVE=$(basename $RIPGREP_URL)
+  RG_URL="$(echo "$RG_RELEASE" | \
+            grep -e 'browser_download_url.\+x86_64.\+linux' | \
+            cut -d'"' -f4)"
+  RG_ARCHIVE="$(basename "$RG_URL")"
   pushd /usr/local
-  if [[ ! -f /usr/local/src/$RIPGREP_ARCHIVE ]]; then
-    curl -L $RIPGREP_URL | sudo tee src/~$RIPGREP_ARCHIVE > /dev/null
-    sudo mv src/~$RIPGREP_ARCHIVE src/$RIPGREP_ARCHIVE
+  if [[ ! -f "/usr/local/src/$RG_ARCHIVE" ]]; then
+    curl -L "$RG_URL" | sudo tee "src/~$RG_ARCHIVE" > /dev/null
+    sudo mv "src/~$RG_ARCHIVE" "src/$RG_ARCHIVE"
   fi
-  sudo tar xvzf src/$RIPGREP_ARCHIVE -C src
-  sudo cp "src/${RIPGREP_ARCHIVE%.*.*}/rg" bin/rg
+  sudo tar xvzf "src/$RG_ARCHIVE" -C src
+  sudo cp "src/${RG_ARCHIVE%.*.*}/rg" bin/rg
   popd
   echo "Installed at $(which rg)."
 fi
@@ -221,11 +221,11 @@ info "Linking dot files from subenv..."
 git-pull https://github.com/sublee/subenv $SUBENV
 git config --global include.path $SUBENV/git-aliases
 # sudo sym-link $SUBENV/limits.conf /etc/security/limits.conf
-sym-link $SUBENV/profile ~/.profile
-sym-link $SUBENV/zshrc ~/.zshrc
-sym-link $SUBENV/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
-sym-link $SUBENV/vimrc ~/.vimrc
-sym-link $SUBENV/tmux.conf ~/.tmux.conf && tmux source ~/.tmux.conf || true
+sym-link "$SUBENV/profile" ~/.profile
+sym-link "$SUBENV/zshrc" ~/.zshrc
+sym-link "$SUBENV/sublee.zsh-theme" ~/.oh-my-zsh/custom/sublee.zsh-theme
+sym-link "$SUBENV/vimrc" ~/.vimrc
+sym-link "$SUBENV/tmux.conf" ~/.tmux.conf && (tmux source ~/.tmux.conf || true)
 
 # Install Vim and tmux plugins.
 info "Installing plugins for Vim and tmux..."
@@ -241,32 +241,32 @@ if [[ "$PYTHON" = true ]]; then
   if [[ ! -x "$(command -v virtualenv)" ]]; then
     sudo easy_install virtualenv
   fi
-  if [[ ! -d $VIRTUALENV ]]; then
-    virtualenv $VIRTUALENV
+  if [[ ! -d "$VIRTUALENV" ]]; then
+    virtualenv "$VIRTUALENV"
   fi
-  $VIRTUALENV/bin/pip install -U pdbpp
-  sym-link $SUBENV/python-startup.py ~/.python-startup
-  SITE_PACKAGES=$($VIRTUALENV/bin/python -c \
+  "$VIRTUALENV/bin/pip" install -U pdbpp
+  sym-link "$SUBENV/python-startup.py" ~/.python-startup
+  SITE_PACKAGES=$("$VIRTUALENV/bin/python" -c \
     "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
-  sym-link $SUBENV/python-debug.pth $SITE_PACKAGES/__debug__.pth
+  sym-link "$SUBENV/python-debug.pth" "$SITE_PACKAGES/__debug__.pth"
 fi
 
 # Show my emblem and result.
-if [[ -n $TERM ]]; then
+if [[ -n "$TERM" ]]; then
   curl "$(dense \
     https://gist.githubusercontent.com/sublee/d22ddfdf3de690bb60ec/raw/ \
     01f399a82f34e37edaeda7a017e0f8e9555fe9a2/sublee.txt
   )"
 fi
 info "Terraformed successfully by sub.sh."
-if [[ -d $BAK ]]; then
+if [[ -d "$BAK" ]]; then
   info "Backup files are stored in $BAK"
 fi
-if [[ $SHELL != $(which zsh) && -z $ZSH ]]; then
+if [[ "$SHELL" != "$(which zsh)" && -z "$ZSH" ]]; then
   info "To use terraformed ZSH, relogin or"
   echo
   info "  $ zsh"
   echo
 fi
 
-}; _ $@
+}; _ "$@"
