@@ -56,7 +56,8 @@ for i in "$@"; do
   esac
 done
 
-if [[ -z $TERM ]]; then
+if [[ -z $TERM ]]
+then
   function secho {
     echo "$2"
   }
@@ -84,7 +85,8 @@ function fatal {
 
 function add-ppa {
   SRC="$1"
-  if ! grep -h "^deb.*$SRC" /etc/apt/sources.list.d/* > /dev/null 2>&1; then
+  if ! grep -h "^deb.*$SRC" /etc/apt/sources.list.d/*.list > /dev/null 2>&1
+  then
     sudo add-apt-repository -y ppa:$SRC
   fi
 }
@@ -94,7 +96,8 @@ function git-pull {
   # just pull from the remote.
   SRC="$1"
   DEST="$2"
-  if [[ ! -d "$DEST" ]]; then
+  if [[ ! -d "$DEST" ]]
+  then
     mkdir -p "$DEST"
     git clone "$SRC" "$DEST"
   else
@@ -107,8 +110,10 @@ function sym-link {
   # the destination path, it moves that to $BAK.
   SRC="$1"
   DEST="$2"
-  if [[ -e $DEST || -L $DEST ]]; then
-    if [[ "$(readlink -f "$SRC")" == "$(readlink -f "$DEST")" ]]; then
+  if [[ -e $DEST || -L $DEST ]]
+  then
+    if [[ "$(readlink -f "$SRC")" == "$(readlink -f "$DEST")" ]]
+    then
       return
     fi
     mkdir -p "$BAK"
@@ -131,7 +136,8 @@ trap failed ERR
 cd ~
 
 # Check if sudo requires password.
-if ! >&/dev/null sudo -n true; then
+if ! >&/dev/null sudo -n true
+then
   err "Make sure $USER can use sudo without password."
   echo
   err "  # echo '$USER ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-$USER"
@@ -140,12 +146,15 @@ if ! >&/dev/null sudo -n true; then
 fi
 
 # Install packages from APT.
-if [[ "$APT_UPDATE" != false ]]; then
+if [[ "$APT_UPDATE" != false ]]
+then
   APT_UPDATED_BEFORE="$((UPDATE_APT_AFTER + 1))"
-  if [[ "$APT_UPDATE" == auto && -f $APT_UPDATED_AT ]]; then
+  if [[ "$APT_UPDATE" == auto && -f $APT_UPDATED_AT ]]
+  then
     APT_UPDATED_BEFORE="$((TIMESTAMP - $(cat "$APT_UPDATED_AT")))"
   fi
-  if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
+  if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]
+  then
     info "Updating APT package lists..."
     # Require to add PPAs.
     sudo apt-get update
@@ -162,8 +171,10 @@ sudo apt-get install -y aptitude curl git git-flow htop ntpdate tmux vim
 
 # Authorize the local SSH key for connecting to
 # localhost without password.
-if ! ssh -qo BatchMode=yes localhost true; then
-  if [[ ! -f ~/.ssh/id_rsa ]]; then
+if ! ssh -qo BatchMode=yes localhost true
+then
+  if [[ ! -f ~/.ssh/id_rsa ]]
+  then
     info "Generating new SSH key..."
     ssh-keygen -f ~/.ssh/id_rsa -N ''
   fi
@@ -173,7 +184,8 @@ if ! ssh -qo BatchMode=yes localhost true; then
 fi
 
 # Install ZSH and Oh My ZSH!
-if [[ ! -x "$(command -v zsh)" ]]; then
+if [[ ! -x "$(command -v zsh)" ]]
+then
   info "Installing Zsh..."
   sudo apt-get install -y zsh
 fi
@@ -192,7 +204,8 @@ RG_RELEASE="$(curl -s \
               https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)"
 RG_VERSION="$(echo "$RG_RELEASE" | grep tag_name | cut -d '"' -f4)"
 info "Installing ripgrep-${RG_VERSION}..."
-if command -v rg &>/dev/null && [[ "$(rg --version)" == "$RG_VERSION" ]]; then
+if command -v rg &>/dev/null && [[ "$(rg --version)" == "$RG_VERSION" ]]
+then
   echo "Already up-to-date."
 else
   RG_URL="$(echo "$RG_RELEASE" | \
@@ -200,7 +213,8 @@ else
             cut -d'"' -f4)"
   RG_ARCHIVE="$(basename "$RG_URL")"
   pushd /usr/local
-  if [[ ! -f "/usr/local/src/$RG_ARCHIVE" ]]; then
+  if [[ ! -f "/usr/local/src/$RG_ARCHIVE" ]]
+  then
     curl -L "$RG_URL" | sudo tee "src/~$RG_ARCHIVE" > /dev/null
     sudo mv "src/~$RG_ARCHIVE" "src/$RG_ARCHIVE"
   fi
@@ -235,13 +249,16 @@ TMUX_PLUGIN_MANAGER_PATH=~/.tmux/plugins/ \
   ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 
 # Setup a Python environment.
-if [[ "$PYTHON" = true ]]; then
+if [[ "$PYTHON" = true ]]
+then
   info "Setting up the Python environment..."
   sudo apt-get install -y python python-dev python-setuptools
-  if [[ ! -x "$(command -v virtualenv)" ]]; then
+  if [[ ! -x "$(command -v virtualenv)" ]]
+  then
     sudo easy_install virtualenv
   fi
-  if [[ ! -d "$VIRTUALENV" ]]; then
+  if [[ ! -d "$VIRTUALENV" ]]
+  then
     virtualenv "$VIRTUALENV"
   fi
   "$VIRTUALENV/bin/pip" install -U pdbpp
@@ -252,7 +269,8 @@ if [[ "$PYTHON" = true ]]; then
 fi
 
 # Show my emblem and result.
-if [[ -n "$TERM" ]]; then
+if [[ -n "$TERM" ]]
+then
   curl "$(dense \
     https://gist.githubusercontent.com/sublee/d22ddfdf3de690bb60ec/raw/ \
     01f399a82f34e37edaeda7a017e0f8e9555fe9a2/sublee.txt
@@ -263,10 +281,12 @@ echo "subenv: $(git -C "$SUBENV" rev-parse --short HEAD)"
 echo "vim: $(vim --version | awk '{ print $5; exit }')"
 echo "git: $(git --version | awk '{ print $3 }')"
 echo "rg: $(rg --version)"
-if [[ -d "$BAK" ]]; then
+if [[ -d "$BAK" ]]
+then
   info "Backup files are stored in $BAK"
 fi
-if [[ "$SHELL" != "$(which zsh)" && -z "$ZSH" ]]; then
+if [[ "$SHELL" != "$(which zsh)" && -z "$ZSH" ]]
+then
   info "To use terraformed ZSH, relogin or"
   echo
   info "  $ zsh"
