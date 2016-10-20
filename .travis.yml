@@ -16,17 +16,10 @@ script:
 - docker start -ia subenv
 after_success:
 - |
-  curl -Lo travis_after_all.py \
-    https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
-  python travis_after_all.py https://api.travis-ci.com
-  if [[ -f .to_export_back ]]
+  if [[ "$TRAVIS_JOB_NUMBER" != *.1 ]]
   then
-    export $(cat .to_export_back)
-    if [[ "$BUILD_LEADER" != YES ]] || \
-       [[ "$BUILD_AGGREGATE_STATUS" != others_succeeded ]]
-    then
-      exit
-    fi
+    echo "sub.sh deployment skipped."
+    exit 0
   fi
 - |
   rm -rf _sub.sh
