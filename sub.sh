@@ -277,7 +277,8 @@ then
     "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
   sym-link "$SUBENV/python-debug.pth" "$SITE_PACKAGES/__debug__.pth"
   mkdir -p ~/.ipython/profile_default
-  sym-link "$SUBENV/ipython_config.py" ~/.ipython/profile_default
+  sym-link "$SUBENV/ipython_config.py" \
+    ~/.ipython/profile_default/ipython_config.py
 fi
 
 # Show my emblem and result.
