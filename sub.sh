@@ -122,6 +122,10 @@ function sym-link {
   ln -s "$SRC" "$DEST"
 }
 
+function executable {
+  which "$1" &>/dev/null
+}
+
 function dense {
   echo "${*// }"
 }
@@ -136,7 +140,7 @@ trap failed ERR
 cd ~
 
 # Check if sudo requires password.
-if [[ ! -x "$(command -v sudo)" ]]
+if ! executable sudo
 then
   apt-get update
   apt-get install -y sudo
@@ -190,7 +194,7 @@ then
 fi
 
 # Install ZSH and Oh My ZSH!
-if [[ ! -x "$(command -v zsh)" ]]
+if ! executable zsh
 then
   info "Installing Zsh..."
   sudo apt-get install -y zsh
@@ -210,7 +214,7 @@ RG_RELEASE="$(curl -s \
               https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)"
 RG_VERSION="$(echo "$RG_RELEASE" | grep tag_name | cut -d '"' -f4)"
 info "Installing ripgrep-${RG_VERSION}..."
-if command -v rg &>/dev/null && [[ "$(rg --version)" == "$RG_VERSION" ]]
+if executable rg && [[ "$(rg --version)" == "$RG_VERSION" ]]
 then
   echo "Already up-to-date."
 else
@@ -259,7 +263,7 @@ if [[ "$PYTHON" = true ]]
 then
   info "Setting up the Python environment..."
   sudo apt-get install -y python python-dev python-setuptools
-  if [[ ! -x "$(command -v virtualenv)" ]]
+  if ! executable virtualenv
   then
     sudo easy_install virtualenv
   fi
