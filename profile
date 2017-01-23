@@ -1,4 +1,4 @@
-#!/bin/env sh
+#!/bin/env bash
 # vim:ft=sh:et:ts=2:sw=2:sts=2:
 
 # Configure the system.
@@ -8,27 +8,27 @@ export LC_ALL=$LANG
 
 # Set $PATH.
 function prepend_path {
-  [[ -d "$@" ]] && export PATH="$@:$PATH"
+  [[ -d "$@" ]] && export PATH="$*:$PATH"
 }
-prepend_path $HOME/bin
-prepend_path $HOME/.local/bin
-prepend_path $HOME/.linuxbrew/bin
-prepend_path $HOME/.cargo/bin
+prepend_path "$HOME"/bin
+prepend_path "$HOME"/.local/bin
+prepend_path "$HOME"/.linuxbrew/bin
+prepend_path "$HOME"/.cargo/bin
 
 # Don't quit by ^D.
 set -o ignoreeof
 
 # Python environment.
-if [ -f $HOME/env/bin/activate ]; then
-  source $HOME/env/bin/activate
+if [[ -f "$HOME"/env/bin/activate ]]; then
+  source "$HOME"/env/bin/activate
 fi
-if [ -f $HOME/.python-startup ]; then
-  export PYTHONSTARTUP=$HOME/.python-startup
+if [[ -f "$HOME"/.python-startup ]]; then
+  export PYTHONSTARTUP="$HOME"/.python-startup
 fi
 
 # Go environment.
-if [ -d $HOME/go ]; then
-  export GOPATH=$HOME/go
+if [[ -d "$HOME"/go ]]; then
+  export GOPATH="$HOME"/go
 fi
 
 # Aliases.
@@ -43,12 +43,12 @@ alias sub.sh="curl -sL sub.sh | bash -s -"
 # Remove temporary files such as Vim swap or pyc.
 function rm-tmp() {
   REGEX=".*\.(sw[ponml]|pyc)$"
-  find . -regextype posix-egrep -regex $REGEX -delete -print
+  find . -regextype posix-egrep -regex "$REGEX" -delete -print
 }
 
 # Include files in ~/.profile.d.
-if [ -d $HOME/.profile.d ]; then
-  for f in $HOME/.profile.d/*; do
-    source $f
+if [ -d "$HOME"/.profile.d ]; then
+  for f in "$HOME"/.profile.d/*; do
+    source "$f"
   done
 fi
