@@ -72,6 +72,13 @@ function info {
   secho 6 "$1"
 }
 
+WARNED=0
+function warn {
+  # Print a yellow colored error message.
+  secho 3 "$1"
+  WARNED=$((WARNED+1))
+}
+
 function err {
   # Print a red colored error message.
   secho 1 "$1"
@@ -271,7 +278,14 @@ then
   then
     virtualenv "$VIRTUALENV"
   fi
-  "$VIRTUALENV/bin/pip" install -U pdbpp ipython
+  function pip-install {
+    if ! "$VIRTUALENV/bin/pip" install -U "$1"
+    then
+      warn "Failed to install $1."
+    fi
+  }
+  pip-install pdbpp
+  pip-install ipython
   sym-link "$SUBENV/python-startup.py" ~/.python-startup
   SITE_PACKAGES=$("$VIRTUALENV/bin/python" -c \
     "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
@@ -281,7 +295,7 @@ then
     ~/.ipython/profile_default/ipython_config.py
 fi
 
-# Show my emblem and result.
+# Show my emblem.
 if [[ -n "$TERM" ]]
 then
   curl "$(dense \
@@ -289,11 +303,22 @@ then
     01f399a82f34e37edaeda7a017e0f8e9555fe9a2/sublee.txt
   )"
 fi
+
+# Print installed versions.
 echo "subenv: $(git -C "$SUBENV" rev-parse --short HEAD)"
 echo "vim: $(vim --version | awk '{ print $5; exit }')"
 echo "git: $(git --version | awk '{ print $3 }')"
 echo "rg: $(rg --version)"
+
+# Notify the result.
 info "Terraformed successfully by sub.sh."
+if [[ "$WARNED" -eq 1 ]]
+then
+  warn "But there was 1 warning."
+elif [[ "$WARNED" -gt 1 ]]
+then
+  warn "But there were $WARNED warnings."
+fi
 if [[ -d "$BAK" ]]
 then
   info "Backup files are stored in $BAK"
