@@ -116,6 +116,13 @@ autocmd VimEnter *
 \|  nnoremap <F5> :MundoToggle<CR>
 \|endif
 
+" ALE
+autocmd VimEnter *
+\ if exists(':ALE')
+\|  nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+\|  nmap <silent> <C-j> <Plug>(ale_next_wrap)
+\|endif
+
 " YouCompleteMe
 autocmd VimEnter *
 \ if exists('g:ycm_goto_buffer_command')
