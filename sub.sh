@@ -149,8 +149,8 @@ cd ~
 # Check if sudo requires password.
 if ! executable sudo
 then
-  apt-get update
-  apt-get install -y sudo
+  apt update
+  apt install -y sudo
 fi
 if ! >&/dev/null sudo -n true
 then
@@ -173,18 +173,18 @@ then
   then
     info "Updating APT package lists..."
     # Require to add PPAs.
-    sudo apt-get update
-    sudo apt-get install -y software-properties-common
+    sudo apt update
+    sudo apt install -y software-properties-common
     # Prefer the latest version of Git.
     add-ppa git-core/ppa
     # Update the APT package lists.
-    sudo apt-get update
+    sudo apt update
     echo "$TIMESTAMP" > "$APT_UPDATED_AT"
   fi
 fi
 info "Installing packages from APT..."
-sudo apt-get install -y aptitude curl git git-flow htop ntpdate tmux vim
-sudo apt-get install -y shellcheck || true
+sudo apt install -y aptitude curl git git-flow htop ntpdate tmux vim
+sudo apt install -y shellcheck || true
 
 # Authorize the local SSH key for connecting to
 # localhost without password.
@@ -204,7 +204,7 @@ fi
 if ! executable zsh
 then
   info "Installing Zsh..."
-  sudo apt-get install -y zsh
+  sudo apt install -y zsh
 fi
 info "Setting up the Zsh environment..."
 sudo chsh -s "$(which zsh)" "$USER"
@@ -241,6 +241,16 @@ else
   echo "Installed at $(which rg)."
 fi
 
+# Upgrade Vim.
+VIM_VERSION=$(vim --version | awk '{ print $5; exit }')
+if [[ "$VIM_VERSION" = 7.* ]]
+then
+  info "Upgrading Vim from $VIM_VERSION..."
+  sudo add-apt-repository ppa:jonathonf/vim
+  sudo apt update
+  sudo apt install -y vim
+fi
+
 # Install plugin managers for Vim and tmux.
 info "Setting up the Vim and tmux environment..."
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
@@ -269,7 +279,7 @@ TMUX_PLUGIN_MANAGER_PATH=~/.tmux/plugins/ \
 if [[ "$PYTHON" = true ]]
 then
   info "Setting up the Python environment..."
-  sudo apt-get install -y python python-dev python-setuptools
+  sudo aptinstall -y python python-dev python-setuptools
   if ! executable virtualenv
   then
     sudo easy_install virtualenv

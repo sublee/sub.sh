@@ -19,13 +19,13 @@ Plug 'ekalinin/Dockerfile.vim'
 " function extensions
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'scrooloose/syntastic'
 Plug 'simnalamburt/vim-mundo'
 Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'w0rp/ale'
 
 " -----------------------------------------------------------------------------
 call plug#end()
@@ -109,15 +109,6 @@ setlocal spelllang=en_us
 
 " Pathogen
 silent! call pathogen#infect()
-
-" Syntastic
-autocmd VimEnter *
-\ if exists(':SyntasticCheck')
-\|  let g:syntastic_cpp_compiler_options = ' -std=c++11'
-\|  let g:syntastic_python_checkers = ['flake8']
-\|  let g:syntastic_sh_checkers = ['shellcheck']
-\|  let g:syntastic_always_populate_loc_list = 1
-\|endif
 
 " Mundo
 autocmd VimEnter *
