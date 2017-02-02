@@ -246,7 +246,7 @@ VIM_VERSION=$(vim --version | awk '{ print $5; exit }')
 if [[ "$VIM_VERSION" = 7.* ]]
 then
   info "Upgrading Vim from $VIM_VERSION..."
-  sudo add-apt-repository ppa:jonathonf/vim
+  add-ppa jonathonf/vim
   sudo apt update
   sudo apt install -y vim
 fi
