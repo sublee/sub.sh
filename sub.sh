@@ -279,7 +279,7 @@ TMUX_PLUGIN_MANAGER_PATH=~/.tmux/plugins/ \
 if [[ "$PYTHON" = true ]]
 then
   info "Setting up the Python environment..."
-  sudo aptinstall -y python python-dev python-setuptools
+  sudo apt install -y python python-dev python-setuptools
   if ! executable virtualenv
   then
     sudo easy_install virtualenv
