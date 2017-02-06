@@ -9,7 +9,8 @@
 #  $ curl -sL sub.sh | bash [-s - OPTIONS]
 #  $ wget -qO- sub.sh | bash [-s - OPTIONS]
 #
-set -e; function _ {
+set -e
+{
 TIMESTAMP="$(date +%s)"
 USER="$(whoami)"
 SUBENV=~/.subenv
@@ -341,4 +342,4 @@ then
   echo
 fi
 
-}; _ "$@"
+}
