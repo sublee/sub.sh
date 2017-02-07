@@ -184,7 +184,7 @@ then
   fi
 fi
 info "Installing packages from APT..."
-sudo apt install -y aptitude curl git git-flow htop ntpdate tmux vim
+sudo apt install -y aptitude curl git git-flow htop ntpdate tmux
 sudo apt install -y shellcheck || true
 
 # Authorize the local SSH key for connecting to
@@ -243,10 +243,23 @@ else
 fi
 
 # Upgrade Vim.
-VIM_VERSION=$(vim --version | awk '{ print $5; exit }')
-if [[ "$VIM_VERSION" = 7.* ]]
+INSTALL_VIM=true
+if executable vim
 then
-  info "Upgrading Vim from $VIM_VERSION..."
+  VIM_VERSION=$(vim --version | awk '{ print $5; exit }')
+  if [[ "$VIM_VERSION" = 8.* ]]
+  then
+    INSTALL_VIM=false
+  fi
+fi
+if [[ "$INSTALL_VIM" != false ]]
+then
+  if [[ -z "$VIM_VERSION" ]]
+  then
+    info "Installing Vim..."
+  else
+    info "Upgrading Vim from $VIM_VERSION..."
+  fi
   add-ppa jonathonf/vim
   sudo apt update
   sudo apt install -y vim
