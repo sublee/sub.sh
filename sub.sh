@@ -184,7 +184,7 @@ then
   fi
 fi
 info "Installing packages from APT..."
-sudo apt install -y aptitude curl git git-flow htop ntpdate tmux
+sudo apt install -y aptitude curl git git-flow htop ntpdate tmux tree
 sudo apt install -y shellcheck || true
 
 # Authorize the local SSH key for connecting to
@@ -262,7 +262,7 @@ then
   fi
   add-ppa jonathonf/vim
   sudo apt update
-  sudo apt install -y vim
+  sudo apt install -y vim vim-nox vim-nox-py2
 fi
 
 # Install plugin managers for Vim and tmux.
