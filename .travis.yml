@@ -4,15 +4,15 @@ services:
 - docker
 env:
   global:
-  - secure: "tAbUBMNusAs14BegrQMjfRtqndfveAruw3kTD2QcUMFyxgWuORj3tuiigjvkr4Uk+\
-             VwY6NYHFWZycqxSJu0uBVwpWpvTgl9sInNMlLSXBEXSobtxLiDlOrDFudB5duu0VN\
-             YbSZOVOAKyeVvn7mAUjOvS6ZrKa15AYWye+qYCYj4="
+  - secure: "iSIergY/VgRH2wfECNoTQFPh+BjdMMUExPS8KqQWvbSSgYMgPnfXGp8BVZkUKO1o0\
+             SZ8AGHHllC1+XUZOkbYjcAzCI3S4ly9GMpgraAnxXmQOTAt3HLE+9K8e9J7Fmpizb\
+             7ojLm9tYursZf9vzOv3iBlIpEM52N7BM0UQ4qeBGc="
   matrix:
   - IMAGE=ubuntu:16.04
   - IMAGE=ubuntu:14.04
 script:
-- docker run -it --name subenv -v "$PWD/sub.sh:/sub.sh" "$IMAGE" /sub.sh
-- docker start -ia subenv
+- docker run -it --name sub.sh -v "$PWD/sub.sh:/sub.sh" "$IMAGE" /sub.sh
+- docker start -ia sub.sh
 after_success:
 - |
   if [[ "$TRAVIS_JOB_NUMBER" != *.1 ]]
@@ -21,18 +21,18 @@ after_success:
     exit 0
   fi
 - |
-  rm -rf _sub.sh
-  mkdir _sub.sh
-  cd _sub.sh
+  rm -rf .gh-pages
+  mkdir .gh-pages
+  cd .gh-pages
 - |
   echo sub.sh > CNAME
   touch .nojekyll
-  python ../sub.sh-web/build.py .
+  python ../web/build.py .
 - |
   export REPO="https://$GITHUB_TOKEN@github.com/sublee/sub.sh"
   git init
   git config user.name "Heungsub Lee"
   git config user.email "sub@subl.ee"
   git add .
-  git commit -m "Deploy sub.sh from subenv-$TRAVIS_COMMIT"
-  git push -qf $REPO master:gh-pages > /dev/null 2>&1
+  git commit -m "Deploy to https://sub.sh/ ($TRAVIS_COMMIT)"
+  git push -qf "$REPO" master:gh-pages > /dev/null 2>&1
