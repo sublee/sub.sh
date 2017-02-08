@@ -13,7 +13,7 @@ set -e
 {
 TIMESTAMP="$(date +%s)"
 USER="$(whoami)"
-SUBENV=~/.subenv
+SUBSH=~/.sub.sh
 VIRTUALENV=~/env
 
 # Where some backup files to be stored.
@@ -271,16 +271,15 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 git-pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-# Apply subenv.
-info "Linking dot files from subenv..."
-git-pull https://github.com/sublee/subenv $SUBENV
-git config --global include.path $SUBENV/git-aliases
-# sudo sym-link $SUBENV/limits.conf /etc/security/limits.conf
-sym-link "$SUBENV/profile" ~/.profile
-sym-link "$SUBENV/zshrc" ~/.zshrc
-sym-link "$SUBENV/sublee.zsh-theme" ~/.oh-my-zsh/custom/sublee.zsh-theme
-sym-link "$SUBENV/vimrc" ~/.vimrc
-sym-link "$SUBENV/tmux.conf" ~/.tmux.conf && (tmux source ~/.tmux.conf || true)
+# Apply sub.sh.
+info "Linking dot files from sub.sh..."
+git-pull https://github.com/sublee/sub.sh "$SUBSH"
+git config --global include.path "$SUBSH/git-aliases"
+sym-link "$SUBSH/profile" ~/.profile
+sym-link "$SUBSH/zshrc" ~/.zshrc
+sym-link "$SUBSH/sublee.zsh-theme" ~/.oh-my-zsh/custom/sublee.zsh-theme
+sym-link "$SUBSH/vimrc" ~/.vimrc
+sym-link "$SUBSH/tmux.conf" ~/.tmux.conf && (tmux source ~/.tmux.conf || true)
 
 # Install Vim and tmux plugins.
 info "Installing plugins for Vim and tmux..."
@@ -310,12 +309,12 @@ then
   }
   pip-install pdbpp
   pip-install ipython
-  sym-link "$SUBENV/python-startup.py" ~/.python-startup
+  sym-link "$SUBSH/python-startup.py" ~/.python-startup
   SITE_PACKAGES=$("$VIRTUALENV/bin/python" -c \
     "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
-  sym-link "$SUBENV/python-debug.pth" "$SITE_PACKAGES/__debug__.pth"
+  sym-link "$SUBSH/python-debug.pth" "$SITE_PACKAGES/__debug__.pth"
   mkdir -p ~/.ipython/profile_default
-  sym-link "$SUBENV/ipython_config.py" \
+  sym-link "$SUBSH/ipython_config.py" \
     ~/.ipython/profile_default/ipython_config.py
 fi
 
@@ -329,7 +328,7 @@ then
 fi
 
 # Print installed versions.
-echo "subenv: $(git -C "$SUBENV" rev-parse --short HEAD)"
+echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD)"
 echo "vim: $(vim --version | awk '{ print $5; exit }')"
 echo "git: $(git --version | awk '{ print $3 }')"
 echo "rg: $(rg --version)"

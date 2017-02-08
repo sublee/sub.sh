@@ -11,15 +11,15 @@ $ curl -sL sub.sh | bash
 If not, do manually:
 
 ```bash
-$ git clone git://github.com/sublee/subenv.git
-$ sudo ln -sr subenv/limits.conf /etc/security/limits.conf
-$ git config --global include.path $(pwd)/subenv/git-aliases
-$ ln -sr subenv/profile ~/.profile
-$ ln -sr subenv/zshrc ~/.zshrc
-$ ln -sr subenv/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
-$ ln -sr subenv/vimrc ~/.vimrc
-$ ln -sr subenv/tmux.conf ~/.tmux.conf
-$ ln -sr subenv/python-startup.py ~/.python-startup
-$ ln -sr subenv/python-debug.pth \
+$ git clone git://github.com/sublee/sub.sh.git
+$ sudo ln -sr sub.sh/limits.conf /etc/security/limits.conf
+$ git config --global include.path $(pwd)/sub.sh/git-aliases
+$ ln -sr sub.sh/profile ~/.profile
+$ ln -sr sub.sh/zshrc ~/.zshrc
+$ ln -sr sub.sh/sublee.zsh-theme ~/.oh-my-zsh/custom/sublee.zsh-theme
+$ ln -sr sub.sh/vimrc ~/.vimrc
+$ ln -sr sub.sh/tmux.conf ~/.tmux.conf
+$ ln -sr sub.sh/python-startup.py ~/.python-startup
+$ ln -sr sub.sh/python-debug.pth \
          $VIRTUAL_ENV/lib/python2.7/site-packages/__debug__.pth
 ```
