@@ -260,9 +260,9 @@ then
   else
     info "Upgrading Vim from $VIM_VERSION..."
   fi
-  add-ppa jonathonf/vim
+  add-ppa pi-rho/dev
   sudo apt update
-  sudo apt install -y vim vim-nox vim-nox-py2
+  sudo apt install -y vim
 fi
 
 # Install plugin managers for Vim and tmux.
