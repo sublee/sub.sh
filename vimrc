@@ -26,6 +26,8 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'w0rp/ale'
+" Plug 'vim-airline/vim-airline'
+" Plug 'Lokaltog/vim-powerline', { 'branch': 'develop' }
 
 " -----------------------------------------------------------------------------
 call plug#end()
@@ -37,7 +39,7 @@ syntax on
 set expandtab
 set tabstop=4 shiftwidth=4 sts=4
 set autoindent
-highlight HardTab term=underline cterm=underline
+hi HardTab term=underline cterm=underline
 autocmd BufWinEnter * 2 match HardTab /\t\+/
 
 " Prefer "very magic" regex.
@@ -64,12 +66,15 @@ set ignorecase
 
 " Highlight searching keyword.
 set hlsearch
-highlight Search term=inverse cterm=none ctermbg=cyan
+hi Search term=inverse cterm=none ctermbg=cyan
 
 " Keep 80 columns and dense lines.
 set colorcolumn=81
-highlight ColorColumn term=underline cterm=underline ctermbg=none
+hi ColorColumn term=underline cterm=underline ctermbg=none
 autocmd BufWinEnter * match Error /\%>80v.\+\|\s\+$\|^\s*\n\+\%$/
+
+" Change gutter color.
+hi SignColumn cterm=none ctermfg=none ctermbg=black
 
 " Some additional syntax highlighters.
 au! BufRead,BufNewFile *.wsgi setfiletype python
@@ -107,27 +112,47 @@ augroup END
 " English spelling checker.
 setlocal spelllang=en_us
 
-" Pathogen
-silent! call pathogen#infect()
+" Always show sign column.
+autocmd BufEnter * sign define sign
+autocmd BufEnter * execute 'sign place 9999 line=1 name=sign buffer='.bufnr('')
 
-" Mundo
-autocmd VimEnter *
-\ if exists(':Mundo')
-\|  nnoremap <F5> :MundoToggle<CR>
-\|endif
+" Status line fallback when ALE is not available.
+function ALEGetStatusLine()
+  return ''
+endfunction
 
 " ALE
 autocmd VimEnter *
 \ if exists(':ALE')
+\|  let g:ale_sign_column_always = 1
+\|  let g:ale_statusline_format = ['E%d', 'W%d', '']
 \|  nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 \|  nmap <silent> <C-j> <Plug>(ale_next_wrap)
 \|endif
+
+" Customize status line.
+set statusline=
+set statusline+=%1*%{ALEGetStatusLine()}%*  " ALE status line.
+set statusline+=\ %f  " file path
+set statusline+=\ %y  " file type
+set statusline+=%m  " modified flag
+set statusline+=%=
+set statusline+=%l/%L  " current line/total lines
+set statusline+=:%v  " virtual column number
+set statusline+=\ 0x%04B\  " character under cursor
+hi User1 cterm=inverse ctermfg=red
 
 " YouCompleteMe
 autocmd VimEnter *
 \ if exists('g:ycm_goto_buffer_command')
 \|  let g:ycm_goto_buffer_command = 'new-tab'
 \|  nnoremap <F12> :YcmCompleter GoToDefinition<CR>
+\|endif
+
+" Mundo
+autocmd VimEnter *
+\ if exists(':Mundo')
+\|  nnoremap <F5> :MundoToggle<CR>
 \|endif
 
 " Explore the directory of the current file by `:E`.
