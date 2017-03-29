@@ -184,7 +184,7 @@ then
   fi
 fi
 info "Installing packages from APT..."
-sudo apt install -y aptitude curl git git-flow htop ntpdate tmux tree
+sudo apt install -y aptitude cmake curl git git-flow htop ntpdate tmux tree
 sudo apt install -y shellcheck || true
 
 # Authorize the local SSH key for connecting to
