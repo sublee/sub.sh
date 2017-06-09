@@ -1,12 +1,19 @@
 #!/bin/env zsh
 # vim:ft=sh:et:ts=2:sw=2:sts=2:
 
+# Fast Git completion: https://superuser.com/questions/458906
+__git_files() {
+  _wanted files expl 'local files' _files
+}
+
 # Oh My ZSH!
 export ZSH=$HOME/.oh-my-zsh
 plugins=git
-for plugin_path in $ZSH/custom/plugins/*; do
+for plugin_path in $ZSH/custom/plugins/*
+do
   plugin=$(basename $plugin_path)
-  if [[ -f "$plugin_path/$plugin.plugin.zsh" ]]; then
+  if [[ -f "$plugin_path/$plugin.plugin.zsh" ]]
+  then
     plugins+=($plugin)
   fi
 done
@@ -39,8 +46,9 @@ bindkey -s "^[Oo" "/"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=6'
 
 # Include ~/.profile.
-if [ -f "$HOME/.profile" ]; then
+if [[ -f "$HOME/.profile" ]]
+then
   source "$HOME/.profile"
 fi
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
