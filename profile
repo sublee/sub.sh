@@ -42,7 +42,7 @@ alias sub.sh="curl -sL sub.sh | bash -s -"
 
 # Remove temporary files such as Vim swap or pyc.
 function rm-tmp() {
-  REGEX=".*\.(sw[ponml]|pyc)$"
+  REGEX=".*\.(sw[ponml]|py[co])$"
   find . -regextype posix-egrep -regex "$REGEX" -delete -print
 }
 
