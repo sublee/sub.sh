@@ -241,29 +241,55 @@ git-pull https://github.com/zsh-users/zsh-autosuggestions \
 git-pull https://github.com/bobthecow/git-flow-completion \
          ~/.oh-my-zsh/custom/plugins/git-flow-completion
 
-# Install ripgrep.
-RG_RELEASE="$(curl -s \
-              https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)"
+
+# Install ripgrep, which is a grep alternative.
+RG_RELEASE="$(
+  curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)"
 RG_VERSION="$(echo "$RG_RELEASE" | grep tag_name | cut -d '"' -f4)"
 info "Installing ripgrep-${RG_VERSION}..."
-if executable rg && [[ "$(rg --version)" == "$RG_VERSION" ]]
+if executable rg && [[ "$(rg --version | cut -d' ' -f2)" == "$RG_VERSION" ]]
 then
   echo "Already up-to-date."
 else
-  RG_URL="$(echo "$RG_RELEASE" | \
-            grep -e 'browser_download_url.\+x86_64.\+linux' | \
-            cut -d'"' -f4)"
+  RG_URL="$(
+    echo "$RG_RELEASE" | \
+    grep -e 'browser_download_url.\+x86_64.\+linux.\+"' | \
+    cut -d'"' -f4
+  )"
   RG_ARCHIVE="$(basename "$RG_URL")"
+  info "Downloading ${RG_URL} at /usr/local/src/${RG_ARCHIVE}..."
   pushd /usr/local
-  if [[ ! -f "/usr/local/src/$RG_ARCHIVE" ]]
-  then
-    curl -L "$RG_URL" | sudo tee "src/~$RG_ARCHIVE" > /dev/null
-    sudo mv "src/~$RG_ARCHIVE" "src/$RG_ARCHIVE"
-  fi
-  sudo tar xvzf "src/$RG_ARCHIVE" -C src
-  sudo cp "src/${RG_ARCHIVE%.*.*}/rg" bin/rg
+    if [[ ! -f "src/$RG_ARCHIVE" ]]
+    then
+      sudo curl -o "src/~$RG_ARCHIVE" -L "$RG_URL"
+      sudo mv "src/~$RG_ARCHIVE" "src/$RG_ARCHIVE"
+    fi
+    sudo tar xvzf "src/$RG_ARCHIVE" -C src
+    sudo cp "src/${RG_ARCHIVE%.*.*}/rg" bin/rg
   popd
   echo "Installed at $(which rg)."
+fi
+
+# Install fd, which is a find alternative.
+FD_RELEASE="$(curl -s https://api.github.com/repos/sharkdp/fd/releases/latest)"
+FD_VERSION="$(echo "$FD_RELEASE" | grep tag_name | cut -d '"' -f4 | cut -c 2-)"
+info "Installing fd-${FD_VERSION}..."
+# Currently, fd doesn't support --version query.
+if executable fd && [[ "$(fd --version)" == "$FD_VERSION" ]]
+then
+  echo "Already up-to-date."
+else
+  FD_URL="$(
+    echo "$FD_RELEASE" | \
+    grep -e 'browser_download_url.\+fd"' | \
+    cut -d'"' -f4
+  )"
+  info "Downloading ${FD_URL} at /usr/local/bin/fd..."
+  pushd /usr/local
+    sudo curl -o bin/fd -L "$FD_URL"
+    sudo chmod +x bin/fd
+  popd
+  echo "Installed at $(which fd)."
 fi
 
 # Upgrade Vim.
