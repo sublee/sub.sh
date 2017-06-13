@@ -6,8 +6,8 @@
 #
 # Shortest way to terraform a Linux environment as for my taste:
 #
-#  $ curl -sL sub.sh | bash [-s - OPTIONS]
-#  $ wget -qO- sub.sh | bash [-s - OPTIONS]
+#  $ curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]
+#  $ wget -qO- sub.sh | bash [-s - [~/.sub.sh] OPTIONS]
 #
 set -e
 {
