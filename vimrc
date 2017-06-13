@@ -5,7 +5,7 @@ call plug#begin('~/.vim/plugged')
 
 " syntax highlighters
 Plug 'plasticboy/vim-markdown'
-Plug 'Jinja'
+Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'othree/html5.vim'
 if version < 704
   Plug 'JulesWang/css.vim'
