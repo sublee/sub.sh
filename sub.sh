@@ -26,7 +26,7 @@ APT_UPDATED_AT=~/.sub.sh-apt-updated-at
 function help
 {
   # Print the help message for --help.
-  echo "Usage: curl -sL sub.sh | bash [-s - OPTIONS]"
+  echo "Usage: curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]"
   echo
   echo "Options:"
   echo "  --help              Show this message and exit."
@@ -39,6 +39,7 @@ function help
 # Configure options.
 PYTHON=true
 APT_UPDATE=auto
+SUBSH_SET=false
 for i in "$@"
 do
   case $i in
@@ -55,6 +56,15 @@ do
       APT_UPDATE=true
       shift;;
     *)
+      if [[ "$SUBSH_SET" == false ]]
+      then
+        SUBSH_SET=true
+        SUBSH="$i"
+        shift
+      else
+        help
+        exit
+      fi
       ;;
   esac
 done
