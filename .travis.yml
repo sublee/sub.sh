@@ -3,10 +3,6 @@ sudo: required
 services:
 - docker
 env:
-  global:
-  - secure: "iSIergY/VgRH2wfECNoTQFPh+BjdMMUExPS8KqQWvbSSgYMgPnfXGp8BVZkUKO1o0\
-             SZ8AGHHllC1+XUZOkbYjcAzCI3S4ly9GMpgraAnxXmQOTAt3HLE+9K8e9J7Fmpizb\
-             7ojLm9tYursZf9vzOv3iBlIpEM52N7BM0UQ4qeBGc="
   matrix:
   - IMAGE=ubuntu:16.04
   - IMAGE=ubuntu:14.04
@@ -29,10 +25,16 @@ after_success:
   touch .nojekyll
   python ../web/build.py .
 - |
-  export REPO="https://$GITHUB_TOKEN@github.com/sublee/sub.sh"
+  openssl aes-256-cbc \
+    -K $encrypted_d9e203712590_key -iv $encrypted_d9e203712590_iv \
+    -in key.enc -out key -d
+  chmod 600 key
+  eval "$(ssh-agent -s)"
+  ssh-add key
+- |
   git init
   git config user.name "Heungsub Lee"
   git config user.email "sub@subl.ee"
   git add .
   git commit -m "Deploy to https://sub.sh/ ($TRAVIS_COMMIT)"
-  git push -qf "$REPO" master:gh-pages > /dev/null 2>&1
+  git push -qf git@github.com:sublee/sub.sh master:gh-pages > /dev/null 2>&1
