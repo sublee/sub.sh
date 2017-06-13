@@ -23,7 +23,8 @@ BAK=~/.sub.sh-bak-$TIMESTAMP
 UPDATE_APT_AFTER=86400
 APT_UPDATED_AT=~/.sub.sh-apt-updated-at
 
-function help {
+function help
+{
   # Print the help message for --help.
   echo "Usage: curl -sL sub.sh | bash [-s - OPTIONS]"
   echo
@@ -38,7 +39,8 @@ function help {
 # Configure options.
 PYTHON=true
 APT_UPDATE=auto
-for i in "$@"; do
+for i in "$@"
+do
   case $i in
     --help)
       help
@@ -59,39 +61,46 @@ done
 
 if [[ -z $TERM ]]
 then
-  function secho {
+  function secho
+  {
     echo "$2"
   }
 else
-  function secho {
+  function secho
+  {
     echo -e "$(tput setaf "$1")$2$(tput sgr0)"
   }
 fi
 
-function info {
+function info
+{
   # Print an information log.
   secho 6 "$1"
 }
 
 WARNED=0
-function warn {
+function warn
+{
   # Print a yellow colored error message.
   secho 3 "$1"
   WARNED=$((WARNED+1))
 }
 
-function err {
+function err
+{
   # Print a red colored error message.
   secho 1 "$1"
 }
 
-function fatal {
+function fatal
+{
   # Print a red colored error message and exit the script.
   err "$@"
   exit 1
 }
 
-function add-ppa {
+function add-ppa
+{
   SRC="$1"
   if ! grep -h "^deb.*$SRC" /etc/apt/sources.list.d/*.list > /dev/null 2>&1
   then
@@ -99,7 +108,8 @@ function add-ppa {
   fi
 }
 
-function git-pull {
+function git-pull
+{
   # Clone a Git repository.  If the repository already exists,
   # just pull from the remote.
   SRC="$1"
@@ -113,7 +123,8 @@ function git-pull {
   fi
 }
 
-function sym-link {
+function sym-link
+{
   # Make a symbolic link.  If something should be backed up at
   # the destination path, it moves that to $BAK.
   SRC="$1"
@@ -130,15 +141,18 @@ function sym-link {
   ln -s "$SRC" "$DEST"
 }
 
-function executable {
+function executable
+{
   which "$1" &>/dev/null
 }
 
-function dense {
+function dense
+{
   echo "${*// }"
 }
 
-function failed {
+function failed
+{
   fatal "Failed to terraform by sub.sh."
 }
 trap failed ERR
@@ -301,7 +315,8 @@ then
   then
     virtualenv "$VIRTUALENV"
   fi
-  function pip-install {
+  function pip-install
+  {
     if ! "$VIRTUALENV/bin/pip" install -U "$1"
     then
       warn "Failed to install $1."
