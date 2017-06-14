@@ -244,7 +244,6 @@ git-pull https://github.com/zsh-users/zsh-autosuggestions \
 git-pull https://github.com/bobthecow/git-flow-completion \
          ~/.oh-my-zsh/custom/plugins/git-flow-completion
 
-
 # Install ripgrep, which is a grep alternative.
 RG_RELEASE="$(
   curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)"
