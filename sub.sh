@@ -367,7 +367,7 @@ then
     fi
   }
   pip-install pdbpp
-  pip-install ipython
+  pip-install 'ipython<6'  # IPython 6.0 requires Python 3.3 or above.
   sym-link "$SUBSH/python-startup.py" ~/.python-startup
   SITE_PACKAGES=$("$VIRTUALENV/bin/python" -c \
     "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
