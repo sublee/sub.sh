@@ -381,8 +381,8 @@ fi
 echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD)"
 echo "vim: $(vim --version | awk '{ print $5; exit }')"
 echo "git: $(git --version | awk '{ print $3 }')"
-echo "rg: $(rg --version)"
-echo "fd: $(fd --version)"
+echo "rg: $(rg --version | cut -d' ' -f2)"
+echo "fd: $(fd --version | cut -d' ' -f2)"
 
 # Notify the result.
 info "Terraformed successfully by sub.sh."
