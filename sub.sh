@@ -145,12 +145,13 @@ function sym-link
   then
     if [[ "$(readlink -f "$SRC")" == "$(readlink -f "$DEST")" ]]
     then
+      echo "Already linked '$DEST'"
       return
     fi
     mkdir -p "$BAK"
     mv "$DEST" "$BAK"
   fi
-  ln -s "$SRC" "$DEST"
+  ln -vs "$SRC" "$DEST"
 }
 
 function executable
