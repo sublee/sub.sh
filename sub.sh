@@ -228,10 +228,10 @@ fi
 # Install ZSH and Oh My ZSH!
 if ! executable zsh
 then
-  info "Installing Zsh..."
+  info "Installing ZSH..."
   sudo apt install -y zsh
 fi
-info "Setting up the Zsh environment..."
+info "Setting up the ZSH environment..."
 sudo chsh -s "$(which zsh)" "$USER"
 git-pull https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
 git-pull https://github.com/zsh-users/zsh-syntax-highlighting \
