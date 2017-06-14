@@ -36,10 +36,11 @@ function help
   echo "                      updating period."
 }
 
-# Configure options.
+# Parse options.
 PYTHON=true
 APT_UPDATE=auto
-SUBSH_SET=false
+SUBSH_DEST_SET=false
+SUBSH_DEST="$SUBSH"
 for i in "$@"
 do
   case $i in
@@ -56,10 +57,10 @@ do
       APT_UPDATE=true
       shift;;
     *)
-      if [[ "$SUBSH_SET" == false ]]
+      if [[ "$SUBSH_DEST_SET" == false ]]
       then
-        SUBSH_SET=true
-        SUBSH="$i"
+        SUBSH_DEST_SET=true
+        SUBSH_DEST="$i"
         shift
       else
         help
@@ -68,6 +69,7 @@ do
       ;;
   esac
 done
+SUBSH_DEST="$(readlink -f "$SUBSH_DEST")"
 
 if [[ -z $TERM ]]
 then
@@ -320,9 +322,16 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 git-pull https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
+# Get sub.sh.
+info "Getting sub.sh at $SUBSH_DEST..."
+git-pull https://github.com/sublee/sub.sh "$SUBSH_DEST"
+if [[ "$SUBSH_DEST_SET" == true ]]
+then
+  sym-link "$SUBSH_DEST" "$SUBSH"
+fi
+
 # Apply sub.sh.
 info "Linking dot files from sub.sh..."
-git-pull https://github.com/sublee/sub.sh "$SUBSH"
 git config --global include.path "$SUBSH/git-aliases"
 sym-link "$SUBSH/profile" ~/.profile
 sym-link "$SUBSH/zshrc" ~/.zshrc
@@ -378,7 +387,7 @@ then
 fi
 
 # Print installed versions.
-echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD)"
+echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD) at $SUBSH_DEST"
 echo "vim: $(vim --version | awk '{ print $5; exit }')"
 echo "git: $(git --version | awk '{ print $3 }')"
 echo "rg: $(rg --version | cut -d' ' -f2)"
