@@ -274,8 +274,7 @@ fi
 FD_RELEASE="$(curl -s https://api.github.com/repos/sharkdp/fd/releases/latest)"
 FD_VERSION="$(echo "$FD_RELEASE" | grep tag_name | cut -d '"' -f4 | cut -c 2-)"
 info "Installing fd-${FD_VERSION}..."
-# Currently, fd doesn't support --version query.
-if executable fd && [[ "$(fd --version)" == "$FD_VERSION" ]]
+if executable fd && [[ "$(fd --version | cut -d' ' -f2)" == "$FD_VERSION" ]]
 then
   echo "Already up-to-date."
 else
@@ -383,6 +382,7 @@ echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD)"
 echo "vim: $(vim --version | awk '{ print $5; exit }')"
 echo "git: $(git --version | awk '{ print $3 }')"
 echo "rg: $(rg --version)"
+echo "fd: $(fd --version)"
 
 # Notify the result.
 info "Terraformed successfully by sub.sh."
