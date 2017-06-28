@@ -103,9 +103,7 @@ fatal() {
 
 add-ppa() {
   local src="$1"
-  if grep -h "^deb.*$src" /etc/apt/sources.list.d/*.list > /dev/null 2>&1; then
-    return
-  else
+  if ! grep -q "^deb.*$src" /etc/apt/sources.list.d/*.list; then
     sudo add-apt-repository -y "ppa:$src"
   fi
 }
