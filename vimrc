@@ -110,10 +110,6 @@ augroup END
 " English spelling checker.
 setlocal spelllang=en_us
 
-" Always show sign column.
-autocmd BufEnter * sign define sign
-autocmd BufEnter * execute 'sign place 9999 line=1 name=sign buffer='.bufnr('')
-
 " Status line fallback when ALE is not available.
 function ALEGetStatusLine()
   return ''
