@@ -11,7 +11,7 @@ script:
 - docker start -ia sub.sh
 after_success:
 - |
-  if [[ "$TRAVIS_JOB_NUMBER" != *.1 ]]
+  if [[ "$TRAVIS_JOB_NUMBER" != *.1 ]] || [[ "$TRAVIS_BRANCH" != master ]]
   then
     echo "sub.sh deployment skipped."
     exit 0
