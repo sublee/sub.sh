@@ -123,6 +123,9 @@ endfunction
 autocmd VimEnter *
 \ if exists(':ALE')
 \|  let g:ale_sign_column_always = 1
+\|  let g:ale_change_sign_column_color = 1
+\|  hi ALESignColumnWithErrors ctermbg=darkmagenta
+\|  hi ALESignColumnWithoutErrors ctermbg=black
 \|  let g:ale_statusline_format = ['E%d', 'W%d', '']
 \|  nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 \|  nmap <silent> <C-j> <Plug>(ale_next_wrap)
