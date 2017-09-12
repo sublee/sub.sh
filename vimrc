@@ -112,6 +112,9 @@ setlocal spelllang=en_us
 autocmd BufEnter * sign define sign
 autocmd BufEnter * execute 'sign place 9999 line=1 name=sign buffer='.bufnr('')
 
+" Change gutter color.
+hi SignColumn cterm=none ctermfg=none ctermbg=black
+
 " ALE
 autocmd VimEnter *
 \ if exists(':ALE')
