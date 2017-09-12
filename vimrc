@@ -108,9 +108,6 @@ augroup END
 " English spelling checker.
 setlocal spelllang=en_us
 
-" Pathogen
-silent! call pathogen#infect()
-
 " Mundo
 autocmd VimEnter *
 \ if exists(':Mundo')
