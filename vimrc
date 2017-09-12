@@ -120,6 +120,7 @@ autocmd VimEnter *
 \ if exists(':ALE')
 \|  let g:ale_sign_column_always = 1
 \|  let g:ale_change_sign_column_color = 1
+\|  let g:ale_statusline_format = ['E%d', 'W%d', '']
 \|  let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 \|  nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 \|  nmap <silent> <C-j> <Plug>(ale_next_wrap)
@@ -127,10 +128,10 @@ autocmd VimEnter *
 
 " Customize status line.
 "
-" 1 error(s) works/project/main.c [c][+]                              29:2/1232
-" │                 │              │  │                                │ │  │
-" │                 └ file path    │  └ modified flag     current line ┘ │  │
-" └ ALE status line                └ file type            current column ┘  │
+" E1 works/project/main.c [c][+]                                      29:2/1232
+" │         │              │  │                                        │ │  │
+" │         └ file path    │  └ modified flag             current line ┘ │  │
+" └ ALE status line        └ file type                    current column ┘  │
 "                                                               total lines ┘
 "
 function ALEGetStatusLine()
