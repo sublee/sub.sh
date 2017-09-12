@@ -108,12 +108,6 @@ augroup END
 " English spelling checker.
 setlocal spelllang=en_us
 
-" Mundo
-autocmd VimEnter *
-\ if exists(':Mundo')
-\|  nnoremap <F5> :MundoToggle<CR>
-\|endif
-
 " ALE
 autocmd VimEnter *
 \ if exists(':ALE')
@@ -129,6 +123,12 @@ autocmd VimEnter *
 \ if exists('g:ycm_goto_buffer_command')
 \|  let g:ycm_goto_buffer_command = 'new-tab'
 \|  nnoremap <F12> :YcmCompleter GoToDefinition<CR>
+\|endif
+
+" Mundo
+autocmd VimEnter *
+\ if exists(':Mundo')
+\|  nnoremap <F5> :MundoToggle<CR>
 \|endif
 
 " EasyMotion
