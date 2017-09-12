@@ -26,6 +26,7 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'w0rp/ale'
+Plug 'easymotion/vim-easymotion'
 
 " -----------------------------------------------------------------------------
 call plug#end()
@@ -131,6 +132,15 @@ autocmd VimEnter *
 \ if exists('g:ycm_goto_buffer_command')
 \|  let g:ycm_goto_buffer_command = 'new-tab'
 \|  nnoremap <F12> :YcmCompleter GoToDefinition<CR>
+\|endif
+
+" EasyMotion
+autocmd VimEnter *
+\ if exists('g:EasyMotion_loaded')
+\|  map <Leader>l <Plug>(easymotion-lineforward)
+\|  map <Leader>j <Plug>(easymotion-j)
+\|  map <Leader>k <Plug>(easymotion-k)
+\|  map <Leader>h <Plug>(easymotion-linebackward)
 \|endif
 
 " Explore the directory of the current file by `:E`.
