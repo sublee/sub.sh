@@ -108,6 +108,10 @@ augroup END
 " English spelling checker.
 setlocal spelllang=en_us
 
+" Always show sign column.
+autocmd BufEnter * sign define sign
+autocmd BufEnter * execute 'sign place 9999 line=1 name=sign buffer='.bufnr('')
+
 " ALE
 autocmd VimEnter *
 \ if exists(':ALE')
