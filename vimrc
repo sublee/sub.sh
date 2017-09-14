@@ -118,13 +118,17 @@ hi SignColumn cterm=none ctermfg=none ctermbg=black
 " ALE
 autocmd VimEnter *
 \ if exists(':ALE')
-\|  let g:ale_sign_column_always = 1
-\|  let g:ale_change_sign_column_color = 1
-\|  let g:ale_statusline_format = ['E%d', 'W%d', '']
-\|  let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+\|  let g:ale_sign_column_always       = 1
+\|  let g:ale_statusline_format        = ['E%d', 'W%d', '']
+\|  let g:ale_echo_msg_format          = '[%linter%] %s [%severity%]'
+\|  let g:ale_lint_delay               = 500
+\|  let g:ale_lint_on_text_changed     = 'normal'
 \|  nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 \|  nmap <silent> <C-j> <Plug>(ale_next_wrap)
 \|endif
+
+" It blocks editing.
+" \|  let g:ale_change_sign_column_color = 1
 
 " Customize status line.
 "
