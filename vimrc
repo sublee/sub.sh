@@ -129,10 +129,9 @@ autocmd VimEnter *
 " Customize status line.
 "
 " E1 works/project/main.c [c][+]                                      29:2/1232
-" │         │              │  │                                        │ │  │
-" │         └ file path    │  └ modified flag             current line ┘ │  │
-" └ ALE status line        └ file type                    current column ┘  │
-"                                                               total lines ┘
+" │         └─ file path   │  └─ modified flag           current line ─┘ │  │
+" └─ ALE status line       └─ file type                  current column ─┘  │
+"                                                              total lines ─┘
 "
 function ALEGetStatusLine()
   " Status line fallback when ALE is not available.
