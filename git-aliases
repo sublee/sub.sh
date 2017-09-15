@@ -2,8 +2,8 @@
 
 [alias]
 st = status -uno --ignore-submodule=none
-lg = log --graph --all --format=format:\
-'%C(yellow)%h %C(green)%ar%C(reset) - %s - %C(magenta)%an%C(blue)%d%C(reset)'
+lg = log --graph --all --date=relative --format=format:\
+'%C(yellow)%h %C(green)%ad%C(reset) - %s - %C(magenta)%an%C(blue)%d%C(reset)'
 ff = merge --ff-only
 rb = rebase --committer-date-is-author-date
 up-sub = "!_() { git -C $1 pull $2 $3; git add $1; }; _"
