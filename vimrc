@@ -17,6 +17,8 @@ Plug 'rust-lang/rust.vim'
 Plug 'ekalinin/Dockerfile.vim'
 
 " function extensions
+Plug 'easymotion/vim-easymotion'
+Plug 'hotwatermorning/auto-git-diff'
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'simnalamburt/vim-mundo'
@@ -26,7 +28,6 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'w0rp/ale'
-Plug 'easymotion/vim-easymotion'
 
 " -----------------------------------------------------------------------------
 call plug#end()
