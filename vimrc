@@ -185,5 +185,7 @@ let g:vim_markdown_folding_disabled=1
 " Customize colors for Jinja syntax.
 hi def link jinjaVarBlock Comment
 
-" Use '#' for comments in Terraform.
+" For Terraform.
+let g:terraform_fold_sections=1
+let g:terraform_remap_spacebar=1
 au FileType tf setlocal commentstring=#\ %s
