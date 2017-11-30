@@ -18,6 +18,7 @@ Plug 'ekalinin/Dockerfile.vim'
 
 " function extensions
 Plug 'easymotion/vim-easymotion'
+Plug 'hashivim/vim-terraform'
 Plug 'hotwatermorning/auto-git-diff'
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -183,3 +184,6 @@ let g:vim_markdown_folding_disabled=1
 
 " Customize colors for Jinja syntax.
 hi def link jinjaVarBlock Comment
+
+" Use '#' for comments in Terraform.
+au FileType tf setlocal commentstring=#\ %s
