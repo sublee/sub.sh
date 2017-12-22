@@ -191,3 +191,9 @@ hi def link jinjaVarBlock Comment
 let g:terraform_fold_sections=1
 let g:terraform_remap_spacebar=1
 au FileType tf setlocal commentstring=#\ %s
+
+" fzf
+au VimEnter *
+\ if exists(':FZF')
+\|  nnoremap <C-f> :FZF<CR>
+\|endif
