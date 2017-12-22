@@ -104,23 +104,23 @@ au FileType make       setl ts=4 sw=4 sts=4 noet
 
 " Markdown-related configurations.
 augroup mkd
-  autocmd BufRead *.markdown set formatoptions=tcroqn2 comments=n:> spell
-  autocmd BufRead *.mkdn     set formatoptions=tcroqn2 comments=n:> spell
-  autocmd BufRead *.mkd      set formatoptions=tcroqn2 comments=n:> spell
+  au BufRead *.markdown set formatoptions=tcroqn2 comments=n:> spell
+  au BufRead *.mkdn     set formatoptions=tcroqn2 comments=n:> spell
+  au BufRead *.mkd      set formatoptions=tcroqn2 comments=n:> spell
 augroup END
 
 " English spelling checker.
 setlocal spelllang=en_us
 
 " Always show sign column.
-autocmd BufEnter * sign define sign
-autocmd BufEnter * execute 'sign place 9999 line=1 name=sign buffer='.bufnr('')
+au BufEnter * sign define sign
+au BufEnter * execute 'sign place 9999 line=1 name=sign buffer='.bufnr('')
 
 " Change gutter color.
 hi SignColumn cterm=none ctermfg=none ctermbg=black
 
 " ALE
-autocmd VimEnter *
+au VimEnter *
 \ if exists(':ALE')
 \|  let g:ale_sign_column_always       = 1
 \|  let g:ale_statusline_format        = ['E%d', 'W%d', '']
@@ -157,20 +157,20 @@ set statusline+=/%L                         " total lines
 hi User1 cterm=inverse ctermfg=red
 
 " YouCompleteMe
-autocmd VimEnter *
+au VimEnter *
 \ if exists('g:ycm_goto_buffer_command')
 \|  let g:ycm_goto_buffer_command = 'new-tab'
 \|  nnoremap <F12> :YcmCompleter GoToDefinition<CR>
 \|endif
 
 " Mundo
-autocmd VimEnter *
+au VimEnter *
 \ if exists(':Mundo')
 \|  nnoremap <F5> :MundoToggle<CR>
 \|endif
 
 " EasyMotion
-autocmd VimEnter *
+au VimEnter *
 \ if exists('g:EasyMotion_loaded')
 \|  map <Leader>l <Plug>(easymotion-lineforward)
 \|  map <Leader>j <Plug>(easymotion-j)
