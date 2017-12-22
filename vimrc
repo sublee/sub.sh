@@ -38,13 +38,6 @@ call plug#end()
 " Syntax highlighting.
 syntax on
 
-" Softtab -- use spaces instead tabs.
-set expandtab
-set tabstop=4 shiftwidth=4 sts=4
-set autoindent
-highlight HardTab term=underline cterm=underline
-autocmd BufWinEnter * 2 match HardTab /\t\+/
-
 " Prefer "very magic" regex.
 nnoremap / /\v
 cnoremap %s/ %s/\v
@@ -71,6 +64,12 @@ set ignorecase
 set hlsearch
 highlight Search term=inverse cterm=none ctermbg=cyan
 
+" Softtab -- use spaces instead tabs.
+set et
+set ts=4 sw=4 sts=4
+set ai
+highlight HardTab term=underline cterm=underline
+au BufWinEnter * 2 match HardTab /\t\+/
 
 " Some additional syntax highlighters.
 au! BufRead,BufNewFile *.wsgi setfiletype python
