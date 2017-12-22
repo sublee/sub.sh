@@ -19,6 +19,8 @@ Plug 'ekalinin/Dockerfile.vim'
 " function extensions
 Plug 'easymotion/vim-easymotion'
 Plug 'hashivim/vim-terraform'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'hotwatermorning/auto-git-diff'
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
