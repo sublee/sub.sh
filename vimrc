@@ -109,13 +109,6 @@ au BufWinEnter *
 \|  match Error /\s\+$\|^\s*\n\+\%$/
 \|endif
 
-" Markdown-related configurations.
-augroup mkd
-  au BufRead *.markdown set formatoptions=tcroqn2 comments=n:> spell
-  au BufRead *.mkdn     set formatoptions=tcroqn2 comments=n:> spell
-  au BufRead *.mkd      set formatoptions=tcroqn2 comments=n:> spell
-augroup END
-
 " English spelling checker.
 setlocal spelllang=en_us
 
