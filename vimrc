@@ -80,6 +80,9 @@ au! BufRead,BufNewFile *go setfiletype golang
 au! BufRead,BufNewFile *rc setfiletype conf
 au! BufRead,BufNewFile *.*_t setfiletype jinja
 
+" Default guide column.
+au BufEnter * set colorcolumn=81
+
 " Set language-specific tab/indent/columns conventions.
 au FileType cpp        setl ts=2 sw=2 sts=2
 au FileType javascript setl ts=2 sw=2 sts=2
@@ -96,15 +99,17 @@ au FileType less       setl ts=2 sw=2 sts=2
 au Filetype rst        setl ts=3 sw=3 sts=3
 au FileType golang     setl noet
 au FileType make       setl ts=4 sw=4 sts=4 noet
-au FileType python     setl ts=4 sw=4 sts=4 | let b:maxcol=79
+au FileType python     setl ts=4 sw=4 sts=4 | let b:forcecolumn=79
+au FileType sh         setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
+au FileType vim        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 
 " Keep maximum columns, avoid trailing empty lines.
-" Let b:maxcol to set the maximum columns.
+" Let b:forcecolumn to set the maximum columns.
 highlight ColorColumn term=underline cterm=underline ctermbg=none
-au BufWinEnter *
-\ if exists('b:maxcol')
-\|  execute 'set colorcolumn='.(b:maxcol+1)
-\|  execute 'match Error /\%>'.(b:maxcol).'v.\+\|\s\+$\|^\s*\n\+\%$/'
+au BufEnter *
+\ if exists('b:forcecolumn')
+\|  execute 'set colorcolumn='.(b:forcecolumn+1)
+\|  execute 'match Error /\%>'.(b:forcecolumn).'v.\+\|\s\+$\|^\s*\n\+\%$/'
 \|else
 \|  match Error /\s\+$\|^\s*\n\+\%$/
 \|endif
