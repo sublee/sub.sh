@@ -22,6 +22,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'hotwatermorning/auto-git-diff'
+Plug 'majutsushi/tagbar', { 'do': 'sudo apt install -y exuberant-ctags' }
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'simnalamburt/vim-mundo'
@@ -201,4 +202,10 @@ au FileType tf setlocal commentstring=#\ %s
 au VimEnter *
 \ if exists(':FZF')
 \|  nnoremap <C-f> :FZF<CR>
+\|endif
+
+" Tagbar
+au VimEnter *
+\ if exists(':TagbarToggle')
+\|  nmap <F8> :TagbarToggle<CR>
 \|endif
