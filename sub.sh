@@ -208,23 +208,50 @@ cd ~
 
 # sudo ------------------------------------------------------------------------
 
-# Check if sudo requires password.
-if ! executable sudo
-then
-  apt update
-  apt install -y sudo
-fi
-if ! >&/dev/null sudo -n true
-then
-  err "Make sure $USER can use sudo without password."
-  echo
-  err "  # echo '$USER ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-$USER"
-  echo
+require_sudo_without_password() {
+  if ! executable sudo
+  then
+    info "Installing sudo..."
+    apt update
+    apt install -y sudo
+  fi
 
-  exit 1
-fi
+  # Check if sudo requires password.
+  if ! >&/dev/null sudo -n true
+  then
+    err "Make sure $USER can use sudo without password."
+    echo
+    err "  # echo '$USER ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-$USER"
+    echo
+
+    return 1
+  fi
+}
+
+require_sudo_without_password
 
 # apt -------------------------------------------------------------------------
+
+update_apt() {
+  info "Updating APT package lists..."
+
+  # Require to add PPAs.
+  sudo apt update
+  sudo apt install -y software-properties-common
+
+  # Prefer the latest version of Git.
+  add-ppa git-core/ppa
+
+  # Update the APT package lists.
+  sudo apt update
+}
+
+install_apt_packages() {
+  info "Installing packages from APT..."
+
+  sudo apt install -y aptitude cmake curl git git-flow htop ntpdate tmux tree
+  sudo apt install -y shellcheck || true
+}
 
 # Install packages from APT.
 if [[ "$APT_UPDATE" != false ]]
@@ -238,24 +265,12 @@ then
 
   if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]
   then
-    info "Updating APT package lists..."
-
-    # Require to add PPAs.
-    sudo apt update
-    sudo apt install -y software-properties-common
-
-    # Prefer the latest version of Git.
-    add-ppa git-core/ppa
-
-    # Update the APT package lists.
-    sudo apt update
-
+    update_apt
     echo "$TIMESTAMP" > "$APT_UPDATED_AT"
   fi
 fi
-info "Installing packages from APT..."
-sudo apt install -y aptitude cmake curl git git-flow htop ntpdate tmux tree
-sudo apt install -y shellcheck || true
+
+install_apt_packages
 
 # localhost ssh ---------------------------------------------------------------
 
@@ -288,9 +303,18 @@ sudo chsh -s "$(which zsh)" "$USER"
 
 # Oh My ZSH!
 github-pull robbyrussell/oh-my-zsh ~/.oh-my-zsh
-github-pull zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-github-pull zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-github-pull bobthecow/git-flow-completion ~/.oh-my-zsh/custom/plugins/git-flow-completion
+
+github-pull \
+  zsh-users/zsh-syntax-highlighting \
+  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+github-pull \
+  zsh-users/zsh-autosuggestions \
+  ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+github-pull \
+  bobthecow/git-flow-completion \
+  ~/.oh-my-zsh/custom/plugins/git-flow-completion
 
 # rg --------------------------------------------------------------------------
 
@@ -301,8 +325,12 @@ install_rg() {
   local rg_latest_version
 
   # Detect the latest and installed version.
-  rg_release="$(curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest)"
-  rg_latest_version="$(echo "$rg_release" | grep tag_name | cut -d '"' -f4)"
+  rg_release="$(
+    curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest
+  )"
+  rg_latest_version="$(
+    echo "$rg_release" | grep tag_name | cut -d '"' -f4
+  )"
 
   info "Installing rg-${rg_latest_version}..."
 
@@ -348,8 +376,12 @@ install_fd() {
   local fd_latest_version
 
   # Detect the latest and installed version.
-  fd_release="$(curl -s https://api.github.com/repos/sharkdp/fd/releases/latest)"
-  fd_latest_version="$(echo "$fd_release" | grep tag_name | cut -d '"' -f4 | cut -c 2-)"
+  fd_release="$(
+    curl -s https://api.github.com/repos/sharkdp/fd/releases/latest
+  )"
+  fd_latest_version="$(
+    echo "$fd_release" | grep tag_name | cut -d '"' -f4 | cut -c 2-
+  )"
 
   info "Installing fd-${fd_latest_version}..."
 
@@ -415,11 +447,6 @@ then
   sudo apt install -y vim
 fi
 
-# # package managers for vim and tmux -------------------------------------------
-
-# info "Setting up the Vim and tmux environment..."
-
-
 # sub.sh ----------------------------------------------------------------------
 
 # Get sub.sh.
@@ -453,8 +480,6 @@ github-pull tmux-plugins/tpm ~/.tmux/plugins/tpm
 vim --noplugin -c PlugInstall -c qa
 stty -F /dev/stdout sane
 
-TMUX_PLUGIN_MANAGER_PATH=~/.tmux/plugins/ ~/.tmux/plugins/tpm/scripts/install_plugins.sh
-
 # python ----------------------------------------------------------------------
 
 # Setup a Python environment.
@@ -483,16 +508,22 @@ then
   pip-install pdbpp
   pip-install 'ipython<6'  # IPython 6.0 requires Python 3.3 or above.
 
-  sym-link "$SUBSH/python-startup.py" ~/.python-startup
+  sym-link \
+    "$SUBSH/python-startup.py" \
+    ~/.python-startup
 
   readonly SITE_PACKAGES=$(
     "$VIRTUALENV/bin/python" -c \
     "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
   )
-  sym-link "$SUBSH/python-debug.pth" "$SITE_PACKAGES/__debug__.pth"
+  sym-link \
+    "$SUBSH/python-debug.pth" \
+    "$SITE_PACKAGES/__debug__.pth"
 
   mkdir -p ~/.ipython/profile_default
-  sym-link "$SUBSH/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
+  sym-link \
+    "$SUBSH/ipython_config.py" \
+    ~/.ipython/profile_default/ipython_config.py
 fi
 
 # results ---------------------------------------------------------------------
