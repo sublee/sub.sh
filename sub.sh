@@ -321,10 +321,9 @@ github-pull \
 # "rg" is a short-term for "ripgrep", which is a "grep" alternative.
 
 install_rg() {
+  # Detect the latest and installed version.
   local rg_release
   local rg_latest_version
-
-  # Detect the latest and installed version.
   rg_release="$(
     curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest
   )"
@@ -332,14 +331,14 @@ install_rg() {
     echo "$rg_release" | grep tag_name | cut -d '"' -f4
   )"
 
-  info "Installing rg-${rg_latest_version}..."
-
   # Compare with the currently installed version.
   if executable rg && [[ "$(rg_version)" == "$rg_latest_version" ]]
   then
-    echo "Already up-to-date."
+    info "Already installed rg-${rg_latest_version}"
     return
   fi
+
+  info "Installing rg-${rg_latest_version}..."
 
   local rg_tgz
   local rg_dir
@@ -372,10 +371,15 @@ install_rg
 # "fd" is a "find" alternative.
 
 install_fd() {
-  local fd_release
-  local fd_latest_version
+  # Remove legacy executable.
+  if [[ -f /usr/local/bin/fd ]]
+  then
+    sudo rm -rf /usr/local/bin/fd
+  fi
 
   # Detect the latest and installed version.
+  local fd_release
+  local fd_latest_version
   fd_release="$(
     curl -s https://api.github.com/repos/sharkdp/fd/releases/latest
   )"
@@ -383,19 +387,13 @@ install_fd() {
     echo "$fd_release" | grep tag_name | cut -d '"' -f4 | cut -c 2-
   )"
 
-  info "Installing fd-${fd_latest_version}..."
-
   if executable fd && [[ "$(fd_version)" == "$fd_latest_version" ]]
   then
-    echo "Already up-to-date."
+    info "Already installed fd-${fd_latest_version}"
     return
   fi
 
-  # Remove legacy executable.
-  if [[ -f /usr/local/bin/fd ]]
-  then
-    sudo rm -rf /usr/local/bin/fd
-  fi
+  info "Installing fd-${fd_latest_version}..."
 
   local fd_deb
   local fd_deb_url
