@@ -557,7 +557,7 @@ if [[ -d "$BAK" ]]
 then
   info "Backup files are stored in $BAK"
 fi
-if [[ "$SHELL" != "$(which zsh)" && -z "$ZSH" ]]
+if [[ "$SHELL" != "$(which zsh)" && -z "${ZSH+x}" ]]
 then
   info "To use just provisioned ZSH, relogin or"
   echo
