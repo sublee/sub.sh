@@ -9,7 +9,7 @@
 #  $ curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]
 #  $ wget -qO- sub.sh | bash [-s - [~/.sub.sh] OPTIONS]
 #
-set -e
+set -euo pipefail
 {
 TIMESTAMP="$(date +%s)"
 USER="$(whoami)"
