@@ -68,6 +68,8 @@ for i in "$@"; do
 done
 SUBSH_DEST="$(readlink -f "$SUBSH_DEST")"
 
+# -----------------------------------------------------------------------------
+
 if [[ -z $TERM ]]; then
   secho() {
     echo "$2"
@@ -149,6 +151,8 @@ failed() {
   fatal "Failed to terraform by sub.sh."
 }
 trap failed ERR
+
+# -----------------------------------------------------------------------------
 
 # Go to the home directory.  A current working directory
 # may deny access from this user.
