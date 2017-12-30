@@ -23,6 +23,9 @@ BAK=~/.sub.sh-bak-$TIMESTAMP
 UPDATE_APT_AFTER=86400
 APT_UPDATED_AT=~/.sub.sh-apt-updated-at
 
+# Keep Debian architecture label.
+DEB_ARCHITECTURE="$(dpkg --print-architecture)"
+
 help() {
   # Print the help message for --help.
   echo "Usage: curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]"
@@ -259,16 +262,20 @@ fd_version() {
 if executable fd && [[ "$(fd_version)" == "$FD_VERSION" ]]; then
   echo "Already up-to-date."
 else
-  FD_URL="$(
+  if [[ -f /usr/local/bin/fd ]]; then
+    # Remove legacy executable.
+    sudo rm -rf /usr/local/bin/fd
+  fi
+  FD_DEB_URL="$(
     echo "$FD_RELEASE" | \
-    grep -e 'browser_download_url.\+fd"' | \
+    grep -e "browser_download_url.\+fd_.\+${DEB_ARCHITECTURE}\.deb\"" | \
     cut -d'"' -f4
   )"
-  info "Downloading ${FD_URL} at /usr/local/bin/fd..."
-  pushd /usr/local
-    sudo curl -o bin/fd -L "$FD_URL"
-    sudo chmod +x bin/fd
-  popd
+  FD_DEB_PATH="$(mktemp -t fd-XXX.deb)"
+  info "Downloading $FD_DEB_URL at $FD_DEB_PATH..."
+  curl -o "$FD_DEB_PATH" -L "$FD_DEB_URL"
+  info "Installing $FD_DEB_PATH..."
+  sudo dpkg -i "$FD_DEB_PATH"
   echo "Installed at $(which fd)."
 fi
 
