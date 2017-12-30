@@ -226,26 +226,22 @@ RG_RELEASE="$(
 RG_VERSION="$(echo "$RG_RELEASE" | grep tag_name | cut -d '"' -f4)"
 info "Installing ripgrep-${RG_VERSION}..."
 rg_version() {
-  rg --version | cut -d' ' -f2
+  rg --version | head -n 1 | cut -d' ' -f2
 }
 if executable rg && [[ "$(rg_version)" == "$RG_VERSION" ]]; then
   echo "Already up-to-date."
 else
-  RG_URL="$(
+  RG_TGZ="$(mktemp -t rg-XXX.tar.gz)"
+  RG_DIR="$(mktemp -dt rg-XXX)"
+  RG_TGZ_URL="$(
     echo "$RG_RELEASE" | \
-    grep -e 'browser_download_url.\+x86_64.\+linux.\+"' | \
+    grep -e "download_url.\+$(uname -m).\+linux.\+" | \
     cut -d'"' -f4
   )"
-  RG_ARCHIVE="$(basename "$RG_URL")"
-  info "Downloading ${RG_URL} at /usr/local/src/${RG_ARCHIVE}..."
-  pushd /usr/local
-    if [[ ! -f "src/$RG_ARCHIVE" ]]; then
-      sudo curl -o "src/~$RG_ARCHIVE" -L "$RG_URL"
-      sudo mv "src/~$RG_ARCHIVE" "src/$RG_ARCHIVE"
-    fi
-    sudo tar xvzf "src/$RG_ARCHIVE" -C src
-    sudo cp "src/${RG_ARCHIVE%.*.*}/rg" bin/rg
-  popd
+  info "Downloading $RG_TGZ_URL at $RG_TGZ..."
+  curl -L "$RG_TGZ_URL" -o "$RG_TGZ"
+  tar xvzf "$RG_TGZ" -C "$RG_DIR"
+  sudo cp "$RG_DIR/"*"/rg" /usr/local/bin/rg
   echo "Installed at $(which rg)."
 fi
 
