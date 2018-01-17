@@ -96,10 +96,10 @@ precmd() {
     RPROMPT=''
   elif [[ "$elapsed" -lt 600 ]]
   then
-    # 3sec~10min: (yellow) 42sec
-    RPROMPT="%F{yellow}${elapsed}sec%f"
+    # 3sec~10min: ↳42sec (yellow)
+    RPROMPT="%F{yellow}↳${elapsed}sec%f"
   else
-    # 10min~: (red) 23min
-    RPROMPT="%F{red}$((elapsed/60))min%f"
+    # 10min~: ↳23min (red)
+    RPROMPT="%F{red}↳$((elapsed/60))min%f"
   fi
 }
