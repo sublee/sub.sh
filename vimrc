@@ -26,6 +26,7 @@ Plug 'majutsushi/tagbar', { 'do': 'sudo apt install -y exuberant-ctags' }
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'simnalamburt/vim-mundo'
+Plug 'terryma/vim-multiple-cursors'
 Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
