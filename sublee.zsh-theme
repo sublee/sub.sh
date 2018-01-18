@@ -16,7 +16,7 @@
 
 prompt_status() {
   # 23:14
-  echo -n "%F{blue}%T%f"
+  echo -n "%F{blue}%D{%H:%M}%f"
   # ✘ (only when the last execution was failed)
   echo -n "%(?::%F{red}✘%f)"
 }
