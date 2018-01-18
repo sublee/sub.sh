@@ -105,6 +105,7 @@ au FileType python     setl ts=4 sw=4 sts=4 | let b:forcecolumn=79
 au FileType sh         setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 au FileType zsh        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 au FileType vim        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
+au FileType terraform  setl ts=2 sw=2 sts=2 | let b:forcecolumn=999
 
 " Keep maximum columns, avoid trailing empty lines.
 " Let b:forcecolumn to set the maximum columns.
