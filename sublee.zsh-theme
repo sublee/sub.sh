@@ -45,7 +45,7 @@ prompt_git() {
   git_branch="$(git symbolic-ref -q --short HEAD 2>/dev/null)"
   if [[ -n "$git_branch" ]]
   then
-    echo -n "%B%F{magenta}:$git_branch%f%b"
+    echo -n "%F{magenta}:$git_branch%f"
     return
   fi
 
@@ -53,7 +53,7 @@ prompt_git() {
   git_tag="$(git describe --tags 2>/dev/null)"
   if [[ -n "$git_tag" ]]
   then
-    echo -n "%F{magenta}:$git_tag%f"
+    echo -n "%F{red}:$git_tag%f"
     return
   fi
 
