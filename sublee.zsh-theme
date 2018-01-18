@@ -8,7 +8,7 @@
 # %K{color}  set bg color
 # %k         reset bg color
 #
-# %T         24h clock (23:45)
+# %D{%H:%M}  24h clock with leading zero (01:23)
 #
 # %n         username
 # %m         hostname up to first dot
