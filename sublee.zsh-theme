@@ -42,16 +42,24 @@ prompt_git() {
   fi
 
   local git_branch
-  local git_commit
   git_branch="$(git symbolic-ref -q --short HEAD 2>/dev/null)"
-  git_commit="$(git show-ref --head -s --abbrev | head -n1)"
-
-  if [[ -z "$git_branch" ]]
+  if [[ -n "$git_branch" ]]
   then
-    echo -n "%F{yellow}:$git_commit%f"
-  else
-    echo -n "%F{magenta}:$git_branch%f"
+    echo -n "%B%F{magenta}:$git_branch%f"
+    return
   fi
+
+  local git_tag
+  git_tag="$(git describe --tags 2>/dev/null)"
+  if [[ -n "$git_tag" ]]
+  then
+    echo -n "%F{magenta}:$git_tag%f"
+    return
+  fi
+
+  local git_commit
+  git_commit="$(git show-ref --head -s --abbrev | head -n1)"
+  echo -n "%F{yellow}:$git_commit%f"
 }
 
 prompt_end() {
