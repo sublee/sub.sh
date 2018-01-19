@@ -53,4 +53,10 @@ then
   source "$HOME/.profile"
 fi
 
+# Alert after every commands to highlight inactive window in Tmux.
+if [[ -n "$TMUX" ]]
+then
+  precmd() { echo -ne "\a" }
+fi
+
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
