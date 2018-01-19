@@ -84,10 +84,10 @@ build_prompt() {
 PROMPT='$(build_prompt) '
 
 # show elapsed time at the RPROMPT if slower than 3sec.
-preexec() {
+start-timer() {
   ZSH_SUBLEE_TIMER="$SECONDS"
 }
-precmd() {
+stop-timer-rprompt() {
   RPROMPT=''
   if [[ -z "$ZSH_SUBLEE_TIMER" ]]
   then
@@ -111,3 +111,5 @@ precmd() {
     RPROMPT="%F{red}↳%S$((elapsed/60))min%s%f"
   fi
 }
+add-zsh-hook preexec start-timer
+add-zsh-hook precmd  stop-timer-rprompt

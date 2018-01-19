@@ -56,7 +56,8 @@ fi
 # Alert after every commands to highlight inactive window in Tmux.
 if [[ -n "$TMUX" ]]
 then
-  precmd() { echo -ne "\a" }
+  bell() { echo -ne "\a" }
+  add-zsh-hook precmd bell
 fi
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
