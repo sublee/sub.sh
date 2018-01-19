@@ -4,6 +4,7 @@
 st = status -uno --ignore-submodule=none
 lg = log --graph --all --date=relative --format=format:\
 '%C(yellow)%h %C(green)%ad%C(reset) - %s - %C(magenta)%an%C(blue)%d%C(reset)'
+ci = commit -p
 cc = checkout
 bb = checkout -b
 ff = merge --ff-only
