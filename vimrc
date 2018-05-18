@@ -122,7 +122,7 @@ au BufEnter *
 \ if &expandtab
 \|  match WrongTab /\t\+/
 \|else
-\|  match WrongTab /  \+/
+\|  match WrongTab /\(^\s*\)\@<=  \+/
 \|endif
 
 " English spelling checker.
