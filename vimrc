@@ -66,12 +66,10 @@ set ignorecase
 set hlsearch
 highlight Search term=inverse cterm=none ctermbg=cyan
 
-" Softtab -- use spaces instead tabs.
+" Softtab -- use spaces instead tabs by default.
 set et
 set ts=4 sw=4 sts=4
 set ai
-highlight HardTab term=underline cterm=underline
-au BufWinEnter * 2 match HardTab /\t\+/
 
 " Some additional syntax highlighters.
 au! BufRead,BufNewFile *.wsgi setfiletype python
@@ -99,7 +97,7 @@ au FileType css        setl ts=2 sw=2 sts=2
 au FileType sass       setl ts=2 sw=2 sts=2
 au FileType less       setl ts=2 sw=2 sts=2
 au Filetype rst        setl ts=3 sw=3 sts=3
-au FileType golang     setl noet
+au FileType go         setl noet
 au FileType make       setl ts=4 sw=4 sts=4 noet
 au FileType python     setl ts=4 sw=4 sts=4 | let b:forcecolumn=79
 au FileType sh         setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
@@ -116,6 +114,15 @@ au BufEnter *
 \|  execute 'match Error /\%>'.(b:forcecolumn).'v.\+\|\s\+$\|^\s*\n\+\%$/'
 \|else
 \|  match Error /\s\+$\|^\s*\n\+\%$/
+\|endif
+
+" Draw underline for wrong tabs.
+highlight WrongTab term=underline cterm=underline
+au BufEnter *
+\ if &expandtab
+\|  match WrongTab /\t\+/
+\|else
+\|  match WrongTab /  \+/
 \|endif
 
 " English spelling checker.
