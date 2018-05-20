@@ -10,20 +10,20 @@ export LC_ALL=$LANG
 function prepend_path {
   [[ -d "$@" ]] && export PATH="$*:$PATH"
 }
-prepend_path "$HOME"/bin
-prepend_path "$HOME"/.local/bin
-prepend_path "$HOME"/.linuxbrew/bin
-prepend_path "$HOME"/.cargo/bin
+prepend_path "$HOME/bin"
+prepend_path "$HOME/.local/bin"
+prepend_path "$HOME/.linuxbrew/bin"
+prepend_path "$HOME/.cargo/bin"
 
 # Don't quit by ^D.
 set -o ignoreeof
 
 # Python environment.
-if [[ -f "$HOME"/env/bin/activate ]]; then
-  source "$HOME"/env/bin/activate
+if [[ -f "$HOME/env/bin/activate" ]]; then
+  source "$HOME/env/bin/activate"
 fi
-if [[ -f "$HOME"/.python-startup ]]; then
-  export PYTHONSTARTUP="$HOME"/.python-startup
+if [[ -f "$HOME/.python-startup" ]]; then
+  export PYTHONSTARTUP="$HOME/.python-startup"
 fi
 
 # Go environment.
@@ -51,8 +51,8 @@ function rm-tmp() {
 alias fix='reset; stty sane; tput rs1; clear; echo -e "\033c"'
 
 # Include files in ~/.profile.d.
-if [ -d "$HOME"/.profile.d ]; then
-  for f in "$HOME"/.profile.d/*; do
+if [ -d "$HOME/.profile.d" ]; then
+  for f in "$HOME/.profile.d"/*; do
     source "$f"
   done
 fi
