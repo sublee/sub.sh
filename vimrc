@@ -34,6 +34,9 @@ Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'w0rp/ale'
 
+" development environments
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
 " -----------------------------------------------------------------------------
 call plug#end()
 
@@ -219,3 +222,6 @@ au VimEnter *
 \ if exists(':TagbarToggle')
 \|  nmap <F8> :TagbarToggle<CR>
 \|endif
+
+" vim-go
+let g:go_def_mode = 'godef'

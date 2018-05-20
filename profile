@@ -27,8 +27,9 @@ if [[ -f "$HOME/.python-startup" ]]; then
 fi
 
 # Go environment.
-if [[ -d "$HOME"/go ]]; then
-  export GOPATH="$HOME"/go
+if [[ -d "$HOME/go" ]]; then
+  export GOPATH="$HOME/go"
+  prepend_path "$GOPATH/bin"
 fi
 
 # Aliases.
