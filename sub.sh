@@ -182,6 +182,7 @@ sym-link() {
     mv "$dest" "$BAK"
   fi
 
+  mkdir -p "$(dirname "$dest")"
   ln -vs "$src" "$dest"
 }
 
@@ -504,11 +505,16 @@ then
   }
 
   pip-install pdbpp
+  pip-install ptpython
   pip-install 'ipython<6'  # IPython 6.0 requires Python 3.3 or above.
 
   sym-link \
     "$SUBSH/python-startup.py" \
     ~/.python-startup
+
+  sym-link \
+    "$SUBSH/ptpython-config.py" \
+    ~/.ptpython/config.py
 
   readonly SITE_PACKAGES=$(
     "$VIRTUALENV/bin/python" -c \
