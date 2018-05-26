@@ -200,6 +200,9 @@ au VimEnter *
 " Explore the directory of the current file by `:E`.
 cabbrev E e %:p:h
 
+" Don't trigger `:Windows` by `:W`.
+cabbrev W echo "did you mean :w?"
+
 " Disable Markdown folding.
 let g:vim_markdown_folding_disabled=1
 
