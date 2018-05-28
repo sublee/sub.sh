@@ -31,7 +31,7 @@ Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --go-completer' }
 Plug 'w0rp/ale'
 
 " development environments
@@ -228,3 +228,4 @@ au VimEnter *
 
 " vim-go
 let g:go_def_mode = 'godef'
+let g:go_fmt_command = "goimports"
