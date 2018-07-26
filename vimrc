@@ -15,6 +15,7 @@ Plug 'stephpy/vim-yaml'
 Plug 'cespare/vim-toml'
 Plug 'rust-lang/rust.vim'
 Plug 'ekalinin/Dockerfile.vim'
+Plug 'posva/vim-vue', { 'do': 'sudo npm i -g eslint eslint-plugin-vue' }
 
 " function extensions
 Plug 'easymotion/vim-easymotion'
@@ -93,6 +94,7 @@ au FileType ruby       setl ts=2 sw=2 sts=2
 au FileType xml        setl ts=2 sw=2 sts=2
 au FileType yaml       setl ts=2 sw=2 sts=2
 au FileType html       setl ts=2 sw=2 sts=2
+au FileType vue        setl ts=2 sw=2 sts=2
 au FileType htmldjango setl ts=2 sw=2 sts=2
 au FileType lua        setl ts=2 sw=2 sts=2
 au FileType haml       setl ts=2 sw=2 sts=2
