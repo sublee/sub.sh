@@ -35,9 +35,6 @@ Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --go-completer' }
 Plug 'w0rp/ale'
 
-" development environments
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-
 " -----------------------------------------------------------------------------
 call plug#end()
 
@@ -143,11 +140,15 @@ hi SignColumn cterm=none ctermfg=none ctermbg=black
 " ALE
 au VimEnter *
 \ if exists(':ALE')
-\|  let g:ale_sign_column_always       = 1
-\|  let g:ale_statusline_format        = ['E%d', 'W%d', '']
-\|  let g:ale_echo_msg_format          = '[%linter%] %s [%severity%]'
-\|  let g:ale_lint_delay               = 500
-\|  let g:ale_lint_on_text_changed     = 'normal'
+\|  let g:ale_sign_column_always   = 1
+\|  let g:ale_statusline_format    = ['E%d', 'W%d', '']
+\|  let g:ale_echo_msg_format      = '[%linter%] %s [%severity%]'
+\|  let g:ale_lint_delay           = 500
+\|  let g:ale_lint_on_text_changed = 'normal'
+\|  let g:ale_fix_on_save          = 1
+\|  let g:ale_fixers = {
+\       'go': ['goimports']
+\   }
 \|  nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 \|  nmap <silent> <C-j> <Plug>(ale_next_wrap)
 \|endif
@@ -180,8 +181,7 @@ hi User1 cterm=inverse ctermfg=red
 " YouCompleteMe
 au VimEnter *
 \ if exists('g:ycm_goto_buffer_command')
-\|  let g:ycm_goto_buffer_command = 'new-tab'
-\|  nnoremap <F12> :YcmCompleter GoToDefinition<CR>
+\|  nnoremap gd :YcmCompleter GoToDefinition<CR>
 \|endif
 
 " Mundo
@@ -227,7 +227,3 @@ au VimEnter *
 \ if exists(':TagbarToggle')
 \|  nmap <F8> :TagbarToggle<CR>
 \|endif
-
-" vim-go
-let g:go_def_mode = 'godef'
-let g:go_fmt_command = "goimports"
