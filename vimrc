@@ -181,6 +181,7 @@ hi User1 cterm=inverse ctermfg=red
 " YouCompleteMe
 au VimEnter *
 \ if exists('g:ycm_goto_buffer_command')
+\|  let g:ycm_goto_buffer_command = 'same-buffer'
 \|  nnoremap gd :YcmCompleter GoToDefinition<CR>
 \|endif
 
