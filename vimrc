@@ -35,6 +35,9 @@ Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --go-completer' }
 Plug 'w0rp/ale'
 
+" language-specific
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
 " -----------------------------------------------------------------------------
 call plug#end()
 
@@ -228,3 +231,9 @@ au VimEnter *
 \ if exists(':TagbarToggle')
 \|  nmap <F8> :TagbarToggle<CR>
 \|endif
+
+" vim-go
+au FileType go nmap gor <Plug>(go-rename)
+au FileType go nmap got <Plug>(go-test-compile)
+" YCM's goto is better.
+let g:go_def_mapping_enabled = 0
