@@ -45,7 +45,7 @@ call plug#end()
 syntax on
 
 " Prefer "very magic" regex.
-nnoremap / /\v
+nmap / /\v
 cnoremap %s/ %s/\v
 
 " Search for visually selected text by //.
@@ -141,20 +141,15 @@ au BufEnter * execute 'sign place 9999 line=1 name=sign buffer='.bufnr('')
 hi SignColumn cterm=none ctermfg=none ctermbg=black
 
 " ALE
-au VimEnter *
-\ if exists(':ALE')
-\|  let g:ale_sign_column_always   = 1
-\|  let g:ale_statusline_format    = ['E%d', 'W%d', '']
-\|  let g:ale_echo_msg_format      = '[%linter%] %s [%severity%]'
-\|  let g:ale_lint_delay           = 500
-\|  let g:ale_lint_on_text_changed = 'normal'
-\|  let g:ale_fix_on_save          = 1
-\|  let g:ale_fixers = {
-\       'go': ['goimports']
-\   }
-\|  nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-\|  nmap <silent> <C-j> <Plug>(ale_next_wrap)
-\|endif
+let g:ale_sign_column_always   = 1
+let g:ale_statusline_format    = ['E%d', 'W%d', '']
+let g:ale_echo_msg_format      = '[%linter%] %s [%severity%]'
+let g:ale_lint_delay           = 500
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_fix_on_save          = 1
+let g:ale_fixers               = {'go': ['goimports']}
+au VimEnter * nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+au VimEnter * nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 " It blocks editing.
 " \|  let g:ale_change_sign_column_color = 1
@@ -182,26 +177,18 @@ set statusline+=/%L                         " total lines
 hi User1 cterm=inverse ctermfg=red
 
 " YouCompleteMe
-au VimEnter *
-\ if exists('g:ycm_goto_buffer_command')
-\|  let g:ycm_goto_buffer_command = 'same-buffer'
-\|  nnoremap gd :YcmCompleter GoToDefinition<CR>
-\|endif
+let g:ycm_goto_buffer_command = 'same-buffer'
+au VimEnter * nmap gd :YcmCompleter GoToDefinition<CR>
 
 " Mundo
-au VimEnter *
-\ if exists(':Mundo')
-\|  nnoremap <F5> :MundoToggle<CR>
-\|endif
+au VimEnter * nmap <F5> :MundoToggle<CR>
 
 " EasyMotion
 au VimEnter *
-\ if exists('g:EasyMotion_loaded')
-\|  map <Leader>l <Plug>(easymotion-lineforward)
-\|  map <Leader>j <Plug>(easymotion-j)
-\|  map <Leader>k <Plug>(easymotion-k)
-\|  map <Leader>h <Plug>(easymotion-linebackward)
-\|endif
+\ map <Leader>l <Plug>(easymotion-lineforward)
+\|map <Leader>j <Plug>(easymotion-j)
+\|map <Leader>k <Plug>(easymotion-k)
+\|map <Leader>h <Plug>(easymotion-linebackward)
 
 " Explore the directory of the current file by `:E`.
 cabbrev E e %:p:h
@@ -221,16 +208,10 @@ let g:terraform_remap_spacebar=1
 au FileType tf setlocal commentstring=#\ %s
 
 " fzf
-au VimEnter *
-\ if exists(':FZF')
-\|  nnoremap <C-f> :FZF<CR>
-\|endif
+au VimEnter * nmap <C-f> :FZF<CR>
 
 " Tagbar
-au VimEnter *
-\ if exists(':TagbarToggle')
-\|  nmap <F8> :TagbarToggle<CR>
-\|endif
+au VimEnter * nmap <F8> :TagbarToggle<CR>
 
 " vim-go
 au FileType go nmap gor <Plug>(go-rename)
