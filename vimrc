@@ -216,5 +216,6 @@ au VimEnter * nmap <F8> :TagbarToggle<CR>
 " vim-go
 au FileType go nmap gor <Plug>(go-rename)
 au FileType go nmap got <Plug>(go-test-func)
+au FileType go nmap goT <Plug>(go-test)
 " YCM's goto is better.
 let g:go_def_mapping_enabled = 0
