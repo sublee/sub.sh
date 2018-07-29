@@ -110,25 +110,34 @@ au FileType zsh        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 au FileType vim        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 au FileType terraform  setl ts=2 sw=2 sts=2 | let b:forcecolumn=999
 
-" Keep maximum columns, avoid trailing empty lines.
-" Let b:forcecolumn to set the maximum columns.
-highlight ColorColumn term=underline cterm=underline ctermbg=none
+" ------------------------------------------------------------------------------
+" Matches
+
+" NOTE: match is not cumulative. So there are 2match, 3match variants.
+" https://unix.stackexchange.com/a/139499
+
+" 1. Warn extra whitespace.
+hi ExtraSpace term=underline ctermbg=red
+au BufEnter * mat ExtraSpace /\s\+$\|^\s*\n\+\%$/
+
+" 2. Draw underline for wrong tabs.
+hi WrongTab term=underline cterm=underline
+au BufEnter *
+\ if &expandtab
+\|  2mat WrongTab /\t\+/
+\|else
+\|  2mat WrongTab /\(^\s*\)\@<=  \+/
+\|endif
+
+" 3. Keep maximum columns.
+hi ColorColumn term=underline cterm=underline ctermbg=none
 au BufEnter *
 \ if exists('b:forcecolumn')
 \|  execute 'set colorcolumn='.(b:forcecolumn+1)
-\|  execute 'match Error /\%>'.(b:forcecolumn).'v.\+\|\s\+$\|^\s*\n\+\%$/'
-\|else
-\|  match Error /\s\+$\|^\s*\n\+\%$/
+\|  execute '3mat Error /\%>'.(b:forcecolumn).'v.\+/'
 \|endif
 
-" Draw underline for wrong tabs.
-highlight WrongTab term=underline cterm=underline
-au BufEnter *
-\ if &expandtab
-\|  match WrongTab /\t\+/
-\|else
-\|  match WrongTab /\(^\s*\)\@<=  \+/
-\|endif
+" ------------------------------------------------------------------------------
 
 " English spelling checker.
 setlocal spelllang=en_us
