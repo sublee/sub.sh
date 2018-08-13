@@ -5,7 +5,6 @@ services:
 env:
   matrix:
   - IMAGE=ubuntu:16.04
-  - IMAGE=ubuntu:14.04
 script:
 - docker run -it --name sub.sh -v "$PWD/sub.sh:/sub.sh" "$IMAGE" /sub.sh
 - docker start -ia sub.sh
