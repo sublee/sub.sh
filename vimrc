@@ -118,15 +118,15 @@ au FileType terraform  setl ts=2 sw=2 sts=2 | let b:forcecolumn=999
 
 " 1. Warn extra whitespace.
 hi ExtraSpace term=underline ctermbg=red
-au BufEnter * mat ExtraSpace /\s\+$\|^\s*\n\+\%$/
+au BufEnter * call matchadd('ExtraSpace', '\s\+$\|^\s*\n\+\%$')
 
 " 2. Draw underline for wrong tabs.
 hi WrongTab term=underline cterm=underline
 au BufEnter *
 \ if &expandtab
-\|  2mat WrongTab /\t\+/
+\|  call matchadd('WrongTab', '\t\+')
 \|else
-\|  2mat WrongTab /\(^\s*\)\@<=  \+/
+\|  call matchadd('WrongTab', '\(^\s*\)\@<=  \+')
 \|endif
 
 " 3. Keep maximum columns.
@@ -134,7 +134,7 @@ hi ColorColumn term=underline cterm=underline ctermbg=none
 au BufEnter *
 \ if exists('b:forcecolumn')
 \|  execute 'set colorcolumn='.(b:forcecolumn+1)
-\|  execute '3mat Error /\%>'.(b:forcecolumn).'v.\+/'
+\|  call matchadd('Error', '\%>'.(b:forcecolumn).'v.\+')
 \|endif
 
 " ------------------------------------------------------------------------------
