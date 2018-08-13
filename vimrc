@@ -156,7 +156,10 @@ let g:ale_echo_msg_format      = '[%linter%] %s [%severity%]'
 let g:ale_lint_delay           = 500
 let g:ale_lint_on_text_changed = 'normal'
 let g:ale_fix_on_save          = 1
-let g:ale_fixers               = {'go': ['goimports']}
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'go': ['goimports'],
+\}
 au VimEnter * nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 au VimEnter * nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
