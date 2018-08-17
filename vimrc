@@ -116,17 +116,22 @@ au FileType terraform  setl ts=2 sw=2 sts=2 | let b:forcecolumn=999
 " NOTE: match is not cumulative. So there are 2match, 3match variants.
 " https://unix.stackexchange.com/a/139499
 
+" 0. Clear my custom matches.
+au BufEnter * silent! call matchdelete(8901)
+au BufEnter * silent! call matchdelete(8902)
+au BufEnter * silent! call matchdelete(8903)
+
 " 1. Warn extra whitespace.
 hi ExtraSpace term=underline ctermbg=red
-au BufEnter * call matchadd('ExtraSpace', '\s\+$\|^\s*\n\+\%$', 8901)
+au BufEnter * call matchadd('ExtraSpace', '\s\+$\|^\s*\n\+\%$', 0, 8901)
 
 " 2. Draw underline for wrong tabs.
 hi WrongTab term=underline cterm=underline
 au BufEnter *
 \ if &expandtab
-\|  call matchadd('WrongTab', '\t\+', 8902)
+\|  call matchadd('WrongTab', '\t\+', 0, 8902)
 \|else
-\|  call matchadd('WrongTab', '\(^\s*\)\@<=  \+', 8902)
+\|  call matchadd('WrongTab', '\(^\s*\)\@<=  \+', 0, 8902)
 \|endif
 
 " 3. Keep maximum columns.
@@ -134,7 +139,7 @@ hi ColorColumn term=underline cterm=underline ctermbg=none
 au BufEnter *
 \ if exists('b:forcecolumn')
 \|  execute 'set colorcolumn='.(b:forcecolumn+1)
-\|  call matchadd('Error', '\%>'.(b:forcecolumn).'v.\+', 8903)
+\|  call matchadd('Error', '\%>'.(b:forcecolumn).'v.\+', 0, 8903)
 \|endif
 
 " ------------------------------------------------------------------------------
