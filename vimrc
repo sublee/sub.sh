@@ -78,6 +78,9 @@ set et
 set ts=4 sw=4 sts=4
 set ai
 
+" Single space between sentences.
+set nojs
+
 " Some additional syntax highlighters.
 au! BufRead,BufNewFile *.wsgi setfiletype python
 au! BufRead,BufNewFile *.sass setfiletype sass
