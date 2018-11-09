@@ -54,8 +54,8 @@ vnoremap // y/<C-R>"<CR>
 " I don't like CRLF.
 set fileformat=unix
 
-" Toggle paste mode by ^v.
-nn <C-V> :set invpaste paste?<CR>
+" Toggle paste mode by ^vv.
+nn <C-V><C-V> :set invpaste paste?<CR>
 
 " Make backspace works like most other applications.
 set backspace=2
