@@ -51,8 +51,11 @@ cnoremap %s/ %s/\v
 " Search for visually selected text by //.
 vnoremap // y/<C-R>"<CR>
 
-" I dislike CRLF.
+" I don't like CRLF.
 set fileformat=unix
+
+" Toggle paste mode by ^v.
+nn <C-V> :set invpaste paste?<CR>
 
 " Make backspace works like most other applications.
 set backspace=2
