@@ -141,7 +141,7 @@ add-ppa() {
 
   if ! grep -q "^deb.*$src" /etc/apt/sources.list.d/*.list
   then
-    sudo add-apt-repository -y "ppa:$src"
+    sudo -E add-apt-repository -y "ppa:$src"
   fi
 }
 
@@ -237,21 +237,21 @@ update_apt() {
   info "Updating APT package lists..."
 
   # Require to add PPAs.
-  sudo apt update
-  sudo apt install -y software-properties-common
+  sudo -E apt update
+  sudo -E apt install -y software-properties-common
 
   # Prefer the latest version of Git.
   add-ppa git-core/ppa
 
   # Update the APT package lists.
-  sudo apt update
+  sudo -E apt update
 }
 
 install_apt_packages() {
   info "Installing packages from APT..."
 
-  sudo apt install -y aptitude cmake curl git git-flow htop ntpdate tmux tree
-  sudo apt install -y shellcheck || true
+  sudo -E apt install -y aptitude cmake curl git git-flow htop ntpdate tmux tree
+  sudo -E apt install -y shellcheck || true
 }
 
 # Install packages from APT.
@@ -295,12 +295,12 @@ fi
 if ! executable zsh
 then
   info "Installing ZSH..."
-  sudo apt install -y zsh
+  sudo -E apt install -y zsh
 fi
 
 info "Setting up the ZSH environment..."
 
-sudo chsh -s "$(which zsh)" "$USER"
+sudo -E chsh -s "$(which zsh)" "$USER"
 
 # Oh My ZSH!
 github-pull robbyrussell/oh-my-zsh ~/.oh-my-zsh
@@ -360,7 +360,7 @@ install_rg() {
   tar xvzf "$rg_tgz" -C "$rg_dir"
 
   info "Installing rg executable..."
-  sudo cp "$rg_dir/"*"/rg" /usr/local/bin/rg
+  sudo -E cp "$rg_dir/"*"/rg" /usr/local/bin/rg
 
   echo "Installed at $(which rg)."
 }
@@ -375,7 +375,7 @@ install_fd() {
   # Remove legacy executable.
   if [[ -f /usr/local/bin/fd ]]
   then
-    sudo rm -rf /usr/local/bin/fd
+    sudo -E rm -rf /usr/local/bin/fd
   fi
 
   # Detect the latest and installed version.
@@ -410,7 +410,7 @@ install_fd() {
   curl -L "$fd_deb_url" -o "$fd_deb"
 
   info "Installing ${fd_deb}..."
-  sudo dpkg -i "$fd_deb"
+  sudo -E dpkg -i "$fd_deb"
 
   echo "Installed at $(which fd)."
 }
@@ -442,8 +442,8 @@ then
 
   add-ppa pi-rho/dev
 
-  sudo apt update
-  sudo apt install -y vim
+  sudo -E apt update
+  sudo -E apt install -y vim
 fi
 
 # sub.sh ----------------------------------------------------------------------
@@ -486,10 +486,10 @@ if [[ "$PYTHON" = true ]]
 then
   info "Setting up the Python environment..."
 
-  sudo apt install -y python python-dev python-setuptools
+  sudo -E apt install -y python python-dev python-setuptools
   if ! executable virtualenv
   then
-    sudo easy_install virtualenv
+    sudo -E easy_install virtualenv
   fi
 
   if [[ ! -d "$VIRTUALENV" ]]
