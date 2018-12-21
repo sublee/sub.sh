@@ -278,10 +278,18 @@ install_apt_packages
 # Authorize the local SSH key for connecting to localhost without password.
 if ! ssh -qo BatchMode=yes localhost true
 then
+  mkdir -p ~/.ssh
+
   if [[ ! -f ~/.ssh/id_rsa ]]
   then
     info "Generating new SSH key..."
     ssh-keygen -f ~/.ssh/id_rsa -N ''
+  fi
+
+  if [[ ! -f ~/.ssh/id_rsa.pub ]]
+  then
+    info "Retrieving a public SSH key from the private..."
+    ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
   fi
 
   ssh-keyscan -H localhost 2>/dev/null 1>> ~/.ssh/known_hosts
