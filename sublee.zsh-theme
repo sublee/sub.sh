@@ -111,5 +111,5 @@ stop-timer-rprompt() {
     RPROMPT="%F{red}↳%S$((elapsed/60))min%s%f"
   fi
 }
-add-zsh-hook preexec start-timer
-add-zsh-hook precmd  stop-timer-rprompt
+preexec_functions+=(start-timer)
+precmd_functions+=(stop-timer-rprompt)

@@ -57,7 +57,7 @@ fi
 if [[ -n "$TMUX" ]]
 then
   bell() { echo -ne "\a" }
-  add-zsh-hook precmd bell
+  precmd_functions+=(bell)
 fi
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
