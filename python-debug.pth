@@ -1,4 +1,1 @@
-import __builtin__ as _; _.B = lambda i=__import__: i('pdb').Pdb().set_trace(i('sys')._getframe().f_back)
-import __builtin__ as _; _.PM = lambda: __import__('pdb').pm()
-import __builtin__ as _; _.pprint = __import__('pprint').pprint
-import __builtin__ as _; _.print_stack = __import__('traceback').print_stack
+import os; exec('try:\n import __builtin__ as _\nexcept ImportError:\n import builtins as _'); _.B = lambda i=__import__: i('pdb').Pdb().set_trace(i('sys')._getframe().f_back); _.PM = lambda: __import__('pdb').pm(); _.pprint = __import__('pprint').pprint; _.print_stack = __import__('traceback').print_stack
