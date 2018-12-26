@@ -342,6 +342,8 @@ github-pull \
 
 install_rg() {
   # Detect the latest and installed version.
+  info "Detecting the latest version of rg..."
+
   local rg_version
   local rg_release
   rg_version="$(
@@ -397,6 +399,8 @@ install_fd() {
   fi
 
   # Detect the latest and installed version.
+  info "Detecting the latest version of fd..."
+
   local fd_release
   local fd_version
   fd_release="$(github-api sharkdp/fd/releases/latest)"
