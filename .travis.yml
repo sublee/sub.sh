@@ -14,21 +14,17 @@ script:
 - docker start -ia sub.sh
 
 after_success:
-- |
-  rm -rf .gh-pages
-  mkdir .gh-pages
-- |
-  pushd .gh-pages
-    echo sub.sh > CNAME
-    touch .nojekyll
-    python ../web/build.py .
-  popd
+- pushd web
+- make
+- echo sub.sh > build/CNAME
+- touch build/.nojekyll
+- popd
 
 deploy:
-  - provider: pages
-    skip_cleanup: true
-    github_token: $GITHUB_TOKEN
-    local_dir: .gh-pages
-    on:
-      branch: master
-      env: IMAGE=ubuntu:16.04
+- provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: web/build
+  on:
+    branch: master
+    env: IMAGE=ubuntu:16.04
