@@ -258,6 +258,7 @@ install_apt_packages() {
     git-flow \
     htop \
     less \
+    lsof \
     ntpdate \
     tmux \
     tree
