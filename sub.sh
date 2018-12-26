@@ -194,10 +194,6 @@ executable() {
   which "$1" &>/dev/null
 }
 
-dense() {
-  echo "${*// }"
-}
-
 failed() {
   fatal "Failed to provision by sub.sh."
 }
@@ -544,10 +540,7 @@ fi
 # Show my emblem.
 if [[ -n "$TERM" ]]
 then
-  curl "$(dense \
-    https://gist.githubusercontent.com/sublee/d22ddfdf3de690bb60ec/raw/ \
-    01f399a82f34e37edaeda7a017e0f8e9555fe9a2/sublee.txt
-  )"
+  curl -sL https://subl.ee/~emblem
 fi
 
 # Print installed versions.
