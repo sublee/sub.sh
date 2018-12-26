@@ -250,7 +250,18 @@ update_apt() {
 install_apt_packages() {
   info "Installing packages from APT..."
 
-  sudo -E apt install -y aptitude cmake curl git git-flow htop ntpdate tmux tree
+  sudo -E apt install -y \
+    aptitude \
+    cmake \
+    curl \
+    git \
+    git-flow \
+    htop \
+    less \
+    ntpdate \
+    tmux \
+    tree
+
   sudo -E apt install -y shellcheck || true
 }
 
