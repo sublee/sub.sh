@@ -1,39 +1,34 @@
 language: c
+
 sudo: required
+
 services:
 - docker
+
 env:
   matrix:
   - IMAGE=ubuntu:16.04
+
 script:
 - docker run -it --name sub.sh -v "$PWD/sub.sh:/sub.sh" "$IMAGE" /sub.sh
 - docker start -ia sub.sh
+
 after_success:
-- |
-  if [[ "$TRAVIS_JOB_NUMBER" != *.1 ]] || [[ "$TRAVIS_BRANCH" != master ]]
-  then
-    echo "sub.sh deployment skipped."
-    exit 0
-  fi
 - |
   rm -rf .gh-pages
   mkdir .gh-pages
-  cd .gh-pages
 - |
-  echo sub.sh > CNAME
-  touch .nojekyll
-  python ../web/build.py .
-- |
-  openssl aes-256-cbc \
-    -K $encrypted_d9e203712590_key -iv $encrypted_d9e203712590_iv \
-    -in ../key.enc -out key -d
-  chmod 600 key
-  eval "$(ssh-agent -s)"
-  ssh-add key
-- |
-  git init
-  git config user.name "Heungsub Lee"
-  git config user.email "sub@subl.ee"
-  git add .
-  git commit -m "Deploy to https://sub.sh/ ($TRAVIS_COMMIT)"
-  git push -qf git@github.com:sublee/sub.sh master:gh-pages > /dev/null 2>&1
+  pushd .gh-pages
+    echo sub.sh > CNAME
+    touch .nojekyll
+    python ../web/build.py .
+  popd
+
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: .gh-pages
+    on:
+      branch: master
+      env: IMAGE=ubuntu:16.04
