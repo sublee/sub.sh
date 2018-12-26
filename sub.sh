@@ -493,7 +493,7 @@ stty -F /dev/stdout sane
 
 # TPM for tmux
 github-pull tmux-plugins/tpm ~/.tmux/plugins/tpm
-~/.tmux/plugins/tpm/bindings/install_plugins
+~/.tmux/plugins/tpm/bindings/install_plugins 2>/dev/null || true
 
 # python ----------------------------------------------------------------------
 
