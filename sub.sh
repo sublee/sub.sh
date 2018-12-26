@@ -118,19 +118,19 @@ fatal() {
 
 # version detectors -----------------------------------------------------------
 
-vim_version() {
+vim-installed-version() {
   vim --version | awk '{ print $5; exit }'
 }
 
-git_version() {
+git-installed-version() {
   git --version | awk '{ print $3 }'
 }
 
-rg_version() {
+rg-installed-version() {
   rg --version | head -n 1 | cut -d' ' -f2
 }
 
-fd_version() {
+fd-installed-version() {
   fd --version | cut -d' ' -f2
 }
 
@@ -162,6 +162,10 @@ git-pull() {
 
 github-pull() {
   git-pull "https://github.com/$1" "$2"
+}
+
+github-api() {
+  curl -s "https://api.github.com/repos/$1"
 }
 
 sym-link() {
@@ -331,23 +335,22 @@ github-pull \
 
 install_rg() {
   # Detect the latest and installed version.
+  local rg_version
   local rg_release
-  local rg_latest_version
-  rg_release="$(
-    curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest
+  rg_version="$(
+    github-api BurntSushi/ripgrep/releases | \
+    grep -oP '(?<=tag_name": ")[0-9.]+' | head -1
   )"
-  rg_latest_version="$(
-    echo "$rg_release" | grep tag_name | cut -d '"' -f4
-  )"
+  rg_release="$(github-api "BurntSushi/ripgrep/releases/tags/$rg_version")"
 
   # Compare with the currently installed version.
-  if executable rg && [[ "$(rg_version)" == "$rg_latest_version" ]]
+  if executable rg && [[ "$(rg-installed-version)" == "$rg_version" ]]
   then
-    info "Already installed rg-${rg_latest_version}"
+    info "Already installed rg-${rg_version}"
     return
   fi
 
-  info "Installing rg-${rg_latest_version}..."
+  info "Installing rg-${rg_version}..."
 
   local rg_tgz
   local rg_dir
@@ -388,21 +391,19 @@ install_fd() {
 
   # Detect the latest and installed version.
   local fd_release
-  local fd_latest_version
-  fd_release="$(
-    curl -s https://api.github.com/repos/sharkdp/fd/releases/latest
-  )"
-  fd_latest_version="$(
+  local fd_version
+  fd_release="$(github-api sharkdp/fd/releases/latest)"
+  fd_version="$(
     echo "$fd_release" | grep tag_name | cut -d '"' -f4 | cut -c 2-
   )"
 
-  if executable fd && [[ "$(fd_version)" == "$fd_latest_version" ]]
+  if executable fd && [[ "$(fd-installed-version)" == "$fd_version" ]]
   then
-    info "Already installed fd-${fd_latest_version}"
+    info "Already installed fd-${fd_version}"
     return
   fi
 
-  info "Installing fd-${fd_latest_version}..."
+  info "Installing fd-${fd_version}..."
 
   local fd_deb
   local fd_deb_url
@@ -432,7 +433,7 @@ INSTALL_VIM=true
 VIM_VERSION=""
 if executable vim
 then
-  VIM_VERSION="$(vim_version)"
+  VIM_VERSION="$(vim-installed-version)"
   if [[ "$VIM_VERSION" = 8.* ]]
   then
     INSTALL_VIM=false
@@ -445,7 +446,7 @@ then
   then
     info "Installing Vim..."
   else
-    info "Upgrading Vim from ${VIM_VERSION}..."
+    info "Upgrading Vim from ${vim-installed-version}..."
   fi
 
   add-ppa pi-rho/dev
@@ -551,10 +552,10 @@ fi
 
 # Print installed versions.
 echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD) at $SUBSH_DEST"
-echo "vim: $(vim_version)"
-echo "git: $(git_version)"
-echo "rg: $(rg_version)"
-echo "fd: $(fd_version)"
+echo "vim: $(vim-installed-version)"
+echo "git: $(git-installed-version)"
+echo "rg: $(rg-installed-version)"
+echo "fd: $(fd-installed-version)"
 
 # Notify the result.
 info "Provisioned successfully by sub.sh."
