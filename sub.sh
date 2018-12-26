@@ -488,12 +488,12 @@ info "Installing plugins for Vim and tmux..."
 # Vim-Plug for Vim
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+vim --noplugin -c PlugInstall -c qa
+stty -F /dev/stdout sane
 
 # TPM for tmux
 github-pull tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-vim --noplugin -c PlugInstall -c qa
-stty -F /dev/stdout sane
+~/.tmux/plugins/tpm/bindings/install_plugins
 
 # python ----------------------------------------------------------------------
 
