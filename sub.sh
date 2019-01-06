@@ -257,6 +257,7 @@ install_apt_packages() {
     git \
     git-flow \
     htop \
+    jq \
     less \
     lsof \
     ntpdate \
