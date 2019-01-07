@@ -19,6 +19,12 @@ prepend_path "$HOME/.cargo/bin"
 set -o ignoreeof
 
 # Python environment.
+if [[ -n "$(command -v pyenv)" ]]; then
+  prepend_path "$HOME/.pyenv/bin"
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi
+
 if [[ -f "$HOME/.python-startup" ]]; then
   export PYTHONSTARTUP="$HOME/.python-startup"
 fi
