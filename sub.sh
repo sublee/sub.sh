@@ -512,7 +512,7 @@ then
 
   if ! executable pyenv
   then
-    curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+    curl -L https://git.io/vxZax | bash
   fi
 
   sym-link \
