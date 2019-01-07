@@ -19,9 +19,6 @@ prepend_path "$HOME/.cargo/bin"
 set -o ignoreeof
 
 # Python environment.
-if [[ -f "$HOME/env/bin/activate" ]]; then
-  source "$HOME/env/bin/activate"
-fi
 if [[ -f "$HOME/.python-startup" ]]; then
   export PYTHONSTARTUP="$HOME/.python-startup"
 fi

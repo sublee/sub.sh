@@ -509,47 +509,23 @@ then
   info "Setting up the Python environment..."
 
   sudo -E apt install -y python python-dev python-setuptools
-  if ! executable virtualenv
+
+  if ! executable pyenv
   then
-    sudo -E easy_install virtualenv
+    curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
   fi
-
-  if [[ ! -d "$VIRTUALENV" ]]
-  then
-    virtualenv "$VIRTUALENV"
-  fi
-
-  pip-install() {
-    if ! "$VIRTUALENV/bin/pip" install -U "$1"
-    then
-      warn "Failed to install $1."
-    fi
-  }
-
-  pip-install pdbpp
-  pip-install ptpython
-  pip-install 'ipython<6'  # IPython 6.0 requires Python 3.3 or above.
 
   sym-link \
     "$SUBSH/python-startup.py" \
     ~/.python-startup
 
-  sym-link \
-    "$SUBSH/ptpython-config.py" \
-    ~/.ptpython/config.py
-
   readonly SITE_PACKAGES=$(
-    "$VIRTUALENV/bin/python" -c \
-    "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+    python -c \
+    'from distutils.sysconfig import get_python_lib; print(get_python_lib())'
   )
   sym-link \
     "$SUBSH/python-debug.pth" \
     "$SITE_PACKAGES/__debug__.pth"
-
-  mkdir -p ~/.ipython/profile_default
-  sym-link \
-    "$SUBSH/ipython_config.py" \
-    ~/.ipython/profile_default/ipython_config.py
 fi
 
 # results ---------------------------------------------------------------------
