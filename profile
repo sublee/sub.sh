@@ -19,7 +19,7 @@ prepend_path "$HOME/.cargo/bin"
 set -o ignoreeof
 
 # Python environment.
-if [[ -n "$(command -v pyenv)" ]]; then
+if [[ -d "$HOME/.pyenv" ]]; then
   prepend_path "$HOME/.pyenv/bin"
   eval "$(pyenv init -)"
   eval "$(pyenv virtualenv-init -)"
