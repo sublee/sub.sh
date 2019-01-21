@@ -165,7 +165,9 @@ github-pull() {
 }
 
 github-api() {
-  curl -s "https://api.github.com/repos/$1"
+  local user="$GITHUB_USER"
+  local token="$GITHUB_TOKEN"
+  curl -su "$user:$token" "https://api.github.com/repos/$1"
 }
 
 sym-link() {
