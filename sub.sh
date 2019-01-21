@@ -165,8 +165,8 @@ github-pull() {
 }
 
 github-api() {
-  local user="$GITHUB_USER"
-  local token="$GITHUB_TOKEN"
+  local user="${GITHUB_USER:-}"
+  local token="${GITHUB_TOKEN:-}"
   curl -su "$user:$token" "https://api.github.com/repos/$1"
 }
 
