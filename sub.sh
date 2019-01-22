@@ -263,6 +263,7 @@ install_apt_packages() {
     less \
     lsof \
     ntpdate \
+    psmisc \
     tmux \
     tree
 
