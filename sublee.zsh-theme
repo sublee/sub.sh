@@ -22,10 +22,13 @@ prompt_status() {
 }
 
 prompt_user() {
-  # sub@fantine❯
-  if [[ $UID -ne 0 ]]
+  # fantine (for root)
+  # sub@fantine (for others)
+  if [[ $UID -eq 0 ]]
   then
-    echo -n "%F{green}%n@%m%F{cyan}❯%f"
+    echo -n "%F{red}%m%f"
+  else
+    echo -n "%F{green}%n@%m%f"
   fi
 }
 
@@ -62,12 +65,11 @@ prompt_git() {
   echo -n "%F{yellow}:$git_commit%f"
 }
 
-prompt_end() {
-  # ¶ (for root)
-  # ❯ (for others)
+prompt_sep() {
+  # ❯
   if [[ "$UID" -eq 0 ]]
   then
-    echo -n "%F{red}¶%f"
+    echo -n "%F{yellow}❯%f"
   else
     echo -n "%F{cyan}❯%f"
   fi
@@ -77,9 +79,10 @@ prompt_end() {
 build_prompt() {
   prompt_status
   prompt_user
+  prompt_sep
   prompt_dir
   prompt_git
-  prompt_end
+  prompt_sep
 }
 PROMPT='$(build_prompt) '
 
