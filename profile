@@ -18,6 +18,16 @@ prepend_path "$HOME/.cargo/bin"
 # Don't quit by ^D.
 set -o ignoreeof
 
+# If the system hostname can't be customized (such as in a Docker container),
+# override it at ~/.hostname file.
+if [[ -f ~/.hostname ]]
+then
+  HOST="$(cat ~/.hostname)"
+else
+  HOST="$(hostname -a)"
+fi
+export HOST
+
 # Python environment.
 if [[ -d "$HOME/.pyenv" ]]; then
   prepend_path "$HOME/.pyenv/bin"
