@@ -259,11 +259,14 @@ install_apt_packages() {
     git \
     git-flow \
     htop \
+    iputils-ping \
     jq \
     less \
     lsof \
+    net-tools \
     ntpdate \
     psmisc \
+    telnet \
     tmux \
     tree
 
