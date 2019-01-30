@@ -10,7 +10,7 @@ env:
   - IMAGE=ubuntu:16.04
 
 script:
-- docker run -it --env-file <(env | grep ^GITHUB) --name sub.sh -v "$PWD/sub.sh:/sub.sh" "$IMAGE" /sub.sh
+- docker run -it --env-file <(env | grep ^GITHUB) --name sub.sh -v "$PWD/sub.sh:/sub.sh" "$IMAGE" bash -c '[[ -f ~/.profile ]] && source ~/.profile; /sub.sh'
 - docker start -ia sub.sh
 
 after_success:
