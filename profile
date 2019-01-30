@@ -24,7 +24,7 @@ if [[ -f ~/.hostname ]]
 then
   HOST="$(cat ~/.hostname)"
 else
-  HOST="$(hostname -a)"
+  HOST="$(hostname -s)"
 fi
 export HOST
 
