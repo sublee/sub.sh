@@ -259,10 +259,12 @@ install_apt_packages() {
     git \
     git-flow \
     htop \
+    iftop \
     iputils-ping \
     jq \
     less \
     lsof \
+    man \
     net-tools \
     ntpdate \
     psmisc \
