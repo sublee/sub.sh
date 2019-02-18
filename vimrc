@@ -109,11 +109,23 @@ au FileType less       setl ts=2 sw=2 sts=2
 au Filetype rst        setl ts=3 sw=3 sts=3
 au FileType go         setl noet
 au FileType make       setl ts=4 sw=4 sts=4 noet
-au FileType python     setl ts=4 sw=4 sts=4 | let b:forcecolumn=79
 au FileType sh         setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 au FileType zsh        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 au FileType vim        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 au FileType terraform  setl ts=2 sw=2 sts=2 | let b:forcecolumn=999
+
+" Read Python max columns from its pylintrc.
+func! s:pylint_max_columns()
+  return system('python -c "'
+\.'import sys; from pylint.config import PYLINTRC;'
+\.'not PYLINTRC and (print(80) or sys.exit());'
+\.'from pylint.checkers.format import FormatChecker as C;'
+\.'print(C().config.max_line_length)'
+\.'"')
+endfunc
+
+au FileType python setl ts=4 sw=4 sts=4
+\| exec 'let b:forcecolumn=' . s:pylint_max_columns()
 
 " ------------------------------------------------------------------------------
 " Matches
