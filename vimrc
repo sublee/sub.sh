@@ -245,6 +245,6 @@ let g:go_def_mapping_enabled = 0
 " Neoformat
 augroup fmt
   au!
-  au BufWritePre *.py undojoin | Neoformat
+  au BufWritePre * silent! undojoin | Neoformat
   let g:neoformat_enabled_python = ['isort', 'yapf']
 augroup END
