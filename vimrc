@@ -4,18 +4,16 @@ call plug#begin('~/.vim/plugged')
 " plugins ---------------------------------------------------------------------
 
 " syntax highlighters
-Plug 'plasticboy/vim-markdown'
-Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'othree/html5.vim'
-if version < 704
-  Plug 'JulesWang/css.vim'
-endif
 Plug 'cakebaker/scss-syntax.vim'
-Plug 'stephpy/vim-yaml'
 Plug 'cespare/vim-toml'
-Plug 'rust-lang/rust.vim'
 Plug 'ekalinin/Dockerfile.vim'
+Plug 'Glench/Vim-Jinja2-Syntax'
+if version < 704 | Plug 'JulesWang/css.vim' | endif
+Plug 'othree/html5.vim'
+Plug 'plasticboy/vim-markdown'
 Plug 'posva/vim-vue', { 'do': 'sudo npm i -g eslint eslint-plugin-vue' }
+Plug 'rust-lang/rust.vim'
+Plug 'stephpy/vim-yaml'
 
 " function extensions
 Plug 'easymotion/vim-easymotion'
