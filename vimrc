@@ -242,14 +242,14 @@ cabbrev E e %:p:h
 cabbrev W echo "did you mean :w?"
 
 " Disable Markdown folding.
-let g:vim_markdown_folding_disabled=1
+let g:vim_markdown_folding_disabled = 1
 
 " Customize colors for Jinja syntax.
 hi def link jinjaVarBlock Comment
 
 " For Terraform.
-let g:terraform_fold_sections=1
-let g:terraform_remap_spacebar=1
+let g:terraform_fold_sections  = 1
+let g:terraform_remap_spacebar = 1
 au FileType tf setlocal commentstring=#\ %s
 
 " fzf
