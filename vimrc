@@ -25,6 +25,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'hotwatermorning/auto-git-diff'
 Plug 'majutsushi/tagbar', { 'do': 'sudo apt install -y exuberant-ctags' }
 Plug 'rhysd/committia.vim'
+Plug 'sbdchd/neoformat'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'simnalamburt/vim-mundo'
 Plug 'terryma/vim-multiple-cursors'
@@ -242,3 +243,10 @@ au FileType go nmap got <Plug>(go-test-func)
 au FileType go nmap goT <Plug>(go-test)
 " YCM's goto is better.
 let g:go_def_mapping_enabled = 0
+
+" Neoformat
+augroup fmt
+  au!
+  au BufWritePre *.py undojoin | Neoformat
+  let g:neoformat_enabled_python = ['isort', 'yapf']
+augroup END
