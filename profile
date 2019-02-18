@@ -31,7 +31,7 @@ export HOST
 # Python environment.
 if [[ -d "$HOME/.pyenv" ]]; then
   prepend_path "$HOME/.pyenv/bin"
-  eval "$(pyenv init -)"
+  eval "$(pyenv init - --no-rehash "$SHELL")"
   eval "$(pyenv virtualenv-init -)"
 fi
 
