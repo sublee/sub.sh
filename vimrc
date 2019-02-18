@@ -116,13 +116,22 @@ au FileType terraform  setl ts=2 sw=2 sts=2 | let b:forcecolumn=999
 
 " Read Python max columns from its pylintrc.
 func! s:pylint_max_columns()
-  if !executable('pylint') | return 80 | endif
+  let default = 79
+
+  if !executable('pylint') | return default | endif
 
   return system('python -c "'
-\.'import sys; from pylint.config import PYLINTRC;'
-\.'not PYLINTRC and (print(80) or sys.exit());'
+\.'from sys import exit;'
+\.'from pylint.config import PYLINTRC;'
+\.''
+\.'PYLINTRC or (print(' . default . '), exit(0));'
+\.''
+\.'from pylint.lint import PyLinter as L;'
 \.'from pylint.checkers.format import FormatChecker as C;'
-\.'print(C().config.max_line_length)'
+\.''
+\.'l = L(); c = C(); l.register_checker(c);'
+\.'l.read_config_file(); l.load_config_file();'
+\.'print(c.config.max_line_length)'
 \.'"')
 endfunc
 
