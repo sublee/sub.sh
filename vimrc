@@ -236,9 +236,6 @@ au VimEnter *
 " Explore the directory of the current file by `:E`.
 cabbrev E e %:p:h
 
-" Don't trigger `:Windows` by `:W`.
-cabbrev W echo "did you mean :w?"
-
 " Disable Markdown folding.
 let g:vim_markdown_folding_disabled = 1
 
@@ -263,9 +260,7 @@ au FileType go nmap goT <Plug>(go-test)
 " YCM's goto is better.
 let g:go_def_mapping_enabled = 0
 
-" Neoformat
-augroup fmt
-  au!
-  au BufWritePre * silent! undojoin | Neoformat
-  let g:neoformat_enabled_python = ['isort', 'yapf']
-augroup END
+" Write with Neoformat by `:W` instead of `:w`.
+com W exec 'silent! undojoin | Neoformat | write'
+let g:neoformat_run_all_formatters = 1
+let g:neoformat_enabled_python = ['autopep8', 'isort']
