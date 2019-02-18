@@ -114,29 +114,27 @@ au FileType zsh        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 au FileType vim        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
 au FileType terraform  setl ts=2 sw=2 sts=2 | let b:forcecolumn=999
 
-" Read Python max columns from its pylintrc.
-func! s:pylint_max_columns()
+" Read Python max columns from its flake8 config.
+func! s:flake8_max_columns()
   let default = 79
 
-  if !executable('pylint') | return default | endif
+  if !executable('flake8') | return default | endif
 
   return system('python -c "'
-\.'from sys import exit;'
-\.'from pylint.config import PYLINTRC;'
+\.'from flake8.main.application import Application as A;'
+\.'from flake8.options.aggregator import aggregate_options as G;'
 \.''
-\.'PYLINTRC or (print(' . default . '), exit(0));'
+\.'a = A();'
+\.'a.parse_preliminary_options_and_args();'
+\.'a.make_config_finder();'
 \.''
-\.'from pylint.lint import PyLinter as L;'
-\.'from pylint.checkers.format import FormatChecker as C;'
-\.''
-\.'l = L(); c = C(); l.register_checker(c);'
-\.'l.read_config_file(); l.load_config_file();'
-\.'print(c.config.max_line_length)'
+\.'c, _ = G(a.option_manager, a.config_finder, []);'
+\.'print(c.max_line_length, end=str())'
 \.'"')
 endfunc
 
 au FileType python setl ts=4 sw=4 sts=4
-\| exec 'let b:forcecolumn=' . s:pylint_max_columns()
+\| exec 'let b:forcecolumn=' . s:flake8_max_columns()
 
 " ------------------------------------------------------------------------------
 " Matches
