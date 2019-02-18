@@ -31,7 +31,7 @@ Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --go-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --go-completer --clang-completer' }
 Plug 'w0rp/ale'
 
 " language-specific
