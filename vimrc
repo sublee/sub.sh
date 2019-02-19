@@ -21,6 +21,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'hotwatermorning/auto-git-diff'
+Plug 'junegunn/vim-easy-align'
 Plug 'majutsushi/tagbar', { 'do': 'sudo apt install -y exuberant-ctags' }
 Plug 'rhysd/committia.vim'
 Plug 'sbdchd/neoformat'
@@ -264,3 +265,6 @@ let g:go_def_mapping_enabled = 0
 com W exec 'silent! undojoin | Neoformat | write'
 let g:neoformat_run_all_formatters = 1
 let g:neoformat_enabled_python = ['autopep8', 'isort']
+
+" EasyAlign with gaip=.
+nmap ga <Plug>(EasyAlign)
