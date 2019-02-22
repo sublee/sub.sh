@@ -9,5 +9,4 @@ cc = checkout
 bb = checkout -b
 ff = merge --ff-only
 rb = rebase --committer-date-is-author-date
-up-sub = "!_() { git -C $1 pull $2 $3; git add $1; }; _"
 ls = ls-tree --full-tree -r --name-only HEAD
