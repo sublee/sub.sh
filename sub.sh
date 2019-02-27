@@ -270,7 +270,8 @@ install_apt_packages() {
     psmisc \
     telnet \
     tmux \
-    tree
+    tree \
+    unzip
 
   sudo -E apt install -y shellcheck || true
 }
