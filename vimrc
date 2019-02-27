@@ -94,26 +94,26 @@ au! BufRead,BufNewFile *.*_t setfiletype jinja
 au BufEnter * set colorcolumn=81
 
 " Set language-specific tab/indent/columns conventions.
-au FileType cpp        setl ts=2 sw=2 sts=2
-au FileType javascript setl ts=2 sw=2 sts=2
-au FileType ruby       setl ts=2 sw=2 sts=2
-au FileType xml        setl ts=2 sw=2 sts=2
-au FileType yaml       setl ts=2 sw=2 sts=2
-au FileType html       setl ts=2 sw=2 sts=2
-au FileType vue        setl ts=2 sw=2 sts=2
-au FileType htmldjango setl ts=2 sw=2 sts=2
-au FileType lua        setl ts=2 sw=2 sts=2
-au FileType haml       setl ts=2 sw=2 sts=2
-au FileType css        setl ts=2 sw=2 sts=2
-au FileType sass       setl ts=2 sw=2 sts=2
-au FileType less       setl ts=2 sw=2 sts=2
-au Filetype rst        setl ts=3 sw=3 sts=3
+au FileType cpp        setl ts=2 sw=2 sts=2 et
+au FileType javascript setl ts=2 sw=2 sts=2 et
+au FileType ruby       setl ts=2 sw=2 sts=2 et
+au FileType xml        setl ts=2 sw=2 sts=2 et
+au FileType yaml       setl ts=2 sw=2 sts=2 et
+au FileType html       setl ts=2 sw=2 sts=2 et
+au FileType vue        setl ts=2 sw=2 sts=2 et
+au FileType htmldjango setl ts=2 sw=2 sts=2 et
+au FileType lua        setl ts=2 sw=2 sts=2 et
+au FileType haml       setl ts=2 sw=2 sts=2 et
+au FileType css        setl ts=2 sw=2 sts=2 et
+au FileType sass       setl ts=2 sw=2 sts=2 et
+au FileType less       setl ts=2 sw=2 sts=2 et
+au Filetype rst        setl ts=3 sw=3 sts=3 et
 au FileType go         setl noet
 au FileType make       setl ts=4 sw=4 sts=4 noet
-au FileType sh         setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
-au FileType zsh        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
-au FileType vim        setl ts=2 sw=2 sts=2 | let b:forcecolumn=80
-au FileType terraform  setl ts=2 sw=2 sts=2 | let b:forcecolumn=999
+au FileType sh         setl ts=2 sw=2 sts=2 et | let b:forcecolumn=80
+au FileType zsh        setl ts=2 sw=2 sts=2 et | let b:forcecolumn=80
+au FileType vim        setl ts=2 sw=2 sts=2 et | let b:forcecolumn=80
+au FileType terraform  setl ts=2 sw=2 sts=2 et | let b:forcecolumn=999
 
 " Read Python max columns from its flake8 config.
 func! s:flake8_max_columns()
@@ -134,7 +134,7 @@ func! s:flake8_max_columns()
 \.'"')
 endfunc
 
-au FileType python setl ts=4 sw=4 sts=4
+au FileType python setl ts=4 sw=4 sts=4 et
 \| exec 'let b:forcecolumn=' . s:flake8_max_columns()
 
 " ------------------------------------------------------------------------------
