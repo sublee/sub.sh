@@ -65,7 +65,7 @@ function rm-tmp() {
 alias fix='reset; stty sane; tput rs1; clear; echo -e "\033c"'
 
 # Attach or create a tmux session.
-alias tm="tmux -2 a || tmux -2"
+alias tm="tmux -2 a -d || tmux -2"
 
 # Include files in ~/.profile.d.
 if [ -d "$HOME/.profile.d" ]; then
