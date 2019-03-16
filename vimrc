@@ -220,6 +220,9 @@ set statusline+=:%v                         " current column
 set statusline+=/%L                         " total lines
 hi User1 cterm=inverse ctermfg=red
 
+" Toggle ALE by F6.
+au VimEnter * nmap <F6> :ALEToggle<CR>
+
 " YouCompleteMe
 let g:ycm_goto_buffer_command = 'same-buffer'
 au VimEnter * nmap gd :YcmCompleter GoToDefinition<CR>
