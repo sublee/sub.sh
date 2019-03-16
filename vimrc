@@ -221,7 +221,19 @@ set statusline+=/%L                         " total lines
 hi User1 cterm=inverse ctermfg=red
 
 " Toggle ALE by F6.
-au VimEnter * nmap <F6> :ALEToggle<CR>
+fun! ToggleALE()
+  if g:ale_enabled
+    ALEDisable
+    set scl=no
+    echo 'ALE disabled'
+  else
+    ALEEnable
+    set scl=yes
+    echo 'ALE enabled'
+  endif
+endfunc
+
+au VimEnter * nmap <F6> :call ToggleALE()<CR>
 
 " YouCompleteMe
 let g:ycm_goto_buffer_command = 'same-buffer'
