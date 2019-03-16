@@ -174,10 +174,6 @@ au BufEnter *
 " English spelling checker.
 setlocal spelllang=en_us
 
-" Always show sign column.
-au BufEnter * sign define sign
-au BufEnter * execute 'sign place 9999 line=1 name=sign buffer='.bufnr('')
-
 " Change gutter color.
 hi SignColumn cterm=none ctermfg=none ctermbg=black
 
@@ -220,17 +216,27 @@ set statusline+=:%v                         " current column
 set statusline+=/%L                         " total lines
 hi User1 cterm=inverse ctermfg=red
 
+" Show the sign column if ALE enabled.
+fun! ShowOrHideSignColumn()
+  let l:ale_enabled = getbufvar(bufnr(''), 'ale_enabled', 1)
+  execute 'set scl='.(l:ale_enabled ? 'yes' : 'no')
+endfun
+
+au BufEnter * call ShowOrHideSignColumn()
+
 " Toggle ALE by F6.
 fun! ToggleALE()
-  if g:ale_enabled
-    ALEDisable
-    set scl=no
+  let l:ale_enabled = getbufvar(bufnr(''), 'ale_enabled', 1)
+
+  if l:ale_enabled
+    ALEDisableBuffer
     echo 'ALE disabled'
   else
-    ALEEnable
-    set scl=yes
+    ALEEnableBuffer
     echo 'ALE enabled'
   endif
+
+  call ShowOrHideSignColumn()
 endfunc
 
 au VimEnter * nmap <F6> :call ToggleALE()<CR>
