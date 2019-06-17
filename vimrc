@@ -71,7 +71,7 @@ set ignorecase
 
 " Highlight searching keyword.
 set hlsearch
-highlight Search term=inverse cterm=none ctermbg=cyan
+hi Search term=inverse cterm=none ctermbg=darkblue
 
 " Softtab -- use spaces instead tabs by default.
 set et
