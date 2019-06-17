@@ -71,7 +71,10 @@ set ignorecase
 
 " Highlight searching keyword.
 set hlsearch
-hi Search term=inverse cterm=none ctermbg=darkblue
+hi Search term=inverse cterm=inverse ctermbg=none ctermfg=darkblue
+
+" Highlight matching parenthesis.
+hi MatchParen term=inverse cterm=inverse ctermbg=none ctermfg=darkcyan
 
 " Softtab -- use spaces instead tabs by default.
 set et
