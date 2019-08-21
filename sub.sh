@@ -528,7 +528,8 @@ then
 
   if [[ -d ~/.ipython ]]
   then
-    sym-link "$SUBSH/ipython_config.py" ~/.ipython/ipython_config.py
+    sym-link \
+      "$SUBSH/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
   fi
 
   readonly SITE_PACKAGES=$(python -c \
