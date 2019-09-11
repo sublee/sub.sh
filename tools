@@ -45,13 +45,13 @@ i() {
 
 # Usage: x N COMMAND ARGS...
 # Run COMMAND over N panes in a new tmux window. "{}" in arguments are replaced
-# with the index (zero-based). The indexes are also allocated to "$X_INDEX" in
-# each tmux pane.
+# with the index (zero-based). The indexes are also allocated to "$X" in each
+# tmux pane.
 #
 # Examples:
 #   x 5 deploy {}.subl.ee
 #   x 5 'sleep {}; echo done'
-#   x 5 python -c 'import os; print(os.getenv("X_INDEX"))'
+#   x 5 python -c 'import os; print(os.getenv("X"))'
 #
 x() {
   # Thanks to @yeonghoey.
@@ -80,8 +80,8 @@ x() {
       #                └─ format to be reused as shell input
     done
 
-    cmd_in_tmux="(X_INDEX=$i ${cmd[*]}); read"
-    #                                     └─ tmux panes remain on exit
+    cmd_in_tmux="(X=$i ${cmd[*]}); read"
+    #                               └─ tmux panes remain on exit
 
     if [[ "$i" -eq 0 ]]; then
       tmux new-window -n "$window" "$cmd_in_tmux"
