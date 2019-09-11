@@ -56,8 +56,10 @@ alias sub.sh="curl -sL sub.sh | bash -s -"
 
 # Remove temporary files such as Vim swap or pyc.
 function rm-tmp() {
-  REGEX=".*\.(sw[ponml]|py[co])$"
-  find . -regextype posix-egrep -regex "$REGEX" -delete -print
+  local regex
+  regex=".*\.(sw[ponml]|py[co])$"
+
+  find . -regextype posix-egrep -regex "$regex" -delete -print
 }
 
 # Sanify terminal input/output.
