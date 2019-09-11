@@ -67,6 +67,11 @@ alias fix='reset; stty sane; tput rs1; clear; echo -e "\033c"'
 # Attach or create a tmux session.
 alias tm="tmux -2 a -d || tmux -2"
 
+# Get the current tmux pane index.
+function i() {
+  tmux display -pt "${TMUX_PANE:?}" '#{pane_index}'
+}
+
 # Include files in ~/.profile.d.
 if [ -d "$HOME/.profile.d" ]; then
   for f in "$HOME/.profile.d"/*; do
