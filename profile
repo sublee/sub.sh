@@ -54,6 +54,7 @@ alias vi="vim -b"
 alias pt="ptpython"
 alias sub.sh="curl -sL sub.sh | bash -s -"
 
+# Usage: rm-tmp
 # Remove temporary files such as Vim swap or pyc.
 function rm-tmp() {
   local regex
@@ -69,7 +70,8 @@ alias fix='reset; stty sane; tput rs1; clear; echo -e "\033c"'
 # Attach or create a tmux session.
 alias tm="tmux -2 a -d || tmux -2"
 
-# Get the current tmux pane index.
+# Usage: i [FORMAT]
+# Get the current tmux pane index. The index is 0 out of a tmux session.
 function i() {
   local pane_index
 
