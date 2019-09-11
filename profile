@@ -7,7 +7,7 @@ export LANG="en_US.UTF-8"
 export LC_ALL=$LANG
 
 # Set $PATH.
-function prepend_path {
+prepend_path() {
   [[ -d "$@" ]] && export PATH="$*:$PATH"
 }
 prepend_path "$HOME/bin"
@@ -56,7 +56,7 @@ alias sub.sh="curl -sL sub.sh | bash -s -"
 
 # Usage: rm-tmp
 # Remove temporary files such as Vim swap or pyc.
-function rm-tmp() {
+rm-tmp() {
   local regex
   regex=".*\.(sw[ponml]|py[co])$"
 
@@ -72,7 +72,7 @@ alias tm="tmux -2 a -d || tmux -2"
 
 # Usage: i [FORMAT]
 # Get the current tmux pane index. The index is 0 out of a tmux session.
-function i() {
+i() {
   local pane_index
 
   if [[ -n "$TMUX_PANE" ]]; then
@@ -94,7 +94,7 @@ function i() {
 #   x 5 deploy {}.subl.ee
 #   x 5 'sleep {}; echo done'
 #
-function x() {
+x() {
   # Thanks to @yeonghoey.
   local n
   local template
