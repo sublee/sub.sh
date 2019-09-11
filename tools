@@ -51,6 +51,7 @@ i() {
 # Examples:
 #   x 5 deploy {}.subl.ee
 #   x 5 'sleep {}; echo done'
+#   x 5 python -c 'import os; print(os.getenv("X_INDEX"))'
 #
 x() {
   # Thanks to @yeonghoey.
@@ -72,11 +73,15 @@ x() {
 
   for i in $(seq 0 "$((n-1))"); do
     declare -a cmd
+    unset cmd
     for opt in "$@"; do
-      cmd+=("${opt//\{\}/$i}")
+      opt="${opt//\{\}/$i}"
+      cmd+=("$(printf %q "$opt")")
+      #                └─ format to be reused as shell input
     done
 
     cmd_in_tmux="(X_INDEX=$i ${cmd[*]}); read"
+    #                                     └─ tmux panes remain on exit
 
     if [[ "$i" -eq 0 ]]; then
       tmux new-window -n "$window" "$cmd_in_tmux"
@@ -84,8 +89,6 @@ x() {
       tmux split-window -t "$window" "$cmd_in_tmux"
       tmux select-layout -t "$window" tiled
     fi
-
-    unset cmd
   done
 
   if [[ -z "$TMUX" ]]; then
