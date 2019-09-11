@@ -59,6 +59,8 @@ x() {
   local window
   local cmd
   local cmd_in_tmux
+  local i
+  local arg
 
   if [[ "$#" -le 1 ]]; then
     echo 'Usage: x N COMMAND ARGS...'
@@ -74,9 +76,9 @@ x() {
   for i in $(seq 0 "$((n-1))"); do
     declare -a cmd
     unset cmd
-    for opt in "$@"; do
-      opt="${opt//\{\}/$i}"
-      cmd+=("$(printf %q "$opt")")
+    for arg in "$@"; do
+      arg="${arg//\{\}/$i}"
+      cmd+=("$(printf %q "$arg")")
       #                └─ format to be reused as shell input
     done
 
