@@ -101,11 +101,6 @@ function x() {
   local cmd
   local window
 
-  if [[ -z "$TMUX" ]]; then
-    echo 'Run in a tmux session.'
-    return 1
-  fi
-
   if [[ "$#" -le 1 ]]; then
     echo 'Usage: x N COMMAND ARGS...'
     return 1
@@ -137,6 +132,10 @@ function x() {
 
     unset cmd
   done
+
+  if [[ -z "$TMUX" ]]; then
+    tmux attach-session
+  fi
 
   # Print the window name as result.
   echo "$window"
