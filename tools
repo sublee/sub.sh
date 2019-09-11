@@ -10,9 +10,9 @@ alias vi="vim -b"
 alias pt="ptpython"
 alias sub.sh="curl -sL sub.sh | bash -s -"
 
-# Usage: rm-tmp
+# Usage: clean
 # Remove temporary files such as Vim swap or pyc.
-rm-tmp() {
+clean() {
   local regex
   regex=".*\.(sw[ponml]|py[co])$"
 
