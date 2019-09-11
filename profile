@@ -97,7 +97,6 @@ i() {
 x() {
   # Thanks to @yeonghoey.
   local n
-  local template
   local cmd
   local window
 
@@ -109,17 +108,12 @@ x() {
   n=$1
   shift
 
-  declare -a template
-  for opt in "$@"; do
-    template+=("$opt")
-  done
-
   # shellcheck disable=SC2124
-  window="x $n ${template[@]:0:1}"
+  window="x $n $1"
 
   for i in $(seq 1 "$n"); do
     declare -a cmd
-    for opt in "${template[@]}"; do
+    for opt in "$@"; do
       cmd+=("${opt//\{\}/$i}")
     done
 
