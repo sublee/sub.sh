@@ -71,7 +71,12 @@ alias tm="tmux -2 a -d || tmux -2"
 
 # Get the current tmux pane index.
 function i() {
-  tmux display -pt "${TMUX_PANE:?}" '#{pane_index}'
+  local pane_index
+  pane_index="$(tmux display -pt "${TMUX_PANE:?}" '#{pane_index}')"
+
+  # shellcheck disable=SC2059
+  # See also: https://github.com/koalaman/shellcheck/wiki/SC2059
+  printf "${1:-%d}\n" "$pane_index"
 }
 
 # Include files in ~/.profile.d.
