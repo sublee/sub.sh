@@ -45,7 +45,8 @@ i() {
 
 # Usage: x N COMMAND ARGS...
 # Run COMMAND over N panes in a new tmux window. "{}" in arguments are replaced
-# with the index (zero-based).
+# with the index (zero-based). The indexes are also allocated to "$X_INDEX" in
+# each tmux pane.
 #
 # Examples:
 #   x 5 deploy {}.subl.ee
@@ -54,8 +55,9 @@ i() {
 x() {
   # Thanks to @yeonghoey.
   local n
-  local cmd
   local window
+  local cmd
+  local cmd_in_tmux
 
   if [[ "$#" -le 1 ]]; then
     echo 'Usage: x N COMMAND ARGS...'
@@ -74,10 +76,12 @@ x() {
       cmd+=("${opt//\{\}/$i}")
     done
 
+    cmd_in_tmux="(X_INDEX=$i ${cmd[*]}); read"
+
     if [[ "$i" -eq 0 ]]; then
-      tmux new-window -n "$window" "${cmd[*]}; read"
+      tmux new-window -n "$window" "$cmd_in_tmux"
     else
-      tmux split-window -t "$window" "${cmd[*]}; read"
+      tmux split-window -t "$window" "$cmd_in_tmux"
       tmux select-layout -t "$window" tiled
     fi
 
