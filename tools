@@ -27,7 +27,8 @@ alias fix='reset; stty sane; tput rs1; clear; echo -e "\033c"'
 alias tm="tmux -2 a -d || tmux -2"
 
 # Usage: i [FORMAT]
-# Get the current tmux pane index. The index is 0 out of a tmux session.
+# Get the current tmux pane index (zero-based). The index is -1 out of a tmux
+# session.
 i() {
   local pane_index
 
@@ -39,12 +40,12 @@ i() {
 
   # shellcheck disable=SC2059
   # See also: https://github.com/koalaman/shellcheck/wiki/SC2059
-  printf "${1:-%d}\n" "$pane_index"
+  printf "${1:-%d}\n" "$((pane_index-1))"
 }
 
 # Usage: x N COMMAND ARGS...
-# Run COMMAND over N panes in a new tmux window.
-# "{}" in arguments are replaced with the index.
+# Run COMMAND over N panes in a new tmux window. "{}" in arguments are replaced
+# with the index (zero-based).
 #
 # Examples:
 #   x 5 deploy {}.subl.ee
@@ -67,13 +68,13 @@ x() {
   # shellcheck disable=SC2124
   window="x $n $1"
 
-  for i in $(seq 1 "$n"); do
+  for i in $(seq 0 "$((n-1))"); do
     declare -a cmd
     for opt in "$@"; do
       cmd+=("${opt//\{\}/$i}")
     done
 
-    if [[ "$i" -eq 1 ]]; then
+    if [[ "$i" -eq 0 ]]; then
       tmux new-window -n "$window" "${cmd[*]}; read"
     else
       tmux split-window -t "$window" "${cmd[*]}; read"
