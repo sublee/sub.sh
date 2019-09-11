@@ -72,7 +72,12 @@ alias tm="tmux -2 a -d || tmux -2"
 # Get the current tmux pane index.
 function i() {
   local pane_index
-  pane_index="$(tmux display -pt "${TMUX_PANE:?}" '#{pane_index}')"
+
+  if [[ -n "$TMUX_PANE" ]]; then
+    pane_index="$(tmux display -pt "$TMUX_PANE" '#{pane_index}')"
+  else
+    pane_index=0
+  fi
 
   # shellcheck disable=SC2059
   # See also: https://github.com/koalaman/shellcheck/wiki/SC2059
