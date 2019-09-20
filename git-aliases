@@ -3,7 +3,7 @@
 [alias]
 st = status -uno --ignore-submodule=none
 ls = ls-tree --full-tree -r --name-only HEAD
-lg = log --graph --all --date=relative --format=format:\
+lg = log --graph --date=relative --format=format:\
 '%C(yellow)%h %C(green)%ad%C(reset) - %s - %C(magenta)%an%C(blue)%d%C(reset)'
 ci = commit -p
 cc = checkout
