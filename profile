@@ -45,9 +45,8 @@ if [[ -f "$HOME/.python-startup" ]]; then
 fi
 
 # Go environment.
-if [[ -d "$HOME/go" ]]; then
-  export GOPATH="$HOME/go"
-  prepend_path "$GOPATH/bin"
+if [[ -d "/usr/local/go" ]]; then
+  prepend_path "/usr/local/go/bin"
 fi
 
 # Include files in ~/.profile.d.
