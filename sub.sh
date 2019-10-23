@@ -463,7 +463,7 @@ VIM_VERSION=""
 if executable vim
 then
   VIM_VERSION="$(vim-installed-version)"
-  if [[ "$VIM_VERSION" = 8.* ]]
+  if [[ "$VIM_VERSION" = 8.1 ]]
   then
     INSTALL_VIM=false
   fi
@@ -478,7 +478,7 @@ then
     info "Upgrading Vim from ${vim-installed-version}..."
   fi
 
-  add-ppa pi-rho/dev
+  add-ppa jonathonf/vim
 
   sudo -E apt update
   sudo -E apt install -y vim
