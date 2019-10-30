@@ -53,7 +53,7 @@ prompt_git() {
   fi
 
   local git_tag
-  git_tag="$(git describe --tags 2>/dev/null)"
+  git_tag="$(git tag --points-at HEAD 2>/dev/null)"
   if [[ -n "$git_tag" ]]
   then
     echo -n "%F{red}:$git_tag%f"
@@ -61,7 +61,7 @@ prompt_git() {
   fi
 
   local git_commit
-  git_commit="$(git show-ref --head -s --abbrev | head -n1)"
+  git_commit="$(git rev-parse --short HEAD)"
   echo -n "%F{yellow}:$git_commit%f"
 }
 
