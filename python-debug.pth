@@ -1,1 +1,28 @@
-import os; exec('try:\n import __builtin__ as _\nexcept ImportError:\n import builtins as _'); _.B = lambda i=__import__: i('pdb').Pdb().set_trace(i('sys')._getframe().f_back); _.PM = lambda: __import__('pdb').pm(); _.pprint = __import__('pprint').pprint; _.print_stack = __import__('traceback').print_stack
+# vim: ft=python :
+"""
+Debug batteries for Python. Place this script into site-packages.
+"""
+
+# Import "builtins" or "__builtin__" as "_".
+import sys; exec('try:\n import __builtin__ as builtins\nexcept ImportError:\n import builtins'); builtins._ = builtins
+
+# Tools are singleton objects that support "~" operator as entry.
+# They can be defined with "define(name, function)".
+import sys; _.__define = lambda name, help, f: type(name, (object,), {'__repr__': lambda self, help=help: help, '__invert__': lambda self, f=f: f()})()
+
+
+"""~B
+Creates a breakpoint and enter into "ipdb" or "pdb".
+"""
+# Use "ipdb" or "pdb".
+import sys; exec('def pdb(frame):\n try:\n  import ipdb; ipdb.set_trace(frame)\n except ImportError:\n  from pdb import Pdb; Pdb().set_trace(frame)'); _.__pdb = pdb
+
+# Prevent "ipdb" to modify PS1 to "In :".
+import sys; _.__protect = lambda f, sys=sys, buf=[]: f() if not hasattr(sys, 'ps1') else (buf.append(sys.ps1), f(), setattr(sys, 'ps1', buf.pop()))
+
+# Define "~B".
+import sys; _.B = __define('B', '~B for breakpoint', lambda pdb=__pdb, sys=sys, protect=__protect: protect(lambda: pdb(sys._getframe(4))))
+
+
+# Clear temporary variables.
+import sys; del _.__protect, _.__define, _.__pdb, _._
