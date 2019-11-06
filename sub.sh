@@ -251,43 +251,39 @@ update_apt() {
 
 install_apt_packages() {
   info "Installing packages from APT..."
-
-  # Fix hang on interactive prompt.
-  # https://github.com/hashicorp/vagrant/issues/10914#issuecomment-503055527
   (
     export DEBIAN_FRONTEND=noninteractive
-    sudo -E apt install -y libssl1.1 || true
+
+    sudo -E apt install -y \
+      aptitude \
+      cmake \
+      curl \
+      git \
+      git-flow \
+      htop \
+      iftop \
+      iputils-ping \
+      jq \
+      less \
+      lsof \
+      man \
+      net-tools \
+      ntpdate \
+      psmisc \
+      telnet \
+      tmux \
+      tree \
+      unzip \
+      wget
+
+    # https://github.com/pyenv/pyenv/wiki/Common-build-problems
+    sudo -E apt install -y \
+      make build-essential libssl-dev zlib1g-dev libbz2-dev \
+      libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev \
+      xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+
+    sudo -E apt install -y shellcheck || true
   )
-
-  sudo -E apt install -y \
-    aptitude \
-    cmake \
-    curl \
-    git \
-    git-flow \
-    htop \
-    iftop \
-    iputils-ping \
-    jq \
-    less \
-    lsof \
-    man \
-    net-tools \
-    ntpdate \
-    psmisc \
-    telnet \
-    tmux \
-    tree \
-    unzip \
-    wget
-
-  # https://github.com/pyenv/pyenv/wiki/Common-build-problems
-  sudo -E apt install -y \
-    make build-essential libssl-dev zlib1g-dev libbz2-dev \
-    libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
-
-  sudo -E apt install -y shellcheck || true
 }
 
 # Install packages from APT.
