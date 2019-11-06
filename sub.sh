@@ -156,7 +156,7 @@ git-pull() {
     mkdir -p "$dest"
     git clone "$src" "$dest"
   else
-    git -C "$dest" pull
+    git -C "$dest" pull --rebase --autostash
   fi
 }
 
