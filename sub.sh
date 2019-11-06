@@ -256,7 +256,7 @@ install_apt_packages() {
   # https://github.com/hashicorp/vagrant/issues/10914#issuecomment-503055527
   (
     export DEBIAN_FRONTEND=noninteractive
-    sudo -E apt install -y libssl1.1
+    sudo -E apt install -y libssl1.1 || true
   )
 
   sudo -E apt install -y \
