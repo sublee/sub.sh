@@ -252,6 +252,13 @@ update_apt() {
 install_apt_packages() {
   info "Installing packages from APT..."
 
+  # Fix hang on interactive prompt.
+  # https://github.com/hashicorp/vagrant/issues/10914#issuecomment-503055527
+  (
+    export DEBIAN_FRONTEND=noninteractive
+    sudo -E apt install -y libssl1.1
+  )
+
   sudo -E apt install -y \
     aptitude \
     cmake \
