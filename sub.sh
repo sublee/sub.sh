@@ -541,11 +541,6 @@ then
     sym-link \
       "$SUBSH/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
   fi
-
-  readonly SITE_PACKAGES=$(python -c \
-    'from distutils.sysconfig import get_python_lib; print(get_python_lib())'
-  )
-  sym-link "$SUBSH/python-debug.pth" "$SITE_PACKAGES/__debug__.pth"
 fi
 
 # results ---------------------------------------------------------------------
