@@ -325,7 +325,7 @@ fi
 # vim -------------------------------------------------------------------------
 
 install_vim() {
-  local vim_version
+  local vim_version=
 
   if executable vim
   then
@@ -356,7 +356,7 @@ install_vim '8.1'
 # git -------------------------------------------------------------------------
 
 install_git() {
-  local git_version
+  local git_version=
 
   if executable git
   then
