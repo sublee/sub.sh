@@ -127,7 +127,7 @@ git-installed-version() {
 }
 
 rg-installed-version() {
-  rg --version | head -n 1 | cut -d' ' -f2
+  rg --version 2>/dev/null | head -n 1 | cut -d' ' -f2
 }
 
 fd-installed-version() {
