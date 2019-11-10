@@ -300,7 +300,7 @@ install_apt_packages
 # localhost ssh ---------------------------------------------------------------
 
 # Authorize the local SSH key for connecting to localhost without password.
-if ! ssh -qo BatchMode=yes localhost true
+if executable ssh && ! ssh -qo BatchMode=yes localhost true
 then
   mkdir -p ~/.ssh
 
