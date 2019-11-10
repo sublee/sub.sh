@@ -241,12 +241,6 @@ update_apt() {
   # Require to add PPAs.
   sudo -E apt update
   sudo -E apt install -y software-properties-common
-
-  # Prefer the latest version of Git.
-  add-ppa git-core/ppa
-
-  # Update the APT package lists.
-  sudo -E apt update
 }
 
 install_apt_packages() {
@@ -258,8 +252,6 @@ install_apt_packages() {
       aptitude \
       cmake \
       curl \
-      git \
-      git-flow \
       htop \
       iftop \
       iputils-ping \
@@ -357,14 +349,74 @@ github-pull \
   bobthecow/git-flow-completion \
   ~/.oh-my-zsh/custom/plugins/git-flow-completion
 
+# vim -------------------------------------------------------------------------
+
+install_vim() {
+  local vim_version
+
+  if executable vim
+  then
+    vim_version="$(vim-installed-version)"
+
+    if [[ "$vim_version" = "$1" ]]
+    then
+      info "Vim $vim_version has already been installed."
+      return
+    fi
+  fi
+
+  if [[ -z "$vim_version" ]]
+  then
+    info "Installing Vim..."
+  else
+    info "Upgrading Vim from ${vim_version}..."
+  fi
+
+  add-ppa jonathonf/vim
+
+  sudo -E apt update
+  sudo -E apt install -y vim
+}
+
+install_vim '8.1'
+
+# git -------------------------------------------------------------------------
+
+install_git() {
+  local git_version
+
+  if executable git
+  then
+    git_version="$(git-installed-version)"
+
+    if [[ "$git_version" = "$1" ]]
+    then
+      info "Git $git_version has already been installed."
+      return
+    fi
+  fi
+
+  if [[ -z "$git_version" ]]
+  then
+    info "Installing Git..."
+  else
+    info "Upgrading Git from ${git_version}..."
+  fi
+
+  add-ppa git-core/ppa
+
+  sudo -E apt update
+  sudo -E apt install -y git
+}
+
+install_git '2.24.0'
+
 # rg --------------------------------------------------------------------------
 
 # "rg" is a short-term for "ripgrep", which is a "grep" alternative.
 
 install_rg() {
   # Detect the latest and installed version.
-  info "Detecting the latest version of rg..."
-
   local rg_version
   local rg_release
   rg_version="$(
@@ -376,7 +428,7 @@ install_rg() {
   # Compare with the currently installed version.
   if executable rg && [[ "$(rg-installed-version)" == "$rg_version" ]]
   then
-    info "Already installed rg-${rg_version}"
+    info "rg-${rg_version} has already been installed."
     return
   fi
 
@@ -431,7 +483,7 @@ install_fd() {
 
   if executable fd && [[ "$(fd-installed-version)" == "$fd_version" ]]
   then
-    info "Already installed fd-${fd_version}"
+    info "fd-${fd_version} has already been installed."
     return
   fi
 
@@ -457,35 +509,6 @@ install_fd() {
 }
 
 install_fd
-
-# vim -------------------------------------------------------------------------
-
-# Upgrade Vim.
-INSTALL_VIM=true
-VIM_VERSION=""
-if executable vim
-then
-  VIM_VERSION="$(vim-installed-version)"
-  if [[ "$VIM_VERSION" = 8.1 ]]
-  then
-    INSTALL_VIM=false
-  fi
-fi
-
-if [[ "$INSTALL_VIM" != false ]]
-then
-  if [[ -z "$VIM_VERSION" ]]
-  then
-    info "Installing Vim..."
-  else
-    info "Upgrading Vim from ${vim-installed-version}..."
-  fi
-
-  add-ppa jonathonf/vim
-
-  sudo -E apt update
-  sudo -E apt install -y vim
-fi
 
 # sub.sh ----------------------------------------------------------------------
 
