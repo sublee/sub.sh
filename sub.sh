@@ -324,30 +324,29 @@ fi
 
 # zsh -------------------------------------------------------------------------
 
-if ! executable zsh
-then
-  info "Installing ZSH..."
-  sudo -E apt install -y zsh
-fi
+install_zsh() {
+  if ! executable zsh
+  then
+    info "Installing ZSH..."
+    sudo -E apt install -y zsh
+  fi
 
-info "Setting up the ZSH environment..."
+  info "Setting up the ZSH environment..."
 
-sudo -E chsh -s "$(which zsh)" "$USER"
+  sudo -E chsh -s "$(which zsh)" "$USER"
 
-# Oh My ZSH!
-github-pull robbyrussell/oh-my-zsh ~/.oh-my-zsh
+  # Oh My ZSH!
+  github-pull robbyrussell/oh-my-zsh ~/.oh-my-zsh
 
-github-pull \
-  zsh-users/zsh-syntax-highlighting \
-  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+  local plugins
+  plugins=~/.oh-my-zsh/custom/plugins
 
-github-pull \
-  zsh-users/zsh-autosuggestions \
-  ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+  github-pull zsh-users/zsh-syntax-highlighting $plugins/zsh-syntax-highlighting
+  github-pull zsh-users/zsh-autosuggestions $plugins/zsh-autosuggestions
+  github-pull bobthecow/git-flow-completion $plugins/git-flow-completion
+}
 
-github-pull \
-  bobthecow/git-flow-completion \
-  ~/.oh-my-zsh/custom/plugins/git-flow-completion
+install_zsh
 
 # vim -------------------------------------------------------------------------
 
