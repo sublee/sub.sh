@@ -446,13 +446,8 @@ install_rg() {
     cut -d'"' -f4
   )"
 
-  info "Downloading ${rg_tgz_url} at ${rg_tgz}..."
   curl -L "$rg_tgz_url" -o "$rg_tgz"
-
-  info "Decompressing ${rg_tgz}..."
   tar xvzf "$rg_tgz" -C "$rg_dir"
-
-  info "Installing rg executable..."
   sudo -E cp "$rg_dir/"*"/rg" /usr/local/bin/rg
 
   echo "Installed at $(which rg)."
@@ -472,8 +467,6 @@ install_fd() {
   fi
 
   # Detect the latest and installed version.
-  info "Detecting the latest version of fd..."
-
   local fd_release
   local fd_version
   fd_release="$(github-api sharkdp/fd/releases/latest)"
@@ -499,10 +492,7 @@ install_fd() {
     cut -d'"' -f4
   )"
 
-  info "Downloading ${fd_deb_url} at ${fd_deb}..."
   curl -L "$fd_deb_url" -o "$fd_deb"
-
-  info "Installing ${fd_deb}..."
   sudo -E dpkg -i "$fd_deb"
 
   echo "Installed at $(which fd)."
