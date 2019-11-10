@@ -360,7 +360,7 @@ install_vim() {
 
     if [[ "$vim_version" = "$1" ]]
     then
-      info "Vim $vim_version has already been installed."
+      info "vim-$vim_version has already been installed."
       return
     fi
   fi
@@ -391,7 +391,7 @@ install_git() {
 
     if [[ "$git_version" = "$1" ]]
     then
-      info "Git $git_version has already been installed."
+      info "git-$git_version has already been installed."
       return
     fi
   fi
