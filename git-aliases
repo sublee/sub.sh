@@ -14,3 +14,13 @@ rbi = rebase -i --rebase-merges
 continue = rebase --continue
 abort = rebase --abort
 amend = commit --amend
+
+# Merge the current branch into a branch.
+# The current branch will be deleted.
+into = !b="$(git rev-parse --abbrev-ref HEAD)" \
+    && ([ "$b" != HEAD ] || (echo 'not on a branch' >&2 && exit 1)) \
+    && git checkout "$1" \
+    && git merge --no-ff "$b" \
+    && git branch -d "$b" \
+    && :
+    #  └─ https://stackoverflow.com/a/25915221
