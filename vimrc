@@ -32,8 +32,15 @@ Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --go-completer --clang-completer' }
 Plug 'w0rp/ale'
+
+" auto completion with langauge server protocol
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+
+Plug 'mattn/vim-lsp-settings'  " :LspInstallServer
 
 " language-specific
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -245,9 +252,13 @@ endfunc
 
 au VimEnter * nmap <F6> :call ToggleALE()<CR>
 
-" YouCompleteMe
-let g:ycm_goto_buffer_command = 'same-buffer'
-au VimEnter * nmap gd :YcmCompleter GoToDefinition<CR>
+" Tab completion for asyncomplete.
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+
+" Go to the definition by `gd`.
+au VimEnter * nmap gd :LspDefinition<CR>
 
 " Mundo
 au VimEnter * nmap <F5> :MundoToggle<CR>
