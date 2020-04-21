@@ -1,0 +1,44 @@
+name: sub.sh
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Run
+      run: docker run -i --name sub.sh -v "$PWD/sub.sh:/sub.sh" ubuntu:18.04 bash -c '[[ -f ~/.profile ]] && source ~/.profile; /sub.sh'
+
+    - name: Rerun
+      run: docker start -a sub.sh
+
+  publish:
+    name: Publish
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build web
+      run: |
+        pushd web
+        make
+        echo sub.sh > build/CNAME
+        touch build/.nojekyll
+        popd
+
+    - name: GitHub Pages
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v1
+      with:
+        build_dir: web/build
+      env:
+        GITHUB_PAT: ${{ secrets.GH_PAT }}
