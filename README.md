@@ -1,5 +1,7 @@
 # sub.sh
 
+![sub.sh](https://github.com/sublee/sub.sh/workflows/sub.sh/badge.svg)
+
 I want to use same environment in my all Linux systems.
 
 If you trust me, just use `sub.sh <http://sub.sh/>`_ on your Linux system:
