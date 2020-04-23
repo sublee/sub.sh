@@ -79,6 +79,11 @@
       cursor: copy;
     }
 
+    .copy::selection, .copy *::selection {
+      color: #f5f5da;    /* Sublette: White */
+      background: #f7c;  /* Sublette: Magenta */
+    }
+
     @media screen and (max-width: 640px) {
       body {
         margin: 3rem 5%;
