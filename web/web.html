@@ -1,6 +1,6 @@
 <script id="head" type="text/html">
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=480" />
+  <meta name="viewport" content="width=device-width, minimum-scale=1" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>sub.sh</title>
   <link rel="shortcut icon" type="image/png" href="favicon.png" />
@@ -32,6 +32,8 @@
       font-weight: 400;
       color: #ccced0;             /* Sublette: Foreground */
       background-color: #202535;  /* Sublette: Background */
+
+      transition: margin 0.2s;
     }
 
     footer {
@@ -75,6 +77,28 @@
 
     .copy {
       cursor: copy;
+    }
+
+    @media screen and (max-width: 640px) {
+      body {
+        margin: 3rem 5%;
+      }
+
+      pre {
+        font-size: 1.25rem;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      body {
+        margin: 2rem 10px;
+        width: auto;
+      }
+
+      pre {
+        padding-left: 0.5rem;
+        font-size: 1rem;
+      }
     }
   </style>
 </script>
