@@ -84,6 +84,21 @@
       background: #f7c;  /* Sublette: Magenta */
     }
 
+    footer a:link, footer a:visited {
+      color: inherit;
+    }
+    footer a:hover {
+      text-decoration: none;
+    }
+    a:hover .sublette-0 { color: #e57; }
+    a:hover .sublette-1 { color: #e65; }
+    a:hover .sublette-2 { color: #fd8; }
+    a:hover .sublette-3 { color: #5e7; }
+    a:hover .sublette-4 { color: #4ee; }
+    a:hover .sublette-5 { color: #58f; }
+    a:hover .sublette-6 { color: #a8f; }
+    a:hover .sublette-7 { color: #f7c; }
+
     @media screen and (max-width: 640px) {
       body {
         margin: 3rem 5%;
@@ -141,8 +156,19 @@ $(function() {
 <footer>
   <p class="copyright">
     &copy; <span class="year">2016&ndash;2020</span> Heungsub Lee
+    &middot;
+    Themed with <a href="https://github.com/sublee/sublette">Sublette</a>.
   </p>
 </footer>
+
+<script>
+  var $sublette = $('a[href$="sublette"]');
+  var sublette = $sublette.text();
+  $sublette.html('');
+  for (var i = 0; i < sublette.length; i++) {
+    $sublette.append($('<span>').addClass('sublette-' + i).text(sublette.charAt(i)));
+  }
+</script>
 
 <script>
   var _gaq = [
