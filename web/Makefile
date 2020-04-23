@@ -1,4 +1,4 @@
-all: build/index.html build/web.html build/favicon.ico
+all: build/index.html build/web.html build/favicon.png
 
 build:
 	mkdir -p $@
@@ -11,5 +11,5 @@ build/index.html: build
 build/web.html: build
 	cp web.html $@
 
-build/favicon.ico: build
-	cp favicon.ico $@
+build/favicon.png: build
+	cp favicon.png $@
