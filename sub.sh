@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # vim:ft=sh:et:ts=2:sw=2:sts=2:
 #
 # sub.sh
