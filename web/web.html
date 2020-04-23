@@ -3,33 +3,87 @@
   <meta name="viewport" content="width=480" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>sub.sh</title>
-  <link rel="shortcut icon" type="image/icon" href="favicon.ico" />
-  <link rel="stylesheet" href="https://subl.ee/style-legacy-v2.css" />
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
   <style>
+    @import url(https://fonts.googleapis.com/css?family=Hind:400,600);
     @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono);
+
+    * {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: 1em;
+      font-weight: inherit;
+      font-style: normal;
+      line-height: 1.5;
+      text-decoration: none;
+      clear:left;
+    }
+
+    html {
+      font-size: 17px;
+    }
+
     body {
       max-width: 30rem;
-      transition: none;
+      margin: 3rem 10%;
+
+      font-family: Hind, sans-serif;
+      font-weight: 400;
+      color: #ccced0;             /* Sublette: Foreground */
+      background-color: #202535;  /* Sublette: Background */
     }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #405570;  /* Sublette: Bright Black */
+    }
+
+    a:link, a:visited {
+      color: #58f;  /* Sublette: Blue */
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    h1, p, pre {
+      margin-bottom: 1rem;
+    }
+
     h1 {
-      font-size: 1.75em;
+      font-size: 1.75rem;
+      font-weight: 600;
     }
+
     pre {
-      font-size: 1.5em;
+      font-size: 1.5rem;
     }
     code {
       font-family: 'Ubuntu Mono', monospace;
     }
+
     code b {
-      font-weight: inherit;
+      color: #5e7;  /* Sublette: Green */
     }
     code i {
-      font-style: normal;
+      color: #4ee;  /* Sublette: Cyan */
+    }
+    code u {
+      color: #a8f;  /* Sublette: Bright Magenta */
+    }
+
+    .copy {
+      cursor: copy;
     }
   </style>
 </script>
+
 <script>
+$(function() {
   $(document.head).html($('#head').text());
+  new ClipboardJS('.copy', {target: function(trigger) { return trigger; }});
+});
 </script>
 
 <header>
@@ -37,22 +91,22 @@
 </header>
 
 <p>
-  <code>sub.sh</code> is a shell script to terraform a Linux environment as
-  for <a href="https://github.com/sublee/sub.sh">my taste</a>.  The script
-  aims ZSH on Ubuntu what I feel comfortable.  It also configures Vim and
-  Python environments to maximize my productivity.
+  <code>sub.sh</code> is a shell script to terraform a Linux environment as for
+  <a href="https://github.com/sublee/sub.sh">my taste</a>. The script aims ZSH
+  on Ubuntu 18.04 what I feel comfortable. It also configures Vim and Python
+  environments to maximize my productivity.
 </p>
 
 <p>Take my settings for your Linux environment:</p>
 
 <pre>
-<code><i>$</i> <b>curl -sL sub.sh <i>|</i> bash</b></code>
+<code><i>❯</i> <span class="copy"><b>curl</b> -sL sub.sh <u>|</u> <b>bash</b></span></code>
 </pre>
 
 <p>Or customize by options:</p>
 
 <pre>
-<code><i>$</i> <b>curl -sL sub.sh <i>|</i> bash <i>-s -</i> --help</b></code>
+<code><i>❯</i> <span class="copy"><b>curl</b> -sL sub.sh <u>|</u> <b>bash</b> -s - --help</span></code>
 </pre>
 
 <footer>
@@ -60,23 +114,6 @@
     &copy; <span class="year">2016&ndash;2020</span> Heungsub Lee
   </p>
 </footer>
-
-<script>
-  $.getScript('https://cdn.jsdelivr.net/clipboard.js/1.5.8/clipboard.min.js')
-   .done(function() {
-    new Clipboard('pre', {
-      target: function(trigger) {
-        return $(trigger).find('b').get(0);
-      }
-    }).on('success', function(e) {
-      $trigger = $(e.trigger);
-      $trigger.removeClass('copied');
-      $trigger.width($trigger.width());
-      $trigger.addClass('copied');
-    });
-    $('pre').css('cursor', 'copy');
-  });
-</script>
 
 <script>
   var _gaq = [
