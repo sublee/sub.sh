@@ -15,8 +15,11 @@ continue = rebase --continue
 abort = rebase --abort
 amend = commit --amend
 
-# Merge the current branch into a branch.
-# The current branch will be deleted.
+# Usage: git into TARGET_BRANCH
+#
+#   Merge the current branch into a branch. The current branch is deleted after
+#   merging.
+#
 into = !b="$(git rev-parse --abbrev-ref HEAD)" \
     && ([ "$b" != HEAD ] || (echo 'not on a branch' >&2 && exit 1)) \
     && git checkout "$1" \
