@@ -24,3 +24,11 @@ into = !b="$(git rev-parse --abbrev-ref HEAD)" \
     && git branch -d "$b" \
     && :
     #  └─ https://stackoverflow.com/a/25915221
+
+# Usage: git squash NUM_COMMITS
+#
+#   Squash the last commits.
+#
+#   Source: https://gist.github.com/hlecuanda/c9a5091938cd6a7b585d
+#
+squash = "!f(){ git reset --soft HEAD~${1} && git commit --edit -m\"$(git log --format=%B --reverse HEAD..HEAD@{1})\"; };f"
