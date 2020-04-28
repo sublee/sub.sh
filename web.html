@@ -1,0 +1,186 @@
+<script id="head" type="text/html">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, minimum-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>sub.sh</title>
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Hind:400,600);
+    @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono);
+
+    * {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: 1em;
+      font-weight: inherit;
+      font-style: normal;
+      line-height: 1.5;
+      text-decoration: none;
+      clear:left;
+    }
+
+    html {
+      font-size: 17px;
+    }
+
+    body {
+      max-width: 30rem;
+      margin: 3rem 10%;
+
+      font-family: Hind, sans-serif;
+      font-weight: 400;
+      color: #ccced0;             /* Sublette: Foreground */
+      background-color: #202535;  /* Sublette: Background */
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #405570;  /* Sublette: Bright Black */
+    }
+
+    a:link, a:visited {
+      color: #58f;  /* Sublette: Blue */
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    h1, p, pre {
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+    }
+
+    pre {
+      font-size: 1.5rem;
+    }
+    code {
+      font-family: 'Ubuntu Mono', monospace;
+    }
+
+    code b {
+      color: #5e7;  /* Sublette: Green */
+    }
+    code i {
+      color: #4ee;  /* Sublette: Cyan */
+    }
+    code u {
+      color: #a8f;  /* Sublette: Bright Magenta */
+    }
+
+    .copy {
+      cursor: copy;
+    }
+
+    .copy::selection, .copy *::selection {
+      color: #ccced0;    /* Sublette: Foreground */
+      background: #a8f;  /* Sublette: Bright Magenta */
+    }
+
+    footer a:link, footer a:visited {
+      color: inherit;
+    }
+    footer a:hover {
+      text-decoration: none;
+    }
+    a:hover .sublette-0 { color: #e57; }
+    a:hover .sublette-1 { color: #e65; }
+    a:hover .sublette-2 { color: #fd8; }
+    a:hover .sublette-3 { color: #5e7; }
+    a:hover .sublette-4 { color: #4ee; }
+    a:hover .sublette-5 { color: #58f; }
+    a:hover .sublette-6 { color: #a8f; }
+    a:hover .sublette-7 { color: #f7c; }
+
+    @media screen and (max-width: 640px) {
+      body {
+        margin: 3rem 5%;
+      }
+
+      pre {
+        font-size: 1.25rem;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      body {
+        margin: 2rem 10px;
+        width: auto;
+      }
+
+      pre {
+        padding-left: 0.5rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</script>
+
+<script>
+$(function() {
+  $(document.head).html($('#head').text());
+  new ClipboardJS('.copy', {target: function(trigger) { return trigger; }});
+});
+</script>
+
+<header>
+  <h1>Linux settings of <a href="https://subl.ee/">Heungsub Lee</a></h1>
+</header>
+
+<p>
+  <code>sub.sh</code> is a shell script to terraform a Linux environment as for
+  <a href="https://github.com/sublee/sub.sh">my taste</a>. The script aims ZSH
+  on Ubuntu 18.04 what I feel comfortable. It also configures Vim and Python
+  environments to maximize my productivity.
+</p>
+
+<p>Take my settings for your Linux environment:</p>
+
+<pre>
+<code><i>❯</i> <span class="copy"><b>curl</b> -sL sub.sh <u>|</u> <b>bash</b></span></code>
+</pre>
+
+<p>Or customize by options:</p>
+
+<pre>
+<code><i>❯</i> <span class="copy"><b>curl</b> -sL sub.sh <u>|</u> <b>bash</b> -s - --help</span></code>
+</pre>
+
+<footer>
+  <p class="copyright">
+    &copy; <span class="year">2016&ndash;2020</span> Heungsub Lee
+    &middot;
+    Themed with <a href="https://github.com/sublee/sublette">Sublette</a>.
+  </p>
+</footer>
+
+<script>
+  var $sublette = $('a[href$="sublette"]');
+  var sublette = $sublette.text();
+  $sublette.html('');
+  for (var i = 0; i < sublette.length; i++) {
+    $sublette.append($('<span>').addClass('sublette-' + i).text(sublette.charAt(i)));
+  }
+</script>
+
+<script>
+  var _gaq = [
+    ['_setAccount', 'UA-1078484-1'],
+    ['_trackPageview', 'sub.sh']
+  ];
+  (function() {
+    var isHTTPS = 'https:' == document.location.protocol;
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = (isHTTPS ? 'https://ssl' : 'http://www')
+           + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+  })();
+</script>
