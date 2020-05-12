@@ -132,15 +132,9 @@ func! s:flake8_max_columns()
   if !executable('flake8') | return default | endif
 
   return system('python -c "'
-\.'from flake8.main.application import Application as A;'
-\.'from flake8.options.aggregator import aggregate_options as G;'
-\.''
-\.'a = A();'
-\.'a.parse_preliminary_options_and_args();'
-\.'a.make_config_finder();'
-\.''
-\.'c, _ = G(a.option_manager, a.config_finder, []);'
-\.'print(c.max_line_length, end=str())'
+\.'from flake8.api.legacy import get_style_guide;'
+\.'s = get_style_guide();'
+\.'print(s.options.max_line_length, end=str())'
 \.'"')
 endfunc
 
