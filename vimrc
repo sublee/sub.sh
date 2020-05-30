@@ -129,7 +129,7 @@ au FileType terraform  setl ts=2 sw=2 sts=2 et | let b:forcecolumn=999
 func! s:flake8_max_columns()
   let default = 79
 
-  silent !system('python -c "import flake8"')
+  silent !python -c "import flake8"
   if v:shell_error != 0 | return default | endif
 
   return system('python -c "'
