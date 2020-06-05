@@ -21,7 +21,6 @@ Plug 'hashivim/vim-terraform'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'hotwatermorning/auto-git-diff'
-Plug 'junegunn/vim-easy-align'
 Plug 'majutsushi/tagbar', { 'do': 'sudo apt install -y exuberant-ctags' }
 Plug 'rhysd/committia.vim'
 Plug 'sbdchd/neoformat'
@@ -40,10 +39,7 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
-Plug 'mattn/vim-lsp-settings'  " :LspInstallServer
-
-" language-specific
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'mattn/vim-lsp-settings'  " Run :LspInstallServer for a new language.
 
 " -----------------------------------------------------------------------------
 call plug#end()
@@ -258,26 +254,11 @@ au VimEnter * nmap gd :LspDefinition<CR>
 " Mundo
 au VimEnter * nmap <F5> :MundoToggle<CR>
 
-" EasyMotion
-au VimEnter *
-\ map <Leader>l <Plug>(easymotion-lineforward)
-\|map <Leader>j <Plug>(easymotion-j)
-\|map <Leader>k <Plug>(easymotion-k)
-\|map <Leader>h <Plug>(easymotion-linebackward)
-
 " Explore the directory of the current file by `:E`.
 cabbrev E e %:p:h
 
 " Disable Markdown folding.
 let g:vim_markdown_folding_disabled = 1
-
-" Customize colors for Jinja syntax.
-hi def link jinjaVarBlock Comment
-
-" For Terraform.
-let g:terraform_fold_sections  = 1
-let g:terraform_remap_spacebar = 1
-au FileType tf setlocal commentstring=#\ %s
 
 " fzf
 au VimEnter * nmap <C-f> :FZF<CR>
@@ -285,17 +266,7 @@ au VimEnter * nmap <C-f> :FZF<CR>
 " Tagbar
 au VimEnter * nmap <F8> :TagbarToggle<CR>
 
-" vim-go
-au FileType go nmap gor <Plug>(go-rename)
-au FileType go nmap got <Plug>(go-test-func)
-au FileType go nmap goT <Plug>(go-test)
-" YCM's goto is better.
-let g:go_def_mapping_enabled = 0
-
 " Write with Neoformat by `:W` instead of `:w`.
 com W exec 'silent! undojoin | Neoformat | write'
 let g:neoformat_run_all_formatters = 1
 let g:neoformat_enabled_python = ['autopep8', 'isort']
-
-" EasyAlign with gaip=.
-nmap ga <Plug>(EasyAlign)
