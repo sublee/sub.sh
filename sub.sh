@@ -560,7 +560,7 @@ fi
 # Show my emblem.
 if [[ -n "$TERM" ]]
 then
-  curl -sL https://subl.ee/~emblem
+  curl -sL https://subl.ee/~emblem || true
 fi
 
 # Print installed versions.
