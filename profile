@@ -7,14 +7,14 @@ export LANG="en_US.UTF-8"
 export LC_ALL=$LANG
 
 # Set $PATH.
-prepend_path() {
+prepend-path() {
   [[ -d "$1" ]] && export PATH="$*:$PATH"
 }
-trap 'unset -f prepend_path' EXIT
-prepend_path "$HOME/bin"
-prepend_path "$HOME/.local/bin"
-prepend_path "$HOME/.linuxbrew/bin"
-prepend_path "$HOME/.cargo/bin"
+trap 'unset -f prepend-path' EXIT
+prepend-path "$HOME/bin"
+prepend-path "$HOME/.local/bin"
+prepend-path "$HOME/.linuxbrew/bin"
+prepend-path "$HOME/.cargo/bin"
 
 # Don't quit by ^D.
 set -o ignoreeof
@@ -36,7 +36,7 @@ unset here
 
 # Python environment.
 if [[ -d "$HOME/.pyenv" ]]; then
-  prepend_path "$HOME/.pyenv/bin"
+  prepend-path "$HOME/.pyenv/bin"
   eval "$(pyenv init - --no-rehash "$SHELL")"
   eval "$(pyenv virtualenv-init -)"
 fi
@@ -47,7 +47,7 @@ fi
 
 # Go environment.
 if [[ -d "/usr/local/go" ]]; then
-  prepend_path "/usr/local/go/bin"
+  prepend-path "/usr/local/go/bin"
 fi
 
 # Include files in ~/.profile.d.
