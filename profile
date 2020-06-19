@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 # vim:ft=sh:et:ts=2:sw=2:sts=2:
 
 # Configure the system.
@@ -46,40 +46,3 @@ if [[ -d "$HOME/.profile.d" ]]; then
     source "$f"
   done
 fi
-
-# Print the hostname. "hostname -s" is used to retrieve the hostname.
-# It can be overridden by $SUBSH_HOSTNAME.
-subsh-hostname() {
-  echo "${SUBSH_HOSTNAME:-$(hostname -s)}"
-}
-
-# Colorize the input with the hostcolor. The hostcolor is automatically
-# determined based on "subsh-hostname". The color can be overridden by
-# $SUBSH_HOSTCOLOR.
-subsh-hostcolor() {
-  local color
-
-  if [[ -n "$SUBSH_HOSTCOLOR" ]]; then
-    color="$SUBSH_HOSTCOLOR"
-  else
-    # Hash hostname with a number to colorize.
-    local sum
-    readonly hostname="$(subsh-hostname)"
-    for (( i=0; i<${#hostname}; i++ )); do
-      (( sum+=$(printf "%d" "'${hostname:$i:1}'") ))
-    done
-
-    # Choose a color except blue (4).
-    color="$((sum%5+1))"
-    if [[ "$color" -eq 4 ]]; then
-      color=6
-    fi
-  fi
-
-  local input
-  read -r input
-
-  tput setaf "$color"
-  echo -n "$input"
-  tput sgr0
-}
