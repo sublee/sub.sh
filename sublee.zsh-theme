@@ -15,10 +15,10 @@
 # %~         cwd, ~ instead of home path
 
 prompt_status() {
+  # ✘$? (only when the last execution was failed)
+  echo -n "%(?::%F{red}✘"$?"%f)"
   # 23:14
   echo -n "%F{blue}%D{%H:%M}%f"
-  # ✘ (only when the last execution was failed)
-  echo -n "%(?::%F{red}✘%f)"
 }
 
 prompt_user() {
