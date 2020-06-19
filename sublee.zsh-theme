@@ -22,13 +22,10 @@ prompt_status() {
 }
 
 prompt_user() {
-  # fantine (for root)
-  # sub@fantine (for others)
-  if [[ $UID -eq 0 ]]
-  then
-    echo -n "%F{red}%m%f"
-  else
-    echo -n "%F{green}%n@%m%f"
+  # fantine
+  echo -n "$(subsh-hostname|subsh-hostcolor)"
+  if [[ "$UID" -eq 0 ]]; then
+    echo -n "%F{yellow}✼%f"
   fi
 }
 
@@ -67,8 +64,7 @@ prompt_git() {
 
 prompt_sep() {
   # ❯
-  if [[ "$UID" -eq 0 ]]
-  then
+  if [[ "$UID" -eq 0 ]]; then
     echo -n "%F{yellow}❯%f"
   else
     echo -n "%F{cyan}❯%f"
