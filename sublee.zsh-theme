@@ -53,7 +53,7 @@ prompt_git() {
   fi
 
   local git_tag
-  git_tag="$(git tag --points-at HEAD 2>/dev/null)"
+  git_tag="$(git tag --points-at HEAD 2>/dev/null | head -1)"
   if [[ -n "$git_tag" ]]
   then
     echo -n "%F{red}:$git_tag%f"
