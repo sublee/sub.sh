@@ -8,8 +8,9 @@ export LC_ALL=$LANG
 
 # Set $PATH.
 prepend_path() {
-  [[ -d "$@" ]] && export PATH="$*:$PATH"
+  [[ -d "$1" ]] && export PATH="$*:$PATH"
 }
+trap 'unset -f prepend_path' EXIT
 prepend_path "$HOME/bin"
 prepend_path "$HOME/.local/bin"
 prepend_path "$HOME/.linuxbrew/bin"
