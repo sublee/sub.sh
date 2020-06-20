@@ -514,7 +514,8 @@ info "Linking dot files from sub.sh..."
 git config --global include.path "$SUBSH/git-aliases"
 sym-link "$SUBSH/profile" ~/.profile
 sym-link "$SUBSH/zshrc" ~/.zshrc
-sym-link "$SUBSH/sublee.zsh-theme" ~/.oh-my-zsh/custom/sublee.zsh-theme
+rm -f ~/.oh-my-zsh/custom/sublee.zsh-theme
+sym-link "$SUBSH/subsh.zsh-theme" ~/.oh-my-zsh/custom/subsh.zsh-theme
 sym-link "$SUBSH/vimrc" ~/.vimrc
 sym-link "$SUBSH/tmux.conf" ~/.tmux.conf && (tmux source ~/.tmux.conf || true)
 

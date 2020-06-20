@@ -18,7 +18,7 @@ then
       plugins+=("$plugin")
     fi
   done
-  ZSH_THEME="sublee"
+  ZSH_THEME="subsh"
   source $ZSH/oh-my-zsh.sh
 fi
 

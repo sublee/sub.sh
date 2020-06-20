@@ -38,7 +38,7 @@ prompt_git() {
 # 1✘23:14user@host~/.sub.sh:master❯
 build_prompt() {
   readonly code="$?"
-  readonly theme="${SUBSH_THEME:-green}"
+  readonly theme="${SUBSH_ZSH_THEME:-green}"
 
   # $?✘ (only when the last execution was failed)
   echo -n "%(?::%F{red}$code✘%f)"
@@ -67,25 +67,22 @@ PROMPT='$(build_prompt) '
 
 # show elapsed time at the RPROMPT if slower than 3sec.
 start-timer() {
-  ZSH_SUBLEE_TIMER="$SECONDS"
+  SUBSH_ZSH_TIMER="$SECONDS"
 }
 stop-timer-rprompt() {
   RPROMPT=''
-  if [[ -z "$ZSH_SUBLEE_TIMER" ]]
-  then
+  if [[ -z "$SUBSH_ZSH_TIMER" ]]; then
     return
   fi
 
   local elapsed
-  elapsed="$(($SECONDS - $ZSH_SUBLEE_TIMER))"
-  unset ZSH_SUBLEE_TIMER
+  elapsed="$(($SECONDS - $SUBSH_ZSH_TIMER))"
+  unset SUBSH_ZSH_TIMER
 
-  if [[ "$elapsed" -lt 3 ]]
-  then
+  if [[ "$elapsed" -lt 3 ]]; then
     # ~3sec: show nothing
     RPROMPT=''
-  elif [[ "$elapsed" -lt 600 ]]
-  then
+  elif [[ "$elapsed" -lt 600 ]]; then
     # 3sec~10min: ↳42sec (yellow)
     RPROMPT="%F{yellow}↳%S${elapsed}sec%s%f"
   else
