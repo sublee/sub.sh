@@ -11,74 +11,57 @@
 # %D{%H:%M}  24h clock with leading zero (01:23)
 #
 # %n         username
-# %m         hostname up to first dot
+# %m         hostname up to first dot (hostname from $HOST)
 # %~         cwd, ~ instead of home path
 
-prompt_status() {
-  # ✘$? (only when the last execution was failed)
-  echo -n "%(?::%F{red}✘"$?"%f)"
-  # 23:14
-  echo -n "%F{blue}%D{%H:%M}%f"
-}
-
-prompt_user() {
-  # fantine
-  echo -n "$(subsh-hostname|subsh-hostcolor)"
-  if [[ "$UID" -eq 0 ]]; then
-    echo -n "%F{yellow}✼%f"
-  fi
-}
-
-prompt_dir() {
-  # ~/.oh-my-zsh/custom
-  echo -n "%~"
-}
-
 prompt_git() {
-  # :develop (only in git repo)
-  if ! git rev-parse 2>/dev/null
-  then
+  if ! git rev-parse 2>/dev/null; then
     return
   fi
 
-  local git_branch
-  git_branch="$(git symbolic-ref -q --short HEAD 2>/dev/null)"
-  if [[ -n "$git_branch" ]]
-  then
-    echo -n "%F{magenta}:$git_branch%f"
+  readonly git_branch="$(git symbolic-ref -q --short HEAD 2>/dev/null)"
+  if [[ -n "$git_branch" ]]; then
+    echo -n "%F{blue}:$git_branch%f"
     return
   fi
 
-  local git_tag
-  git_tag="$(git tag --points-at HEAD 2>/dev/null | head -1)"
-  if [[ -n "$git_tag" ]]
-  then
+  readonly git_tag="$(git tag --points-at HEAD 2>/dev/null | head -1)"
+  if [[ -n "$git_tag" ]]; then
     echo -n "%F{red}:$git_tag%f"
     return
   fi
 
-  local git_commit
-  git_commit="$(git rev-parse --short HEAD)"
+  readonly git_commit="$(git rev-parse --short HEAD)"
   echo -n "%F{yellow}:$git_commit%f"
 }
 
-prompt_sep() {
-  # ❯
-  if [[ "$UID" -eq 0 ]]; then
-    echo -n "%F{yellow}❯%f"
-  else
-    echo -n "%F{cyan}❯%f"
-  fi
-}
-
-# 23:14✘sub@fantine❯~/.oh-my-zsh/custom:develop❯
+# 1✘23:14user@host~/.sub.sh:master❯
 build_prompt() {
-  prompt_status
-  prompt_user
-  prompt_sep
-  prompt_dir
+  readonly code="$?"
+  readonly theme="${SUBSH_THEME:-green}"
+
+  # $?✘ (only when the last execution was failed)
+  echo -n "%(?::%F{red}$code✘%f)"
+
+  # 23:14
+  echo -n "%D{%H:%M}"
+
+  # root: hostname
+  # other: username@hostname
+  if [[ "$UID" -eq 0 ]]; then
+    echo -n "%F{$theme}%m%f"
+  else
+    echo -n "%F{$theme}%n@%m%f"
+  fi
+
+  # ~/.sub.sh
+  echo -n "%~"
+
+  # :develop (only in git repo)
   prompt_git
-  prompt_sep
+
+  # ❯
+  echo -n "%F{$theme}❯%f"
 }
 PROMPT='$(build_prompt) '
 
