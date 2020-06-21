@@ -18,7 +18,6 @@ set -euo pipefail
 readonly TIMESTAMP="$(date +%s)"
 readonly USER="$(whoami)"
 readonly SUBSH=~/.sub.sh
-readonly VIRTUALENV=~/env
 
 # Where some backup files to be stored.
 readonly BAK=~/.sub.sh-bak-$TIMESTAMP
@@ -65,8 +64,7 @@ do
       shift;;
 
     *)
-      if [[ "$SUBSH_DEST_SET" == false ]]
-      then
+      if [[ "$SUBSH_DEST_SET" == false ]]; then
         SUBSH_DEST_SET=true
         SUBSH_DEST="$i"
         shift
@@ -86,8 +84,7 @@ readonly SUBSH_DEST="$(readlink -f "$SUBSH_DEST")"
 
 # print -----------------------------------------------------------------------
 
-if [[ -z "$TERM" ]]
-then
+if [[ -z "$TERM" ]]; then
   secho() {
     echo "$2"
   }
@@ -143,8 +140,7 @@ fd-installed-version() {
 add-ppa() {
   local src="$1"
 
-  if ! grep -q "^deb.*$src" /etc/apt/sources.list.d/*.list
-  then
+  if ! grep -q "^deb.*$src" /etc/apt/sources.list.d/*.list; then
     sudo -E add-apt-repository -y "ppa:$src"
   fi
 }
@@ -155,8 +151,7 @@ git-pull() {
   local src="$1"
   local dest="$2"
 
-  if [[ ! -d "$dest" ]]
-  then
+  if [[ ! -d "$dest" ]]; then
     mkdir -p "$dest"
     git clone "$src" "$dest"
   else
@@ -180,10 +175,8 @@ sym-link() {
   local src="$1"
   local dest="$2"
 
-  if [[ -e $dest || -L $dest ]]
-  then
-    if [[ "$(readlink -f "$src")" == "$(readlink -f "$dest")" ]]
-    then
+  if [[ -e $dest || -L $dest ]]; then
+    if [[ "$(readlink -f "$src")" == "$(readlink -f "$dest")" ]]; then
       echo "Already linked '$dest'"
       return
     fi
@@ -216,16 +209,14 @@ cd ~
 # sudo ------------------------------------------------------------------------
 
 require_sudo_without_password() {
-  if ! executable sudo
-  then
+  if ! executable sudo; then
     info "Installing sudo..."
     apt update
     apt install -y sudo
   fi
 
   # Check if sudo requires password.
-  if ! >&/dev/null sudo -n true
-  then
+  if ! >&/dev/null sudo -n true; then
     err "Make sure $USER can use sudo without password."
     echo
     err "  # echo '$USER ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-$USER"
@@ -283,17 +274,14 @@ install_apt_packages() {
 }
 
 # Install packages from APT.
-if [[ "$APT_UPDATE" != false ]]
-then
-  if [[ "$APT_UPDATE" == auto && -f $APT_UPDATED_AT ]]
-  then
+if [[ "$APT_UPDATE" != false ]]; then
+  if [[ "$APT_UPDATE" == auto && -f $APT_UPDATED_AT ]]; then
     readonly APT_UPDATED_BEFORE="$((TIMESTAMP - $(cat "$APT_UPDATED_AT")))"
   else
     readonly APT_UPDATED_BEFORE="$((UPDATE_APT_AFTER + 1))"
   fi
 
-  if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]
-  then
+  if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
     update_apt
     echo "$TIMESTAMP" > "$APT_UPDATED_AT"
   fi
@@ -304,18 +292,15 @@ install_apt_packages
 # localhost ssh ---------------------------------------------------------------
 
 # Authorize the local SSH key for connecting to localhost without password.
-if executable ssh && ! ssh -qo BatchMode=yes localhost true
-then
+if executable ssh && ! ssh -qo BatchMode=yes localhost true; then
   mkdir -p ~/.ssh
 
-  if [[ ! -f ~/.ssh/id_rsa ]]
-  then
+  if [[ ! -f ~/.ssh/id_rsa ]]; then
     info "Generating new SSH key..."
     ssh-keygen -f ~/.ssh/id_rsa -N ''
   fi
 
-  if [[ ! -f ~/.ssh/id_rsa.pub ]]
-  then
+  if [[ ! -f ~/.ssh/id_rsa.pub ]]; then
     info "Retrieving a public SSH key from the private..."
     ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
   fi
@@ -331,19 +316,16 @@ fi
 install_vim() {
   local vim_version=
 
-  if executable vim
-  then
+  if executable vim; then
     vim_version="$(vim-installed-version)"
 
-    if [[ "$vim_version" = "$1" ]]
-    then
+    if [[ "$vim_version" = "$1" ]]; then
       info "vim-$vim_version has already been installed."
       return
     fi
   fi
 
-  if [[ -z "$vim_version" ]]
-  then
+  if [[ -z "$vim_version" ]]; then
     info "Installing Vim..."
   else
     info "Upgrading Vim from ${vim_version}..."
@@ -362,19 +344,16 @@ install_vim '8.1'
 install_git() {
   local git_version=
 
-  if executable git
-  then
+  if executable git; then
     git_version="$(git-installed-version)"
 
-    if [[ "$git_version" = "$1" ]]
-    then
+    if [[ "$git_version" = "$1" ]]; then
       info "git-$git_version has already been installed."
       return
     fi
   fi
 
-  if [[ -z "$git_version" ]]
-  then
+  if [[ -z "$git_version" ]]; then
     info "Installing Git..."
   else
     info "Upgrading Git from ${git_version}..."
@@ -403,8 +382,7 @@ install_rg() {
   rg_release="$(github-api "BurntSushi/ripgrep/releases/tags/$rg_version")"
 
   # Compare with the currently installed version.
-  if executable rg && [[ "$(rg-installed-version)" == "$rg_version" ]]
-  then
+  if executable rg && [[ "$(rg-installed-version)" == "$rg_version" ]]; then
     info "rg-${rg_version} has already been installed."
     return
   fi
@@ -438,8 +416,7 @@ install_rg
 
 install_fd() {
   # Remove legacy executable.
-  if [[ -f /usr/local/bin/fd ]]
-  then
+  if [[ -f /usr/local/bin/fd ]]; then
     sudo -E rm -rf /usr/local/bin/fd
   fi
 
@@ -451,8 +428,7 @@ install_fd() {
     echo "$fd_release" | grep tag_name | cut -d '"' -f4 | cut -c 2-
   )"
 
-  if executable fd && [[ "$(fd-installed-version)" == "$fd_version" ]]
-  then
+  if executable fd && [[ "$(fd-installed-version)" == "$fd_version" ]]; then
     info "fd-${fd_version} has already been installed."
     return
   fi
@@ -480,8 +456,7 @@ install_fd
 # zsh -------------------------------------------------------------------------
 
 install_zsh() {
-  if ! executable zsh
-  then
+  if ! executable zsh; then
     info "Installing ZSH..."
     sudo -E apt install -y zsh
   fi
@@ -508,8 +483,7 @@ install_zsh
 # Get sub.sh.
 info "Getting sub.sh at $SUBSH_DEST..."
 github-pull sublee/sub.sh "$SUBSH_DEST"
-if [[ "$SUBSH_DEST_SET" == true ]]
-then
+if [[ "$SUBSH_DEST_SET" == true ]]; then
   sym-link "$SUBSH_DEST" "$SUBSH"
 fi
 
@@ -518,7 +492,8 @@ info "Linking dot files from sub.sh..."
 git config --global include.path "$SUBSH/git-aliases"
 sym-link "$SUBSH/profile" ~/.profile
 sym-link "$SUBSH/zshrc" ~/.zshrc
-sym-link "$SUBSH/sublee.zsh-theme" ~/.oh-my-zsh/custom/sublee.zsh-theme
+rm -f ~/.oh-my-zsh/custom/sublee.zsh-theme
+sym-link "$SUBSH/subsh.zsh-theme" ~/.oh-my-zsh/custom/subsh.zsh-theme
 sym-link "$SUBSH/vimrc" ~/.vimrc
 sym-link "$SUBSH/tmux.conf" ~/.tmux.conf && (tmux source ~/.tmux.conf || true)
 
@@ -539,21 +514,18 @@ github-pull tmux-plugins/tpm ~/.tmux/plugins/tpm
 # python ----------------------------------------------------------------------
 
 # Setup a Python environment.
-if [[ "$PYTHON" = true ]]
-then
+if [[ "$PYTHON" = true ]]; then
   info "Setting up the Python environment..."
 
   sudo -E apt install -y python python-dev python-setuptools
 
-  if ! executable pyenv
-  then
+  if ! executable pyenv; then
     curl -L https://git.io/vxZax | bash
   fi
 
   sym-link "$SUBSH/python-startup.py" ~/.python-startup
 
-  if [[ -d ~/.ipython ]]
-  then
+  if [[ -d ~/.ipython ]]; then
     sym-link \
       "$SUBSH/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
   fi
@@ -562,8 +534,7 @@ fi
 # results ---------------------------------------------------------------------
 
 # Show my emblem.
-if [[ -n "$TERM" ]]
-then
+if [[ -n "$TERM" ]]; then
   curl -sL https://subl.ee/~emblem || true
 fi
 
@@ -576,19 +547,15 @@ echo "fd: $(fd-installed-version)"
 
 # Notify the result.
 info "Provisioned successfully by sub.sh."
-if [[ "$WARNED" -eq 1 ]]
-then
+if [[ "$WARNED" -eq 1 ]]; then
   warn "But there was 1 warning."
-elif [[ "$WARNED" -gt 1 ]]
-then
+elif [[ "$WARNED" -gt 1 ]]; then
   warn "But there were $WARNED warnings."
 fi
-if [[ -d "$BAK" ]]
-then
+if [[ -d "$BAK" ]]; then
   info "Backup files are stored in $BAK"
 fi
-if [[ "$SHELL" != "$(which zsh)" && -z "${ZSH+x}" ]]
-then
+if [[ "$SHELL" != "$(which zsh)" && -z "${ZSH+x}" ]]; then
   info "To use just provisioned ZSH, relogin or"
   echo
   info "  $ zsh"
