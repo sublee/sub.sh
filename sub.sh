@@ -14,7 +14,6 @@ set -euo pipefail
 readonly TIMESTAMP="$(date +%s)"
 readonly USER="$(whoami)"
 readonly SUBSH=~/.sub.sh
-readonly VIRTUALENV=~/env
 
 # Where some backup files to be stored.
 readonly BAK=~/.sub.sh-bak-$TIMESTAMP
