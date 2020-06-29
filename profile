@@ -27,8 +27,20 @@ unset here
 # Python environment.
 if [[ -d "$HOME/.pyenv" ]]; then
   prepend-path "$HOME/.pyenv/bin"
-  [[ -z "$PYENV_SHELL" ]] && eval "$(pyenv init - --no-rehash "$SHELL")"
-  [[ -z "$PYENV_VIRTUALENV_INIT" ]] && eval "$(pyenv virtualenv-init -)"
+
+  old_path="$PATH"
+  eval "$(pyenv init - --no-rehash)"
+  if [[ ":$old_path:" == *":$(pyenv root)/shims:"* ]]; then
+    export PATH="$old_path"
+    unset old_path
+  fi
+
+  old_path="$PATH"
+  eval "$(pyenv virtualenv-init -)"
+  if [[ ":$old_path:" == *":$(pyenv root)/plugins/pyenv-virtualenv/shims:"* ]]; then
+    export PATH="$old_path"
+    unset old_path
+  fi
 fi
 
 if [[ -f "$HOME/.python-startup" ]]; then
