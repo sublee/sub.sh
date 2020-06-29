@@ -8,7 +8,7 @@ export LC_ALL=$LANG
 
 # Set $PATH.
 prepend-path() {
-  [[ -d "$1" ]] && export PATH="$*:$PATH"
+  [[ -d "$1" ]] && [[ ":$PATH:" != *":$1:"* ]] && export PATH="$*:$PATH"
 }
 trap 'unset -f prepend-path' EXIT
 prepend-path "$HOME/bin"
@@ -27,8 +27,8 @@ unset here
 # Python environment.
 if [[ -d "$HOME/.pyenv" ]]; then
   prepend-path "$HOME/.pyenv/bin"
-  eval "$(pyenv init - --no-rehash "$SHELL")"
-  eval "$(pyenv virtualenv-init -)"
+  [[ -z "$PYENV_SHELL" ]] && eval "$(pyenv init - --no-rehash "$SHELL")"
+  [[ -z "$PYENV_VIRTUALENV_INIT" ]] && eval "$(pyenv virtualenv-init -)"
 fi
 
 if [[ -f "$HOME/.python-startup" ]]; then
