@@ -196,7 +196,7 @@ set -euo pipefail
   }
 
   executable() {
-    which "$1" &>/dev/null
+    command -v "$1" &>/dev/null
   }
 
   failed() {
