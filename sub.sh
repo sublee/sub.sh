@@ -320,7 +320,7 @@ set -euo pipefail
   # vim ------------------------------------------------------------------------
 
   install_vim() {
-    local vim_version
+    local vim_version=''
 
     if executable vim; then
       vim_version="$(vim-installed-version)"
@@ -348,7 +348,7 @@ set -euo pipefail
   # git ------------------------------------------------------------------------
 
   install_git() {
-    local git_version
+    local git_version=''
 
     if executable git; then
       git_version="$(git-installed-version)"
