@@ -28,7 +28,8 @@ set -euo pipefail
     echo
     echo "Options:"
     echo "  --help              Show this message and exit."
-    echo "  --no-python         Do not setup Python environment."
+    echo "  --no-python         Do not setup Python development environment."
+    echo "  --no-pyenv          Do not install pyenv."
     echo "  --no-apt-update     Do not update APT package lists."
     echo "  --force-apt-update  Update APT package lists on regardless of"
     echo "                      updating period."
@@ -36,6 +37,7 @@ set -euo pipefail
 
   # Parse options.
   PYTHON=true
+  PYENV=true
   APT_UPDATE=auto
   SUBSH_DEST_SET=false
   SUBSH_DEST="$SUBSH"
@@ -49,6 +51,11 @@ set -euo pipefail
 
     --no-python)
       PYTHON=false
+      shift
+      ;;
+
+    --no-pyenv)
+      PYENV=false
       shift
       ;;
 
@@ -518,15 +525,15 @@ set -euo pipefail
 
     sudo -E apt install -y python python-dev python-setuptools
 
-    if ! executable pyenv; then
-      curl -L https://git.io/vxZax | bash
-    fi
-
     sym-link "$SUBSH/python-startup.py" ~/.python-startup
 
     if [[ -d ~/.ipython ]]; then
       sym-link \
         "$SUBSH/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
+    fi
+
+    if [[ "$PYENV" == true ]] && ! executable pyenv; then
+      curl -L https://git.io/vxZax | bash
     fi
   fi
 
