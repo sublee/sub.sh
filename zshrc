@@ -7,7 +7,7 @@ __git_files() {
 
 # Oh My ZSH!
 export ZSH=$HOME/.oh-my-zsh
-plugins=(git z)
+plugins=(git)
 if [[ -d "$ZSH" ]]
 then
   for plugin_path in $ZSH/custom/plugins/*
