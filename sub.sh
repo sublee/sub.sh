@@ -28,6 +28,7 @@ set -euo pipefail
     echo
     echo "Options:"
     echo "  --help              Show this message and exit."
+    echo "  --versions          Show installed versions and exit."
     echo "  --no-python         Do not setup Python development environment."
     echo "  --no-pyenv          Do not install pyenv."
     echo "  --no-apt-update     Do not update APT package lists."
@@ -36,6 +37,7 @@ set -euo pipefail
   }
 
   # Parse options.
+  VERSIONS_ONLY=false
   PYTHON=true
   PYENV=true
   APT_UPDATE=auto
@@ -47,6 +49,11 @@ set -euo pipefail
     --help)
       help
       exit
+      ;;
+
+    --versions)
+      VERSIONS_ONLY=true
+      shift
       ;;
 
     --no-python)
@@ -140,6 +147,19 @@ set -euo pipefail
   fd-installed-version() {
     fd --version | cut -d' ' -f2
   }
+
+  installed-versions() {
+    echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD) at $SUBSH_DEST"
+    echo "vim: $(vim-installed-version)"
+    echo "git: $(git-installed-version)"
+    echo "rg: $(rg-installed-version)"
+    echo "fd: $(fd-installed-version)"
+  }
+
+  if [[ "$VERSIONS_ONLY" == "true" ]]; then
+    installed-versions
+    exit
+  fi
 
   # other utilities ------------------------------------------------------------
 
@@ -486,11 +506,7 @@ set -euo pipefail
   fi
 
   # Print installed versions.
-  echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD) at $SUBSH_DEST"
-  echo "vim: $(vim-installed-version)"
-  echo "git: $(git-installed-version)"
-  echo "rg: $(rg-installed-version)"
-  echo "fd: $(fd-installed-version)"
+  installed-versions
 
   # Notify the result.
   info "Provisioned successfully by sub.sh."
