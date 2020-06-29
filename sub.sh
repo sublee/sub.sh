@@ -527,10 +527,8 @@ set -euo pipefail
 
     sym-link "$SUBSH/python-startup.py" ~/.python-startup
 
-    if [[ -d ~/.ipython ]]; then
-      sym-link \
-        "$SUBSH/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
-    fi
+    mkdir -p ~/.ipython/profile_default
+    sym-link "$SUBSH/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
 
     if [[ "$PYENV" == true ]] && ! executable pyenv; then
       curl -L https://git.io/vxZax | bash
