@@ -381,10 +381,7 @@ set -euo pipefail
     # Detect the latest and installed version.
     local rg_version
     local rg_release
-    rg_version="$(
-      github-api BurntSushi/ripgrep/releases |
-        grep -oP '(?<=tag_name": ")[0-9.]+' | head -1
-    )"
+    rg_version="$(github-api BurntSushi/ripgrep/releases | grep -oP '(?<=tag_name": ")[0-9.]+' | head -1)"
     rg_release="$(github-api "BurntSushi/ripgrep/releases/tags/$rg_version")"
 
     # Compare with the currently installed version.
@@ -401,11 +398,7 @@ set -euo pipefail
 
     rg_tgz="$(mktemp -t rg-XXX.tar.gz)"
     rg_dir="$(mktemp -dt rg-XXX)"
-    rg_tgz_url="$(
-      echo "$rg_release" |
-        grep -e "download_url.\+$(uname -m).\+linux.\+" |
-        cut -d'"' -f4
-    )"
+    rg_tgz_url="$(echo "$rg_release" | grep -e "download_url.\+$(uname -m).\+linux.\+" | cut -d'"' -f4)"
 
     curl -L "$rg_tgz_url" -o "$rg_tgz"
     tar xvzf "$rg_tgz" -C "$rg_dir"
@@ -430,9 +423,7 @@ set -euo pipefail
     local fd_release
     local fd_version
     fd_release="$(github-api sharkdp/fd/releases/latest)"
-    fd_version="$(
-      echo "$fd_release" | grep tag_name | cut -d '"' -f4 | cut -c 2
-    )"
+    fd_version="$(echo "$fd_release" | grep tag_name | cut -d '"' -f4 | cut -c 2)"
 
     if executable fd && [[ "$(fd-installed-version)" == "$fd_version" ]]; then
       info "fd-${fd_version} has already been installed."
@@ -445,11 +436,7 @@ set -euo pipefail
     local fd_deb_url
 
     fd_deb="$(mktemp -t fd-XXX.deb)"
-    fd_deb_url="$(
-      echo "$fd_release" |
-        grep -e "download_url.\+fd_.\+$(dpkg --print-architecture)\.deb\"" |
-        cut -d'"' -f4
-    )"
+    fd_deb_url="$(echo "$fd_release" | grep -e "download_url.\+fd_.\+$(dpkg --print-architecture)\.deb\"" | cut -d'"' -f4)"
 
     curl -L "$fd_deb_url" -o "$fd_deb"
     sudo -E dpkg -i "$fd_deb"
