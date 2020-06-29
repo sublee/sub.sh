@@ -319,59 +319,15 @@ set -euo pipefail
 
   # vim ------------------------------------------------------------------------
 
-  install_vim() {
-    local vim_version=''
-
-    if executable vim; then
-      vim_version="$(vim-installed-version)"
-
-      if [[ "$vim_version" == "$1" ]]; then
-        info "vim-$vim_version has already been installed."
-        return
-      fi
-    fi
-
-    if [[ -z "$vim_version" ]]; then
-      info "Installing Vim..."
-    else
-      info "Upgrading Vim from ${vim_version}..."
-    fi
-
-    add-ppa jonathonf/vim
-
-    sudo -E apt update
-    sudo -E apt install -y vim
-  }
-
-  install_vim '8.1'
+  add-ppa jonathonf/vim
+  sudo -E apt update
+  sudo -E apt install -y vim
 
   # git ------------------------------------------------------------------------
 
-  install_git() {
-    local git_version=''
-
-    if executable git; then
-      git_version="$(git-installed-version)"
-
-      if [[ "$git_version" == "$1" ]]; then
-        info "git-$git_version has already been installed."
-        return
-      fi
-    fi
-
-    if [[ -z "$git_version" ]]; then
-      info "Installing Git..."
-    else
-      info "Upgrading Git from ${git_version}..."
-    fi
-
-    add-ppa git-core/ppa
-
-    sudo -E apt update
-    sudo -E apt install -y git
-  }
-
-  install_git '2.24.0'
+  add-ppa git-core/ppa
+  sudo -E apt update
+  sudo -E apt install -y git
 
   # rg -------------------------------------------------------------------------
 
