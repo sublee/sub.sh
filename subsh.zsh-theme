@@ -37,11 +37,10 @@ prompt_git() {
 
 # 1✘23:14user@host~/.sub.sh:master❯
 build_prompt() {
-  readonly code="$?"
   readonly theme="${SUBSH_ZSH_THEME:-green}"
 
   # $?✘ (only when the last execution was failed)
-  echo -n "%(?::%F{red}$code✘%f)"
+  echo -n "%(?::%F{red}%?✘%f)"
 
   # 23:14
   echo -n "%D{%H:%M}"
