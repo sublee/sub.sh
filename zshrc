@@ -2,7 +2,7 @@
 
 # Fast Git completion: https://superuser.com/questions/458906
 __git_files() {
-  _wanted files expl 'local files' _files
+  _wanted files expl "local files" _files
 }
 
 # Oh My ZSH!
@@ -45,7 +45,7 @@ bindkey -s "^[Oj" "*"
 bindkey -s "^[Oo" "/"
 
 # Config zsh-autosuggestions.
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=6'
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=6"
 
 # Include ~/.profile.
 if [[ -f "$HOME/.profile" ]]
