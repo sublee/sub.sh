@@ -44,6 +44,9 @@ bindkey -s "^[Om" "-"
 bindkey -s "^[Oj" "*"
 bindkey -s "^[Oo" "/"
 
+# Disable the update checking.
+export DISABLE_AUTO_UPDATE="true"
+
 # Config zsh-autosuggestions.
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=6"
 
