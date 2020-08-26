@@ -21,7 +21,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'hotwatermorning/auto-git-diff'
-Plug 'majutsushi/tagbar', { 'do': 'sudo apt install -y exuberant-ctags' }
+Plug 'majutsushi/tagbar'  " requires ctags
 Plug 'rhysd/committia.vim'
 Plug 'sbdchd/neoformat'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
