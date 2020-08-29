@@ -249,8 +249,11 @@ set -euo pipefail
   require_sudo_without_password() {
     if ! executable sudo; then
       info "Installing sudo..."
-      apt update
-      apt install -y sudo
+
+      case $OS in
+        ubuntu) apt update; apt install -y sudo;;
+        centos) yum install -y sudo;;
+      esac
     fi
 
     # Check if sudo requires password.
