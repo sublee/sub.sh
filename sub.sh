@@ -225,6 +225,18 @@ set -euo pipefail
   trap failed ERR
 
   # ============================================================================
+  # Checking OS
+  # ============================================================================
+
+  if grep -q 'NAME="Ubuntu"' /etc/os-release; then
+    readonly OS=ubuntu
+  elif grep -q 'NAME="CentOS Linux"' /etc/os-release; then
+    readonly OS=centos
+  else
+    fatal "Only Ubuntu or CentOS supported."
+  fi
+
+  # ============================================================================
   # Provisioning
   # ============================================================================
 
