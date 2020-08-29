@@ -18,10 +18,6 @@ set -euo pipefail
   # Where some backup files to be stored.
   readonly BAK=~/.sub.sh-bak-$TIMESTAMP
 
-  # Don't update APT if the last updated time is in a day.
-  readonly UPDATE_APT_AFTER=86400
-  readonly APT_UPDATED_AT=~/.sub.sh-apt-updated-at
-
   help() {
     # Print the help message for --help.
     echo "Usage: curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]"
@@ -31,16 +27,12 @@ set -euo pipefail
     echo "  --versions          Show installed versions and exit."
     echo "  --no-python         Do not setup Python development environment."
     echo "  --no-pyenv          Do not install pyenv."
-    echo "  --no-apt-update     Do not update APT package lists."
-    echo "  --force-apt-update  Update APT package lists on regardless of"
-    echo "                      updating period."
   }
 
   # Parse options.
   VERSIONS_ONLY=false
   PYTHON=true
   PYENV=true
-  APT_UPDATE=auto
   SUBSH_DEST_SET=false
   SUBSH_DEST="$SUBSH"
 
@@ -63,16 +55,6 @@ set -euo pipefail
 
     --no-pyenv)
       PYENV=false
-      shift
-      ;;
-
-    --no-apt-update)
-      APT_UPDATE=false
-      shift
-      ;;
-
-    --force-apt-update)
-      APT_UPDATE=true
       shift
       ;;
 
@@ -251,7 +233,7 @@ set -euo pipefail
       info "Installing sudo..."
 
       case $OS in
-        ubuntu) apt update; apt install -y sudo;;
+        ubuntu) apt update && apt install -y sudo;;
         centos) yum install -y sudo;;
       esac
     fi
@@ -271,19 +253,12 @@ set -euo pipefail
 
   # apt ------------------------------------------------------------------------
 
-  update_apt() {
-    info "Updating APT package lists..."
-
-    # Require to add PPAs.
-    sudo -E apt update
-    sudo -E apt install -y software-properties-common
-  }
-
   install_apt_packages() {
     info "Installing packages from APT..."
     (
       export DEBIAN_FRONTEND=noninteractive
 
+      sudo -E apt update
       sudo -E apt install -y \
         aptitude \
         cmake \
@@ -298,6 +273,7 @@ set -euo pipefail
         net-tools \
         ntpdate \
         psmisc \
+        software-properties-common \
         telnet \
         tmux \
         tree \
@@ -313,20 +289,6 @@ set -euo pipefail
       sudo -E apt install -y shellcheck || true
     )
   }
-
-  # Install packages from APT.
-  if [[ "$APT_UPDATE" != false ]]; then
-    if [[ "$APT_UPDATE" == auto && -f $APT_UPDATED_AT ]]; then
-      readonly APT_UPDATED_BEFORE="$((TIMESTAMP - $(cat "$APT_UPDATED_AT")))"
-    else
-      readonly APT_UPDATED_BEFORE="$((UPDATE_APT_AFTER + 1))"
-    fi
-
-    if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
-      update_apt
-      echo "$TIMESTAMP" >"$APT_UPDATED_AT"
-    fi
-  fi
 
   install_apt_packages
 
