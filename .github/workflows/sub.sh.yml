@@ -6,12 +6,17 @@ jobs:
   verify:
     name: Verify
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        image: ['ubuntu:18.04', 'centos:7.4.1708']
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
     - name: Run
-      run: docker run -i --name sub.sh -v "$PWD/sub.sh:/sub.sh" ubuntu:18.04 bash -c '[[ -f ~/.profile ]] && source ~/.profile; /sub.sh'
+      run: docker run -i --name sub.sh -v "$PWD/sub.sh:/sub.sh" ${{ matrix.image }} bash -c '[[ -f ~/.profile ]] && source ~/.profile; /sub.sh'
 
     - name: Rerun
       run: docker start -a sub.sh
