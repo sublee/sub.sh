@@ -1,9 +1,6 @@
 name: sub.sh
 
-on:
-  push:
-    branches:
-    - master
+on: push
 
 jobs:
   verify:
@@ -23,6 +20,9 @@ jobs:
     name: Publish
     needs: verify
     runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/master'
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
