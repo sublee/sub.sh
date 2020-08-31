@@ -42,6 +42,7 @@ help() {
   echo
   echo "Options:"
   echo "  --help        Show this message and exit."
+  echo "  --versions    Show versions and exit."
   echo "  --no-pyenv    Do not install pyenv."
 }
 
@@ -57,6 +58,11 @@ parse_opts() {
     case $opt in
     --help)
       help
+      exit
+      ;;
+
+    --versions)
+      result
       exit
       ;;
 
