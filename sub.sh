@@ -324,6 +324,7 @@ set -euo pipefail
       popd
       ;;
     centos)
+      sudo -E dnf -y copr enable carlwgeorge/ripgrep
       sudo -E yum install -y ripgrep
       ;;
   esac
