@@ -500,5 +500,6 @@ _print_versions() {
 
 
 set -euo pipefail
+trap 'error "Interrupted during provisioning."; exit 1' INT
 trap 'error "Failed to provision."; exit 1' ERR
 main "$@"
