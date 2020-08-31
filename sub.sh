@@ -18,10 +18,6 @@ set -euo pipefail
   # Where some backup files to be stored.
   readonly BAK=~/.sub.sh-bak-$TIMESTAMP
 
-  # Don't update APT if the last updated time is in a day.
-  readonly UPDATE_APT_AFTER=86400
-  readonly APT_UPDATED_AT=~/.sub.sh-apt-updated-at
-
   help() {
     # Print the help message for --help.
     echo "Usage: curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]"
@@ -31,16 +27,12 @@ set -euo pipefail
     echo "  --versions          Show installed versions and exit."
     echo "  --no-python         Do not setup Python development environment."
     echo "  --no-pyenv          Do not install pyenv."
-    echo "  --no-apt-update     Do not update APT package lists."
-    echo "  --force-apt-update  Update APT package lists on regardless of"
-    echo "                      updating period."
   }
 
   # Parse options.
   VERSIONS_ONLY=false
   PYTHON=true
   PYENV=true
-  APT_UPDATE=auto
   SUBSH_DEST_SET=false
   SUBSH_DEST="$SUBSH"
 
@@ -66,16 +58,6 @@ set -euo pipefail
       shift
       ;;
 
-    --no-apt-update)
-      APT_UPDATE=false
-      shift
-      ;;
-
-    --force-apt-update)
-      APT_UPDATE=true
-      shift
-      ;;
-
     *)
       if [[ "$SUBSH_DEST_SET" == false ]]; then
         SUBSH_DEST_SET=true
@@ -97,13 +79,13 @@ set -euo pipefail
 
   # print ----------------------------------------------------------------------
 
-  if [[ -z "$TERM" ]]; then
+  if tput clear &>/dev/null; then
     secho() {
-      echo "$2"
+      echo -e "$(tput setaf "$1")$2$(tput sgr0)"
     }
   else
     secho() {
-      echo -e "$(tput setaf "$1")$2$(tput sgr0)"
+      echo "$2"
     }
   fi
 
@@ -132,28 +114,8 @@ set -euo pipefail
 
   # version detectors ----------------------------------------------------------
 
-  vim-installed-version() {
-    vim --version | awk '{ print $5; exit }'
-  }
-
-  git-installed-version() {
-    git --version | awk '{ print $3 }'
-  }
-
-  rg-installed-version() {
-    rg --version 2>/dev/null | head -n 1 | cut -d' ' -f2
-  }
-
-  fd-installed-version() {
-    fd --version | cut -d' ' -f2
-  }
-
   installed-versions() {
     echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD) at $SUBSH_DEST"
-    echo "vim: $(vim-installed-version)"
-    echo "git: $(git-installed-version)"
-    echo "rg: $(rg-installed-version)"
-    echo "fd: $(fd-installed-version)"
   }
 
   if [[ "$VERSIONS_ONLY" == "true" ]]; then
@@ -225,6 +187,18 @@ set -euo pipefail
   trap failed ERR
 
   # ============================================================================
+  # Checking OS
+  # ============================================================================
+
+  # LSB: Linux Standard Base
+  readonly LSB_DIST="$(source /etc/os-release && echo "$ID")"
+  case "$LSB_DIST" in
+    ubuntu) ;;
+    centos) ;;
+    *) fatal "Only Ubuntu or CentOS supported."
+  esac
+
+  # ============================================================================
   # Provisioning
   # ============================================================================
 
@@ -234,91 +208,59 @@ set -euo pipefail
 
   # sudo -----------------------------------------------------------------------
 
-  require_sudo_without_password() {
-    if ! executable sudo; then
-      info "Installing sudo..."
-      apt update
-      apt install -y sudo
-    fi
+  info "Installing sudo..."
+  case $LSB_DIST in
+    ubuntu) apt update && apt install -y sudo ;;
+    centos) yum install -y sudo ;;
+  esac
 
-    # Check if sudo requires password.
-    if ! sudo >&/dev/null -n true; then
-      err "Make sure $USER can use sudo without password."
-      echo
-      err "  # echo '$USER ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-$USER"
-      echo
-
-      return 1
-    fi
-  }
-
-  require_sudo_without_password
-
-  # apt ------------------------------------------------------------------------
-
-  update_apt() {
-    info "Updating APT package lists..."
-
-    # Require to add PPAs.
-    sudo -E apt update
-    sudo -E apt install -y software-properties-common
-  }
-
-  install_apt_packages() {
-    info "Installing packages from APT..."
-    (
-      export DEBIAN_FRONTEND=noninteractive
-
-      sudo -E apt install -y \
-        aptitude \
-        cmake \
-        curl \
-        htop \
-        iftop \
-        iputils-ping \
-        jq \
-        less \
-        lsof \
-        man \
-        net-tools \
-        ntpdate \
-        psmisc \
-        telnet \
-        tmux \
-        tree \
-        unzip \
-        wget
-
-      # https://github.com/pyenv/pyenv/wiki/Common-build-problems
-      sudo -E apt install -y \
-        make build-essential libssl-dev zlib1g-dev libbz2-dev \
-        libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev \
-        xz-utils tk-dev libffi-dev liblzma-dev python-openssl
-
-      sudo -E apt install -y shellcheck || true
-    )
-  }
-
-  # Install packages from APT.
-  if [[ "$APT_UPDATE" != false ]]; then
-    if [[ "$APT_UPDATE" == auto && -f $APT_UPDATED_AT ]]; then
-      readonly APT_UPDATED_BEFORE="$((TIMESTAMP - $(cat "$APT_UPDATED_AT")))"
-    else
-      readonly APT_UPDATED_BEFORE="$((UPDATE_APT_AFTER + 1))"
-    fi
-
-    if [[ $APT_UPDATED_BEFORE -gt $UPDATE_APT_AFTER ]]; then
-      update_apt
-      echo "$TIMESTAMP" >"$APT_UPDATED_AT"
-    fi
+  # Check if sudo requires password.
+  if ! sudo >&/dev/null -n true; then
+    err "Make sure $USER can use sudo without password."
+    echo
+    err "  # echo '$USER ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-$USER"
+    echo
+    exit 1
   fi
 
-  install_apt_packages
+  # packages from apt/yum ------------------------------------------------------
+
+  install_apt_packages() {
+    sudo -E apt update
+    DEBIAN_FRONTEND=noninteractive sudo -E apt install -y \
+      cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
+      psmisc shellcheck software-properties-common telnet tmux tree unzip wget
+
+    # apt-specific
+    sudo -E apt install -y aptitude
+  }
+
+  install_yum_packages() {
+    sudo -E yum install -y \
+      cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
+      psmisc shellcheck software-properties-common telnet tmux tree unzip wget
+
+    # dnf: https://github.com/whamcloud/integrated-manager-for-lustre/issues/827#issuecomment-644640424
+    sudo -E yum update -y python*
+    sudo -E yum install -y dnf-data dnf-plugins-core libdnf-devel libdnf python2-dnf-plugin-migrate dnf-automatic
+  }
+
+  info "Installing packages..."
+  case $LSB_DIST in
+    ubuntu) install_apt_packages ;;
+    centos) install_yum_packages ;;
+  esac
 
   # localhost ssh --------------------------------------------------------------
 
+  info "Installing SSH..."
+  case $LSB_DIST in
+    ubuntu) sudo -E apt install -y openssh-client openssh-server ;;
+    centos) sudo -E yum install -y openssh-clients openssh-serve ;;
+  esac
+
   # Authorize the local SSH key for connecting to localhost without password.
-  if executable ssh && ! ssh -qo BatchMode=yes localhost true; then
+  if ! ssh -qo BatchMode=yes localhost true; then
     mkdir -p ~/.ssh
 
     if [[ ! -f ~/.ssh/id_rsa ]]; then
@@ -337,115 +279,86 @@ set -euo pipefail
     info "Authorized the SSH key to connect to localhost."
   fi
 
-  # vim ------------------------------------------------------------------------
+  # vim 8+ ---------------------------------------------------------------------
 
-  add-ppa jonathonf/vim
-  sudo -E apt update
-  sudo -E apt install -y vim
+  info "Installing vim..."
+  case $LSB_DIST in
+    ubuntu)
+      add-ppa jonathonf/vim
+      sudo -E apt update
+      sudo -E apt install -y vim
+      ;;
+    centos)
+      sudo -E dnf copr -y enable hnakamur/vim
+      sudo -E yum install -y vim
+      ;;
+  esac
 
-  # git ------------------------------------------------------------------------
+  # git 2+ ---------------------------------------------------------------------
 
-  add-ppa git-core/ppa
-  sudo -E apt update
-  sudo -E apt install -y git
+  info "Installing git..."
+  case $LSB_DIST in
+    ubuntu)
+      add-ppa git-core/ppa
+      sudo -E apt update
+      sudo -E apt install -y git
+      ;;
+    centos)
+      sudo -E dnf install -y https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+      sudo -E yum install -y git
+      ;;
+  esac
 
   # rg -------------------------------------------------------------------------
 
-  # "rg" is a short-term for "ripgrep", which is a "grep" alternative.
-
-  install_rg() {
-    # Detect the latest and installed version.
-    local rg_version
-    local rg_release
-    rg_version="$(github-api BurntSushi/ripgrep/releases | grep -oP '(?<=tag_name": ")[0-9.]+' | head -1)"
-    rg_release="$(github-api "BurntSushi/ripgrep/releases/tags/$rg_version")"
-
-    # Compare with the currently installed version.
-    if executable rg && [[ "$(rg-installed-version)" == "$rg_version" ]]; then
-      info "rg-${rg_version} has already been installed."
-      return
-    fi
-
-    info "Installing rg-${rg_version}..."
-
-    local rg_tgz
-    local rg_dir
-    local rg_tgz_url
-
-    rg_tgz="$(mktemp -t rg-XXX.tar.gz)"
-    rg_dir="$(mktemp -dt rg-XXX)"
-    rg_tgz_url="$(echo "$rg_release" | grep -e "download_url.\+$(uname -m).\+linux.\+" | cut -d'"' -f4)"
-
-    curl -L "$rg_tgz_url" -o "$rg_tgz"
-    tar xvzf "$rg_tgz" -C "$rg_dir"
-    sudo -E cp "$rg_dir/"*"/rg" /usr/local/bin/rg
-
-    echo "Installed at $(which rg)."
-  }
-
-  install_rg
+  info "Installing rg..."
+  case $LSB_DIST in
+    ubuntu)
+      # sudo -E apt install -y ripgrep  # available in Ubuntu 18.10
+      pushd "$(mktemp -d)"
+      curl -LO https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb
+      sudo dpkg -i ./*.deb
+      popd
+      ;;
+    centos)
+      sudo -E dnf copr -y enable carlwgeorge/ripgrep
+      sudo -E yum install -y ripgrep
+      ;;
+  esac
 
   # fd -------------------------------------------------------------------------
 
-  # "fd" is a "find" alternative.
-
-  install_fd() {
-    # Remove legacy executable.
-    if [[ -f /usr/local/bin/fd ]]; then
-      sudo -E rm -rf /usr/local/bin/fd
-    fi
-
-    # Detect the latest and installed version.
-    local fd_release
-    local fd_version
-    fd_release="$(github-api sharkdp/fd/releases/latest)"
-    fd_version="$(echo "$fd_release" | grep tag_name | cut -d '"' -f4 | cut -c 2)"
-
-    if executable fd && [[ "$(fd-installed-version)" == "$fd_version" ]]; then
-      info "fd-${fd_version} has already been installed."
-      return
-    fi
-
-    info "Installing fd-${fd_version}..."
-
-    local fd_deb
-    local fd_deb_url
-
-    fd_deb="$(mktemp -t fd-XXX.deb)"
-    fd_deb_url="$(echo "$fd_release" | grep -e "download_url.\+fd_.\+$(dpkg --print-architecture)\.deb\"" | cut -d'"' -f4)"
-
-    curl -L "$fd_deb_url" -o "$fd_deb"
-    sudo -E dpkg -i "$fd_deb"
-
-    echo "Installed at $(which fd)."
-  }
-
-  install_fd
+  info "Installing fd..."
+  case $LSB_DIST in
+    ubuntu)
+      # sudo -E apt install -y fd-find  # available in Ubuntu 19.04
+      pushd "$(mktemp -d)"
+      curl -LO https://github.com/sharkdp/fd/releases/download/v8.1.1/fd_8.1.1_amd64.deb
+      sudo dpkg -i ./*.deb
+      popd
+      ;;
+    centos)
+      sudo -E dnf copr -y enable surkum/fd
+      sudo -E yum install -y fd
+      ;;
+  esac
 
   # zsh ------------------------------------------------------------------------
 
-  install_zsh() {
-    if ! executable zsh; then
-      info "Installing ZSH..."
-      sudo -E apt install -y zsh
-    fi
+  info "Installing ZSH..."
+  case $LSB_DIST in
+    ubuntu) sudo -E apt install -y zsh ;;
+    centos) sudo -E yum install -y zsh ;;
+  esac
+  sudo -E chsh -s "$(which zsh)" "$USER"
 
-    info "Setting up the ZSH environment..."
+  info "Installing Oh My ZSH!..."
+  github-pull robbyrussell/oh-my-zsh ~/.oh-my-zsh
 
-    sudo -E chsh -s "$(which zsh)" "$USER"
-
-    # Oh My ZSH!
-    github-pull robbyrussell/oh-my-zsh ~/.oh-my-zsh
-
-    local plugins
-    plugins=~/.oh-my-zsh/custom/plugins
-
-    github-pull zsh-users/zsh-syntax-highlighting $plugins/zsh-syntax-highlighting
-    github-pull zsh-users/zsh-autosuggestions $plugins/zsh-autosuggestions
-    github-pull bobthecow/git-flow-completion $plugins/git-flow-completion
-  }
-
-  install_zsh
+  readonly plugins=~/.oh-my-zsh/custom/plugins
+  github-pull zsh-users/zsh-syntax-highlighting $plugins/zsh-syntax-highlighting
+  github-pull zsh-users/zsh-autosuggestions $plugins/zsh-autosuggestions
+  github-pull bobthecow/git-flow-completion $plugins/git-flow-completion
 
   # sub.sh ---------------------------------------------------------------------
 
@@ -478,7 +391,7 @@ set -euo pipefail
 
   # TPM for tmux
   github-pull tmux-plugins/tpm ~/.tmux/plugins/tpm
-  ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+  TMUX_PLUGIN_MANAGER_PATH=~/.tmux/plugins/ ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 
   # python ---------------------------------------------------------------------
 
@@ -486,7 +399,10 @@ set -euo pipefail
   if [[ "$PYTHON" == true ]]; then
     info "Setting up the Python environment..."
 
-    sudo -E apt install -y python python-dev python-setuptools
+    case $LSB_DIST in
+      ubuntu) sudo -E apt install -y python python-dev python-setuptools ;;
+      centos) sudo -E yum install -y python3 python3-devel python3-setuptools ;;
+    esac
 
     sym-link "$SUBSH/python-startup.py" ~/.python-startup
 
