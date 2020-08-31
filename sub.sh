@@ -13,8 +13,8 @@
 
 # main(...)
 main() {
-  init
   parse_opts "$@"
+  init
   check_os
 
   # Go to the home directory. The current working directory may deny access
@@ -29,15 +29,10 @@ main() {
 
   download_subsh
   setup_subsh
+
+  [[ -d "$bak_dir" ]] && info "Backup files are stored in: $bak_dir"
+
   result
-}
-
-
-# init() sets the static variables.
-# set: $timestamp, $lsb_dist
-init() {
-  readonly timestamp="$(date +%s)"
-  readonly lsb_dist="$(source /etc/os-release && echo "$ID")"
 }
 
 
@@ -85,6 +80,15 @@ parse_opts() {
 
   readonly subsh_dir
   readonly install_pyenv
+}
+
+
+# init() sets the static variables.
+# set: $lsb_dist, $timestamp, $bak_dir
+init() {
+  readonly lsb_dist="$(source /etc/os-release && echo "$ID")"
+  readonly timestamp="$(date +%s)"
+  readonly bak_dir="$subsh_dir/.bak.$timestamp"
 }
 
 
@@ -157,8 +161,8 @@ link() {
     fi
 
     # Backup the previous file.
-    mkdir -p "$subsh_dir/.bak.$timestamp"
-    mv "$dest" "$subsh_dir/.bak.$timestamp"
+    mkdir -p "$bak_dir"
+    mv "$dest" "$bak_dir"
   fi
 
   mkdir -p "$(dirname "$dest")"
@@ -466,10 +470,6 @@ _install_tmux_plugins() {
 
 # result() prints the information of provisioning result.
 result() {
-  if [[ -d "$subsh_dir/.bak.$timestamp" ]]; then
-    info "Backup files are stored in: $subsh_dir/.bak.$timestamp"
-  fi
-
   echo
   _print_emblem
   _print_versions
