@@ -404,7 +404,8 @@ _install_pyenv() { [[ "$install_pyenv" = true ]]
 }
 
 
-# setup_zsh() installs ZSH, Oh My ZSH!, and third-party plugins.
+# setup_zsh() installs ZSH, Oh My ZSH!, and third-party plugins. It depends on
+# Git.
 setup_zsh() {
   _install_zsh
   _install_ohmyzsh
@@ -508,6 +509,7 @@ _print_versions() {
   local subsh_version git_version vim_version rg_version fd_version
 
   subsh_version="$(git -C "$subsh_dir" rev-parse --short HEAD)"
+  zsh_version="$(zsh --version | awk '{ print $2 }')"
   tmux_version="$(tmux -V | awk '{ print $2 }')"
   git_version="$(git --version | awk '{ print $3 }')"
   vim_version="$(vim --version | awk '{ print $5; exit }')"
@@ -515,6 +517,7 @@ _print_versions() {
   fd_version="$(fd --version | cut -d' ' -f2)"
 
   echo "sub.sh: $subsh_version at $subsh_dir"
+  echo -n "zsh-$zsh_version "
   echo -n "tmux-$tmux_version "
   echo -n "git-$git_version "
   echo -n "vim-$vim_version "
