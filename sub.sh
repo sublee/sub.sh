@@ -508,13 +508,19 @@ _print_versions() {
   local subsh_version git_version vim_version rg_version fd_version
 
   subsh_version="$(git -C "$subsh_dir" rev-parse --short HEAD)"
+  tmux_version="$(tmux -V | awk '{ print $2 }')"
   git_version="$(git --version | awk '{ print $3 }')"
   vim_version="$(vim --version | awk '{ print $5; exit }')"
   rg_version="$(rg --version | tail -n +1 | head -n 1 | cut -d' ' -f2)"
   fd_version="$(fd --version | cut -d' ' -f2)"
 
   echo "sub.sh: $subsh_version at $subsh_dir"
-  echo "git-$git_version vim-$vim_version rg-$rg_version fd-$fd_version"
+  echo -n "tmux-$tmux_version "
+  echo -n "git-$git_version "
+  echo -n "vim-$vim_version "
+  echo -n "rg-$rg_version "
+  echo -n "fd-$fd_version"
+  echo
 }
 
 
