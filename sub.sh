@@ -240,12 +240,9 @@ set -euo pipefail
       cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
       psmisc shellcheck software-properties-common telnet tmux tree unzip wget
 
-    # yum-specific
     # dnf: https://github.com/whamcloud/integrated-manager-for-lustre/issues/827#issuecomment-644640424
     sudo -E yum update -y python*
-    sudo -E yum install -y \
-      dnf-data dnf-plugins-core libdnf-devel libdnf \
-      python2-dnf-plugin-migrate dnf-automatic
+    sudo -E yum install -y dnf-data dnf-plugins-core libdnf-devel libdnf python2-dnf-plugin-migrate dnf-automatic
   }
 
   info "Installing packages..."
@@ -292,7 +289,7 @@ set -euo pipefail
       sudo -E apt install -y vim
       ;;
     centos)
-      sudo -E dnf -y copr enable hnakamur/vim
+      sudo -E dnf copr -y enable hnakamur/vim
       sudo -E yum install -y vim
       ;;
   esac
@@ -307,7 +304,7 @@ set -euo pipefail
       sudo -E apt install -y git
       ;;
     centos)
-      sudo -E yum install -y https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+      sudo -E dnf install -y https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
       sudo -E yum install -y git
       ;;
   esac
@@ -324,7 +321,7 @@ set -euo pipefail
       popd
       ;;
     centos)
-      sudo -E dnf -y copr enable carlwgeorge/ripgrep
+      sudo -E dnf copr -y enable carlwgeorge/ripgrep
       sudo -E yum install -y ripgrep
       ;;
   esac
@@ -341,7 +338,7 @@ set -euo pipefail
       popd
       ;;
     centos)
-      sudo -E dnf -y copr enable surkum/fd
+      sudo -E dnf copr -y enable surkum/fd
       sudo -E yum install -y fd
       ;;
   esac
