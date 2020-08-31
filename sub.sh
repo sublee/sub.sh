@@ -229,8 +229,7 @@ set -euo pipefail
     sudo -E apt update
     DEBIAN_FRONTEND=noninteractive sudo -E apt install -y \
       cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
-      psmisc ripgrep shellcheck software-properties-common telnet tmux tree \
-      unzip wget
+      psmisc shellcheck software-properties-common telnet tmux tree unzip wget
 
     # apt-specific
     sudo -E apt install -y aptitude
@@ -239,8 +238,7 @@ set -euo pipefail
   install_yum_packages() {
     sudo -E yum install -y \
       cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
-      psmisc ripgrep shellcheck software-properties-common telnet tmux tree \
-      unzip wget
+      psmisc shellcheck software-properties-common telnet tmux tree unzip wget
 
     # yum-specific
     # dnf: https://github.com/whamcloud/integrated-manager-for-lustre/issues/827#issuecomment-644640424
@@ -314,14 +312,32 @@ set -euo pipefail
       ;;
   esac
 
-  # fd -------------------------------------------------------------------------
+  # rg -------------------------------------------------------------------------
 
-  # "fd" is a "find" alternative.
+  info "Installing rg..."
+  case $LSB_DIST in
+    ubuntu)
+      # sudo -E apt install -y ripgrep  # available in Ubuntu 18.10
+      pushd "$(mktemp -d)"
+      curl -LO https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb
+      sudo dpkg -i ./*.deb
+      popd
+      ;;
+    centos)
+      sudo -E yum install -y ripgrep
+      ;;
+  esac
+
+  # fd -------------------------------------------------------------------------
 
   info "Installing fd..."
   case $LSB_DIST in
     ubuntu)
-      sudo -E apt install -y fd-find
+      # sudo -E apt install -y fd-find  # available in Ubuntu 19.04
+      pushd "$(mktemp -d)"
+      curl -LO https://github.com/sharkdp/fd/releases/download/v8.1.1/fd_8.1.1_amd64.deb
+      sudo dpkg -i ./*.deb
+      popd
       ;;
     centos)
       sudo -E dnf -y copr enable surkum/fd
