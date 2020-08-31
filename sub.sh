@@ -488,11 +488,11 @@ _print_versions() {
   subsh_version="$(git -C "$subsh_dir" rev-parse --short HEAD)"
   git_version="$(git --version | awk '{ print $3 }')"
   vim_version="$(vim --version | awk '{ print $5; exit }')"
-  rg_version="$(rg --version 2>/dev/null | head -n 1 | cut -d' ' -f2)"
+  rg_version="$(rg --version | tail -n +1 | head -n 1 | cut -d' ' -f2)"
   fd_version="$(fd --version | cut -d' ' -f2)"
 
   echo "sub.sh: $subsh_version at $subsh_dir"
-  echo "git-$git_version, vim-$vim_version, rg-$rg_version, fd-$fd_version"
+  echo "git-$git_version vim-$vim_version rg-$rg_version fd-$fd_version"
 }
 
 
