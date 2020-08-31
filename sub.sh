@@ -285,7 +285,7 @@ _install_apt_packages() { [[ "$lsb_dist" = ubuntu ]]
   # etc.
   DEBIAN_FRONTEND=noninteractive sudo -E apt install -y \
     cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
-    psmisc shellcheck software-properties-common telnet tmux tree unzip wget
+    psmisc shellcheck software-properties-common telnet tree unzip wget
 }
 
 _install_yum_packages() { [[ "$lsb_dist" = centos ]]
@@ -297,24 +297,37 @@ _install_yum_packages() { [[ "$lsb_dist" = centos ]]
     dnf-data dnf-plugins-core libdnf-devel libdnf \
     python2-dnf-plugin-migrate dnf-automatic
 
+  # End Point Package Repository
+  # https://packages.endpoint.com/rhel/7/os/x86_64/
+  sudo -E dnf install -y https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+
   # Python 3
   sudo -E yum install -y python3 python3-devel python3-setuptools
 
   # etc.
   sudo -E yum install -y \
     cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
-    psmisc shellcheck software-properties-common telnet tmux tree unzip wget
+    psmisc shellcheck software-properties-common telnet tree unzip wget
 }
 
 
-# setup_tools() installs Git 2+, Vim 8+, ripgrep, and fd.
+# setup_tools() installs tmux 2.6+, Git 2+, Vim 8+, ripgrep, and fd.
 setup_tools() {
+  _install_tmux
   _install_git
   _install_vim
   _install_rg
   _install_fd
 
   [[ "$install_pyenv" = true ]] && _install_pyenv
+}
+
+_install_tmux() {
+  info "Installing tmux..."
+  case $lsb_dist in
+    ubuntu) sudo -E apt install -y tmux ;;
+    centos) sudo -E yum install -y tmux ;;  # tmux 2.9a from End Point
+  esac
 }
 
 _install_git() {
@@ -326,8 +339,7 @@ _install_git() {
       sudo -E apt install -y git
     ;;
     centos)
-      sudo -E dnf install -y https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-      sudo -E yum install -y git
+      sudo -E yum install -y git  # git 2.24.1 from End Point
     ;;
   esac
 }
