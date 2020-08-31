@@ -434,12 +434,14 @@ _install_ohmyzsh() {
 # sub.sh ----------------------------------------------------------------------
 
 
+# download_subsh() clones the sub.sh repository at the given target directory.
 download_subsh() {
   info "Downloading sub.sh at $subsh_dir..."
   git_pull https://github.com/sublee/sub.sh "$subsh_dir"
 }
 
 
+# setup_subsh() enables the settings from sub.sh.
 setup_subsh() {
   _apply_settings
   _install_vim_plugins
@@ -459,7 +461,9 @@ _apply_settings() {
 
   link "$subsh_dir/python-startup.py" ~/.python-startup
   mkdir -p ~/.ipython/profile_default
-  link "$subsh_dir/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
+  pushd ~/.ipython/profile_default
+  link "$subsh_dir/ipython_config.py"
+  popd
 }
 
 _install_vim_plugins() {
