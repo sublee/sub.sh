@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# vim:ft=sh:et:ts=2:sw=2:sts=2:
+# vim:ft=sh:et:ts=2:sw=2:sts=2:cc=80:
 #
 # sub.sh
 # ~~~~~~
@@ -9,59 +9,71 @@
 #  $ curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]
 #  $ wget -qO- sub.sh | bash [-s - [~/.sub.sh] OPTIONS]
 #
-set -euo pipefail
-{
-  readonly TIMESTAMP="$(date +%s)"
-  readonly USER="$(whoami)"
-  readonly SUBSH=~/.sub.sh
 
-  # Where some backup files to be stored.
-  readonly BAK=~/.sub.sh-bak-$TIMESTAMP
 
-  help() {
-    # Print the help message for --help.
-    echo "Usage: curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]"
-    echo
-    echo "Options:"
-    echo "  --help              Show this message and exit."
-    echo "  --versions          Show installed versions and exit."
-    echo "  --no-python         Do not setup Python development environment."
-    echo "  --no-pyenv          Do not install pyenv."
-  }
+# main(...)
+main() {
+  init
+  parse_opts "$@"
+  check_os
 
-  # Parse options.
-  VERSIONS_ONLY=false
-  PYTHON=true
-  PYENV=true
-  SUBSH_DEST_SET=false
-  SUBSH_DEST="$SUBSH"
+  # Go to the home directory. The current working directory may deny access
+  # from this user.
+  cd ~
 
-  for i in "$@"; do
-    case $i in
+  setup_sudo
+  setup_ssh
+  setup_packages
+  setup_tools
+  setup_zsh
+
+  download_subsh
+  setup_subsh
+  result
+}
+
+
+# init() sets the static variables.
+# set: $timestamp, $lsb_dist
+init() {
+  readonly timestamp="$(date +%s)"
+  readonly lsb_dist="$(source /etc/os-release && echo "$ID")"
+}
+
+
+# help() prints the help message.
+help() {
+  echo "Usage: curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]"
+  echo
+  echo "Options:"
+  echo "  --help        Show this message and exit."
+  echo "  --no-pyenv    Do not install pyenv."
+}
+
+
+# parse_opts(...) parses options and sets variables.
+# set: $subsh_dir, $install_pyenv
+parse_opts() {
+  local dest_provided=false
+  subsh_dir=~/.sub.sh
+  install_pyenv=true
+
+  for opt in "$@"; do
+    case $opt in
     --help)
       help
       exit
       ;;
 
-    --versions)
-      VERSIONS_ONLY=true
-      shift
-      ;;
-
-    --no-python)
-      PYTHON=false
-      shift
-      ;;
-
     --no-pyenv)
-      PYENV=false
+      install_pyenv=false
       shift
       ;;
 
     *)
-      if [[ "$SUBSH_DEST_SET" == false ]]; then
-        SUBSH_DEST_SET=true
-        SUBSH_DEST="$i"
+      if [[ "$dest_provided" == false ]]; then
+        dest_provided=true
+        subsh_dir="$opt"
         shift
       else
         help
@@ -71,373 +83,423 @@ set -euo pipefail
     esac
   done
 
-  readonly SUBSH_DEST="$(readlink -f "$SUBSH_DEST")"
+  readonly subsh_dir
+  readonly install_pyenv
+}
 
-  # ============================================================================
-  # Functions
-  # ============================================================================
 
-  # print ----------------------------------------------------------------------
-
-  if tput clear &>/dev/null; then
-    secho() {
-      echo -e "$(tput setaf "$1")$2$(tput sgr0)"
-    }
-  else
-    secho() {
-      echo "$2"
-    }
-  fi
-
-  info() {
-    # Print an information log.
-    secho 6 "$1"
-  }
-
-  WARNED=0
-  warn() {
-    # Print a yellow colored error message.
-    secho 3 "$1"
-    WARNED=$((WARNED + 1))
-  }
-
-  err() {
-    # Print a red colored error message.
-    secho 1 "$1"
-  }
-
-  fatal() {
-    # Print a red colored error message and exit the script.
-    err "$@"
+# check_os tests if the OS is either Ubuntu or CentOS.
+check_os() {
+  if [[ "$lsb_dist" != ubuntu ]] && [[ "$lsb_dist" != centos ]]; then
+    error "Supporting Ubuntu or CentOS only. '$lsb_dist' is not supported."
     exit 1
-  }
+  fi
+}
 
-  # version detectors ----------------------------------------------------------
 
-  installed-versions() {
-    echo "sub.sh: $(git -C "$SUBSH" rev-parse --short HEAD) at $SUBSH_DEST"
-  }
+# Utilities -------------------------------------------------------------------
 
-  if [[ "$VERSIONS_ONLY" == "true" ]]; then
-    installed-versions
-    exit
+
+# safe_tput(...) executes tput if running on a terminal.
+if tput clear &>/dev/null; then
+  safe_tput() ( tput "$@" )
+else
+  safe_tput() ( true )
+fi
+
+
+# info($text...) prints an information log with green color.
+info() {
+  echo -en "$(safe_tput setaf 2)$(safe_tput rev) sub.sh $(safe_tput sgr0)"
+  echo -e "$(safe_tput setaf 2) $*$(safe_tput sgr0)"
+}
+
+
+# error($text...) prints an error log with red color.
+error() {
+  echo -en "$(safe_tput setaf 1)$(safe_tput rev) sub.sh $(safe_tput sgr0)"
+  echo -e "$(safe_tput setaf 1) $*$(safe_tput sgr0)"
+}
+
+
+# executable($cmd) tests if the given command is executable.
+executable() {
+  command -v "$1" &>/dev/null
+}
+
+
+# git_pull($src[, $dest]) pulls the remote Git repository. If the local
+# repository does not exist, it clones instead.
+git_pull() {
+  local src="$1"
+  local dest="${2:-"$(basename "$src")"}"
+
+  if [[ ! -d "$dest" ]]; then
+    mkdir -p "$dest"
+    git clone "$src" "$dest"
+    return
   fi
 
-  # other utilities ------------------------------------------------------------
+  git -C "$dest" pull --rebase --autostash
+}
 
-  add-ppa() {
-    local src="$1"
 
-    if ! grep -q "^deb.*$src" /etc/apt/sources.list.d/*.list; then
-      sudo -E add-apt-repository -y "ppa:$src"
-    fi
-  }
+# link($src[, $dest]) creates a symbolic link. If the destination exists, it is
+# moved into the backup directory.
+link() {
+  local src="$1"
+  local dest="${2:-"$(basename "$src")"}"
 
-  git-pull() {
-    # Clone a Git repository.  If the repository already exists,
-    # just pull from the remote.
-    local src="$1"
-    local dest="$2"
-
-    if [[ ! -d "$dest" ]]; then
-      mkdir -p "$dest"
-      git clone "$src" "$dest"
-    else
-      git -C "$dest" pull --rebase --autostash
-    fi
-  }
-
-  github-pull() {
-    git-pull "https://github.com/$1" "$2"
-  }
-
-  github-api() {
-    local user="${GITHUB_USER:-}"
-    local token="${GITHUB_TOKEN:-}"
-    curl -su "$user:$token" "https://api.github.com/repos/$1"
-  }
-
-  sym-link() {
-    # Make a symbolic link.  If something should be backed up at
-    # the destination path, it moves that to $BAK.
-    local src="$1"
-    local dest="$2"
-
-    if [[ -e $dest || -L $dest ]]; then
-      if [[ "$(readlink -f "$src")" == "$(readlink -f "$dest")" ]]; then
-        echo "Already linked '$dest'"
-        return
-      fi
-
-      mkdir -p "$BAK"
-      mv "$dest" "$BAK"
+  if [[ -e $dest || -L $dest ]]; then
+    if [[ "$(readlink -f "$src")" == "$(readlink -f "$dest")" ]]; then
+      echo "Already linked '$dest'"
+      return
     fi
 
-    mkdir -p "$(dirname "$dest")"
-    ln -vs "$src" "$dest"
-  }
+    # Backup the previous file.
+    mkdir -p "$subsh_dir/.bak.$timestamp"
+    mv "$dest" "$subsh_dir/.bak.$timestamp"
+  fi
 
-  executable() {
-    command -v "$1" &>/dev/null
-  }
+  mkdir -p "$(dirname "$dest")"
+  ln -vs "$src" "$dest"
+}
 
-  failed() {
-    fatal "Failed to provision by sub.sh."
-  }
-  trap failed ERR
 
-  # ============================================================================
-  # Checking OS
-  # ============================================================================
+# add_ppa($src) adds an APT repository at "ppa:$src". (Ubuntu-only)
+add_ppa() { [[ "$lsb_dist" = ubuntu ]]
+  local src="$1"
+  if ! grep -q "^deb.*$src" /etc/apt/sources.list.d/*.list; then
+    sudo -E add-apt-repository -y "ppa:$src"
+  fi
+}
 
-  # LSB: Linux Standard Base
-  readonly LSB_DIST="$(source /etc/os-release && echo "$ID")"
-  case "$LSB_DIST" in
-    ubuntu) ;;
-    centos) ;;
-    *) fatal "Only Ubuntu or CentOS supported."
-  esac
 
-  # ============================================================================
-  # Provisioning
-  # ============================================================================
+# Provisioning ----------------------------------------------------------------
 
-  # Go to the home directory.  A current working directory
-  # may deny access from this user.
-  cd ~
 
-  # sudo -----------------------------------------------------------------------
+# setup_sudo() ensures that the sudo command is executable without password. If
+# the password is required for the current user, exits with 1.
+setup_sudo() {
+  _install_sudo
+  _check_nopasswd_sudoer
+}
+
+_install_sudo() {
+  if executable sudo; then
+    info "sudo is available."
+    return
+  fi
 
   info "Installing sudo..."
-  case $LSB_DIST in
+  case $lsb_dist in
     ubuntu) apt update && apt install -y sudo ;;
     centos) yum install -y sudo ;;
   esac
+}
 
-  # Check if sudo requires password.
-  if ! sudo >&/dev/null -n true; then
-    err "Make sure $USER can use sudo without password."
-    echo
-    err "  # echo '$USER ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-$USER"
-    echo
-    exit 1
+_check_nopasswd_sudoer() {
+  if sudo &>/dev/null -n true; then
+    return
   fi
 
-  # packages from apt/yum ------------------------------------------------------
+  local user
+  user="$(whoami)"
 
-  install_apt_packages() {
-    sudo -E apt update
-    DEBIAN_FRONTEND=noninteractive sudo -E apt install -y \
-      cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
-      psmisc shellcheck software-properties-common telnet tmux tree unzip wget
+  error "Make sure '$user' user may use sudo without password."
+  error
+  error "  $ echo '$user aLL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-$user"
+  error
 
-    # apt-specific
-    sudo -E apt install -y aptitude
-  }
+  exit 1
+}
 
-  install_yum_packages() {
-    sudo -E yum install -y \
-      cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
-      psmisc shellcheck software-properties-common telnet tmux tree unzip wget
 
-    # dnf: https://github.com/whamcloud/integrated-manager-for-lustre/issues/827#issuecomment-644640424
-    sudo -E yum update -y python*
-    sudo -E yum install -y dnf-data dnf-plugins-core libdnf-devel libdnf python2-dnf-plugin-migrate dnf-automatic
-  }
+# setup_ssh() ensures the localhost SSH connection is authorized without
+# passphrase.
+setup_ssh() {
+  _install_ssh
+  _authorize_localhost_ssh
+}
 
-  info "Installing packages..."
-  case $LSB_DIST in
-    ubuntu) install_apt_packages ;;
-    centos) install_yum_packages ;;
-  esac
-
-  # localhost ssh --------------------------------------------------------------
-
+_install_ssh() {
   info "Installing SSH..."
-  case $LSB_DIST in
-    ubuntu) sudo -E apt install -y openssh-client openssh-server ;;
-    centos) sudo -E yum install -y openssh-clients openssh-serve ;;
+  case $lsb_dist in
+    ubuntu) sudo -E apt install -y openssh-client  openssh-server ;;
+    centos) sudo -E yum install -y openssh-clients openssh-server ;;
   esac
+}
 
-  # Authorize the local SSH key for connecting to localhost without password.
-  if ! ssh -qo BatchMode=yes localhost true; then
-    mkdir -p ~/.ssh
-
-    if [[ ! -f ~/.ssh/id_rsa ]]; then
-      info "Generating new SSH key..."
-      ssh-keygen -f ~/.ssh/id_rsa -N ''
-    fi
-
-    if [[ ! -f ~/.ssh/id_rsa.pub ]]; then
-      info "Retrieving a public SSH key from the private..."
-      ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
-    fi
-
-    ssh-keyscan -H localhost 2>/dev/null 1>>~/.ssh/known_hosts
-    cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys
-
-    info "Authorized the SSH key to connect to localhost."
+_authorize_localhost_ssh() {
+  if ssh -qo BatchMode=yes localhost true; then
+    info "SSH to localhost is already authorized."
+    return
   fi
 
-  # vim 8+ ---------------------------------------------------------------------
+  mkdir -p ~/.ssh
 
-  info "Installing vim..."
-  case $LSB_DIST in
-    ubuntu)
-      add-ppa jonathonf/vim
-      sudo -E apt update
-      sudo -E apt install -y vim
-      ;;
-    centos)
-      sudo -E dnf copr -y enable hnakamur/vim
-      sudo -E yum install -y vim
-      ;;
+  if [[ ! -f ~/.ssh/id_rsa ]]; then
+    info "Generating ~/.ssh/id_rsa..."
+    ssh-keygen -f ~/.ssh/id_rsa -N ''
+  fi
+
+  if [[ ! -f ~/.ssh/id_rsa.pub ]]; then
+    info "Generating ~/.ssh/id_rsa.pub from ~/.ssh/id_rsa..."
+    ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
+  fi
+
+  info "Authorizing ~/.ssh/id_rsa.pub for localhost SSH connection..."
+  ssh-keyscan -H localhost 2>/dev/null 1>>~/.ssh/known_hosts
+  cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys
+}
+
+
+# setup_packages() installs official packages from the standard package
+# manager.
+setup_packages() {
+  case $lsb_dist in
+    ubuntu) _install_apt_packages ;;
+    centos) _install_yum_packages ;;
   esac
+}
 
-  # git 2+ ---------------------------------------------------------------------
+_install_apt_packages() { [[ "$lsb_dist" = ubuntu ]]
+  info "Installing packages from APT..."
 
-  info "Installing git..."
-  case $LSB_DIST in
+  sudo -E apt update
+  sudo -E apt install -y aptitude
+
+  # Python 3
+  sudo -E apt install -y python python-dev python-setuptools
+
+  # etc.
+  DEBIAN_FRONTEND=noninteractive sudo -E apt install -y \
+    cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
+    psmisc shellcheck software-properties-common telnet tmux tree unzip wget
+}
+
+_install_yum_packages() { [[ "$lsb_dist" = centos ]]
+  info "Installing packages from YUM..."
+
+  # dnf: https://github.com/whamcloud/integrated-manager-for-lustre/issues/827
+  sudo -E yum update -y python*
+  sudo -E yum install -y \
+    dnf-data dnf-plugins-core libdnf-devel libdnf \
+    python2-dnf-plugin-migrate dnf-automatic
+
+  # Python 3
+  sudo -E yum install -y python3 python3-devel python3-setuptools
+
+  # etc.
+  sudo -E yum install -y \
+    cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
+    psmisc shellcheck software-properties-common telnet tmux tree unzip wget
+}
+
+
+# setup_tools() installs Git 2+, Vim 8+, ripgrep, and fd.
+setup_tools() {
+  _install_git
+  _install_vim
+  _install_rg
+  _install_fd
+
+  [[ "$install_pyenv" = true ]] && _install_pyenv
+}
+
+_install_git() {
+  info "Installing Git..."
+  case $lsb_dist in
     ubuntu)
-      add-ppa git-core/ppa
+      add_ppa git-core/ppa
       sudo -E apt update
       sudo -E apt install -y git
-      ;;
+    ;;
     centos)
       sudo -E dnf install -y https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
       sudo -E yum install -y git
-      ;;
+    ;;
   esac
+}
 
-  # rg -------------------------------------------------------------------------
+_install_vim() {
+  info "Installing Vim..."
+  case $lsb_dist in
+    ubuntu)
+      add_ppa jonathonf/vim
+      sudo -E apt update
+      sudo -E apt install -y vim
+    ;;
+    centos)
+      sudo -E dnf copr -y enable hnakamur/vim
+      sudo -E yum install -y vim
+    ;;
+  esac
+}
 
-  info "Installing rg..."
-  case $LSB_DIST in
+_install_rg() {
+  info "Installing ripgrep..."
+  case $lsb_dist in
     ubuntu)
       # sudo -E apt install -y ripgrep  # available in Ubuntu 18.10
       pushd "$(mktemp -d)"
       curl -LO https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb
       sudo dpkg -i ./*.deb
       popd
-      ;;
+    ;;
     centos)
       sudo -E dnf copr -y enable carlwgeorge/ripgrep
       sudo -E yum install -y ripgrep
-      ;;
+    ;;
   esac
+}
 
-  # fd -------------------------------------------------------------------------
-
+_install_fd() {
   info "Installing fd..."
-  case $LSB_DIST in
+  case $lsb_dist in
     ubuntu)
       # sudo -E apt install -y fd-find  # available in Ubuntu 19.04
       pushd "$(mktemp -d)"
       curl -LO https://github.com/sharkdp/fd/releases/download/v8.1.1/fd_8.1.1_amd64.deb
       sudo dpkg -i ./*.deb
       popd
-      ;;
+    ;;
     centos)
       sudo -E dnf copr -y enable surkum/fd
       sudo -E yum install -y fd
-      ;;
+    ;;
   esac
+}
 
-  # zsh ------------------------------------------------------------------------
+_install_pyenv() { [[ "$install_pyenv" = true ]]
+  if executable pyenv; then
+    info "pyenv is available."
+    return
+  fi
 
+  info "Installing pyenv..."
+  curl -L https://git.io/vxZax | bash
+}
+
+
+# setup_zsh() installs ZSH, Oh My ZSH!, and third-party plugins.
+setup_zsh() {
+  _install_zsh
+  _install_ohmyzsh
+  sudo -E chsh -s "$(which zsh)" "$(whoami)"
+}
+
+_install_zsh() {
   info "Installing ZSH..."
-  case $LSB_DIST in
+  case $lsb_dist in
     ubuntu) sudo -E apt install -y zsh ;;
     centos) sudo -E yum install -y zsh ;;
   esac
-  sudo -E chsh -s "$(which zsh)" "$USER"
+}
 
+_install_ohmyzsh() {
   info "Installing Oh My ZSH!..."
-  github-pull robbyrussell/oh-my-zsh ~/.oh-my-zsh
+  git_pull https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
 
-  readonly plugins=~/.oh-my-zsh/custom/plugins
-  github-pull zsh-users/zsh-syntax-highlighting $plugins/zsh-syntax-highlighting
-  github-pull zsh-users/zsh-autosuggestions $plugins/zsh-autosuggestions
-  github-pull bobthecow/git-flow-completion $plugins/git-flow-completion
+  pushd ~/.oh-my-zsh/custom/plugins
+  git_pull https://github.com/zsh-users/zsh-syntax-highlighting
+  git_pull https://github.com/zsh-users/zsh-autosuggestions
+  git_pull https://github.com/bobthecow/git-flow-completion
+  popd
+}
 
-  # sub.sh ---------------------------------------------------------------------
 
-  # Get sub.sh.
-  info "Getting sub.sh at $SUBSH_DEST..."
-  github-pull sublee/sub.sh "$SUBSH_DEST"
-  if [[ "$SUBSH_DEST_SET" == true ]]; then
-    sym-link "$SUBSH_DEST" "$SUBSH"
+# sub.sh ----------------------------------------------------------------------
+
+
+download_subsh() {
+  info "Downloading sub.sh at $subsh_dir..."
+  git_pull https://github.com/sublee/sub.sh "$subsh_dir"
+}
+
+
+setup_subsh() {
+  _apply_settings
+  _install_vim_plugins
+  _install_tmux_plugins
+}
+
+_apply_settings() {
+  info "Applying settings from $subsh_dir..."
+
+  git config --global include.path "$subsh_dir/git-aliases"
+
+  link "$subsh_dir/profile" ~/.profile
+  link "$subsh_dir/zshrc" ~/.zshrc
+  link "$subsh_dir/subsh.zsh-theme" ~/.oh-my-zsh/custom/subsh.zsh-theme
+  link "$subsh_dir/vimrc" ~/.vimrc
+  link "$subsh_dir/tmux.conf" ~/.tmux.conf && (tmux source ~/.tmux.conf || true)
+
+  link "$subsh_dir/python-startup.py" ~/.python-startup
+  mkdir -p ~/.ipython/profile_default
+  link "$subsh_dir/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
+}
+
+_install_vim_plugins() {
+  info "Installing Vim plugins..."
+
+  # Vim-Plug
+  if [[ ! -f ~/.vim/autoload/plug.vim ]]; then
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   fi
 
-  # Apply sub.sh.
-  info "Linking dot files from sub.sh..."
-  git config --global include.path "$SUBSH/git-aliases"
-  sym-link "$SUBSH/profile" ~/.profile
-  sym-link "$SUBSH/zshrc" ~/.zshrc
-  rm -f ~/.oh-my-zsh/custom/sublee.zsh-theme
-  sym-link "$SUBSH/subsh.zsh-theme" ~/.oh-my-zsh/custom/subsh.zsh-theme
-  sym-link "$SUBSH/vimrc" ~/.vimrc
-  sym-link "$SUBSH/tmux.conf" ~/.tmux.conf && (tmux source ~/.tmux.conf || true)
-
-  # plugins for vim and tmux ---------------------------------------------------
-
-  info "Installing plugins for Vim and tmux..."
-
-  # Vim-Plug for Vim
-  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   vim --noplugin -c PlugInstall -c qa
   stty -F /dev/stdout sane || true
+}
 
-  # TPM for tmux
-  github-pull tmux-plugins/tpm ~/.tmux/plugins/tpm
-  TMUX_PLUGIN_MANAGER_PATH=~/.tmux/plugins/ ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+_install_tmux_plugins() {
+  info "Installing tmux plugins..."
 
-  # python ---------------------------------------------------------------------
+  mkdir -p ~/.tmux/plugins
+  pushd ~/.tmux/plugins
+  git_pull https://github.com/tmux-plugins/tpm
+  TMUX_PLUGIN_MANAGER_PATH=~/.tmux/plugins/ ./tpm/scripts/install_plugins.sh
+  popd
+}
 
-  # Setup a Python environment.
-  if [[ "$PYTHON" == true ]]; then
-    info "Setting up the Python environment..."
 
-    case $LSB_DIST in
-      ubuntu) sudo -E apt install -y python python-dev python-setuptools ;;
-      centos) sudo -E yum install -y python3 python3-devel python3-setuptools ;;
-    esac
-
-    sym-link "$SUBSH/python-startup.py" ~/.python-startup
-
-    mkdir -p ~/.ipython/profile_default
-    sym-link "$SUBSH/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
-
-    if [[ "$PYENV" == true ]] && ! executable pyenv; then
-      curl -L https://git.io/vxZax | bash
-    fi
+# result() prints the information of provisioning result.
+result() {
+  if [[ -d "$subsh_dir/.bak.$timestamp" ]]; then
+    info "Backup files are stored in: $subsh_dir/.bak.$timestamp"
   fi
 
-  # results --------------------------------------------------------------------
+  echo
+  _print_emblem
+  _print_versions
+  echo
+}
 
-  # Show my emblem.
+_print_emblem() {
   if [[ -n "$TERM" ]]; then
     curl -sL https://subl.ee/~emblem || true
   fi
-
-  # Print installed versions.
-  installed-versions
-
-  # Notify the result.
-  info "Provisioned successfully by sub.sh."
-  if [[ "$WARNED" -eq 1 ]]; then
-    warn "But there was 1 warning."
-  elif [[ "$WARNED" -gt 1 ]]; then
-    warn "But there were $WARNED warnings."
-  fi
-  if [[ -d "$BAK" ]]; then
-    info "Backup files are stored in $BAK"
-  fi
-  if [[ "$SHELL" != "$(which zsh)" && -z "${ZSH+x}" ]]; then
-    info "To use just provisioned ZSH, relogin or"
-    echo
-    info "  $ zsh"
-    echo
-  fi
 }
+
+_print_versions() {
+  local subsh_version git_version vim_version rg_version fd_version
+
+  subsh_version="$(git -C "$subsh_dir" rev-parse --short HEAD)"
+  git_version="$(git --version | awk '{ print $3 }')"
+  vim_version="$(vim --version | awk '{ print $5; exit }')"
+  rg_version="$(rg --version | tail -n +1 | head -n 1 | cut -d' ' -f2)"
+  fd_version="$(fd --version | cut -d' ' -f2)"
+
+  echo "sub.sh: $subsh_version at $subsh_dir"
+  echo "git-$git_version vim-$vim_version rg-$rg_version fd-$fd_version"
+}
+
+
+# Entrypoint ------------------------------------------------------------------
+
+
+set -euo pipefail
+trap 'error "Interrupted during provisioning."; exit 1' INT
+trap 'error "Failed to provision."; exit 1' ERR
+main "$@"
