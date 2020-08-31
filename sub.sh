@@ -79,13 +79,13 @@ set -euo pipefail
 
   # print ----------------------------------------------------------------------
 
-  if [[ -z "$TERM" ]]; then
+  if tput clear &>/dev/null; then
     secho() {
-      echo "$2"
+      echo -e "$(tput setaf "$1")$2$(tput sgr0)"
     }
   else
     secho() {
-      echo -e "$(tput setaf "$1")$2$(tput sgr0)"
+      echo "$2"
     }
   fi
 
