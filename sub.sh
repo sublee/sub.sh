@@ -228,15 +228,34 @@ _check_nopasswd_sudoer() {
 # setup_ssh() ensures the localhost SSH connection is authorized without
 # passphrase.
 setup_ssh() {
-  _install_ssh
+  _install_ssh_client
+  _install_ssh_server
   _authorize_localhost_ssh
 }
 
-_install_ssh() {
-  info "Installing SSH..."
+_install_ssh_client() {
+  if executable ssh; then
+    info "SSH client is already available."
+    return
+  fi
+
+  info "Installing SSH client..."
   case $lsb_dist in
-    ubuntu) sudo -E apt install -y openssh-client  openssh-server ;;
-    centos) sudo -E yum install -y openssh-clients openssh-server ;;
+    ubuntu) sudo -E apt install -y openssh-client  ;;
+    centos) sudo -E yum install -y openssh-clients ;;
+  esac
+}
+
+_install_ssh_server() {
+  if executable sshd; then
+    info "SSH server is already available."
+    return
+  fi
+
+  info "Installing SSH server..."
+  case $lsb_dist in
+    ubuntu) sudo -E apt install -y openssh-server ;;
+    centos) sudo -E yum install -y openssh-server ;;
   esac
 }
 
