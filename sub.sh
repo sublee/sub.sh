@@ -260,6 +260,11 @@ _install_ssh_server() {
 }
 
 _authorize_localhost_ssh() {
+  if ! systemctl status sshd &>/dev/null; then
+    info "SSH server is not running. Skipping to authorize localhost SSH."
+    return
+  fi
+
   if ssh -qo BatchMode=yes localhost true; then
     info "SSH to localhost is already authorized."
     return
