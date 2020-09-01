@@ -201,7 +201,7 @@ setup_sudo() {
 
 _install_sudo() {
   if executable sudo; then
-    info "sudo is available."
+    info "sudo is already available."
     return
   fi
 
@@ -232,19 +232,43 @@ _check_nopasswd_sudoer() {
 # setup_ssh() ensures the localhost SSH connection is authorized without
 # passphrase.
 setup_ssh() {
-  _install_ssh
+  _install_ssh_client
+  _install_ssh_server
   _authorize_localhost_ssh
 }
 
-_install_ssh() {
-  info "Installing SSH..."
+_install_ssh_client() {
+  if executable ssh; then
+    info "SSH client is already available."
+    return
+  fi
+
+  info "Installing SSH client..."
   case $lsb_dist in
-    ubuntu) sudo -E apt install -y openssh-client  openssh-server ;;
-    centos) sudo -E yum install -y openssh-clients openssh-server ;;
+    ubuntu) sudo -E apt install -y openssh-client  ;;
+    centos) sudo -E yum install -y openssh-clients ;;
+  esac
+}
+
+_install_ssh_server() {
+  if executable sshd; then
+    info "SSH server is already available."
+    return
+  fi
+
+  info "Installing SSH server..."
+  case $lsb_dist in
+    ubuntu) sudo -E apt install -y openssh-server ;;
+    centos) sudo -E yum install -y openssh-server ;;
   esac
 }
 
 _authorize_localhost_ssh() {
+  if ! systemctl status sshd &>/dev/null; then
+    info "SSH server is not running. Skipping to authorize localhost SSH."
+    return
+  fi
+
   if ssh -qo BatchMode=yes localhost true; then
     info "SSH to localhost is already authorized."
     return
@@ -399,7 +423,7 @@ _install_fd() {
 
 _install_pyenv() { [[ "$install_pyenv" = true ]]
   if executable pyenv; then
-    info "pyenv is available."
+    info "pyenv is already available."
     return
   fi
 
