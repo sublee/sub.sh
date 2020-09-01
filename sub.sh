@@ -197,7 +197,7 @@ setup_sudo() {
 
 _install_sudo() {
   if executable sudo; then
-    info "sudo is available."
+    info "sudo is already available."
     return
   fi
 
@@ -419,7 +419,7 @@ _install_fd() {
 
 _install_pyenv() { [[ "$install_pyenv" = true ]]
   if executable pyenv; then
-    info "pyenv is available."
+    info "pyenv is already available."
     return
   fi
 
