@@ -12,16 +12,17 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Too many arguments
-      run: ./sub.sh one two; [[ $? -eq 2 ]]
+      run: set +e; ./sub.sh one two; [[ $? -eq 2 ]]
 
     - name: Unknown option
-      run: ./sub.sh --unknown-option; [[ $? -eq 2 ]]
+      run: set +e; ./sub.sh --unknown-option; [[ $? -eq 2 ]]
 
     - name: Non-directory exists
-      run: ./sub.sh "$(mktemp)"; [[ $? -eq 2 ]]
+      run: set +e; ./sub.sh "$(mktemp)"; [[ $? -eq 2 ]]
 
     - name: Non-directory exists (symbolic link)
       run: |
+        set +e
         target="$(mktemp)"
         link="$(mktemp)"
         ln -sf "$target" "$link"
