@@ -10,6 +10,13 @@ alias vi="vim -b"
 alias pt="ptpython"
 alias sub.sh="curl -sL sub.sh | bash -s -"
 
+# k for kubectl
+if command -v kubectl >/dev/null; then
+  alias k="kubectl"
+  # https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete
+  complete -F __start_kubectl k
+fi
+
 # Usage: clean
 #
 # Remove temporary files such as Vim swap or pyc.

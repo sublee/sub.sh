@@ -76,3 +76,7 @@ pastefinish() {
 }
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
+
+# kubectl autocomplete.
+# https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
