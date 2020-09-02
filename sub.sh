@@ -38,12 +38,18 @@ main() {
 
 # help() prints the help message.
 help() {
-  echo "Usage: curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]"
-  echo
-  echo "Options:"
-  echo "  --help        Show this message and exit."
-  echo "  --versions    Show versions and exit."
-  echo "  --no-pyenv    Do not install pyenv."
+  usage
+  >&2 echo
+  >&2 echo "Options:"
+  >&2 echo "  --help        Show this message and exit."
+  >&2 echo "  --versions    Show versions and exit."
+  >&2 echo "  --no-pyenv    Do not install pyenv."
+}
+
+
+# usage() prints the short usage message.
+usage() {
+  >&2 echo "Usage: curl -sL sub.sh | bash [-s - [~/.sub.sh] OPTIONS]"
 }
 
 
@@ -72,14 +78,26 @@ parse_opts() {
       ;;
 
     *)
-      if [[ "$dest_provided" == false ]]; then
-        dest_provided=true
-        subsh_dir="$opt"
-        shift
-      else
-        help
-        exit
+      local error=""
+
+      if [[ "$dest_provided" == true ]]; then
+        error="Too many arguments"
+      elif [[ "$opt" == -* ]]; then
+        error="Unknown option"
+      elif [[ -e "$opt" ]] && [[ ! -d "$opt" ]]; then
+        error="Non-directory exists"
       fi
+
+      if [[ -n "$error" ]]; then
+        >&2 echo "$error: $opt"
+        usage
+        >&2 echo "Try --help for more information."
+        exit 2
+      fi
+
+      dest_provided=true
+      subsh_dir="$opt"
+      shift
       ;;
     esac
   done
@@ -120,15 +138,15 @@ fi
 
 # info($text...) prints an information log with green color.
 info() {
-  echo -en "$(safe_tput setaf 2)$(safe_tput rev) sub.sh $(safe_tput sgr0)"
-  echo -e "$(safe_tput setaf 2) $*$(safe_tput sgr0)"
+  >&2 echo -en "$(safe_tput setaf 2)$(safe_tput rev) sub.sh $(safe_tput sgr0)"
+  >&2 echo -e "$(safe_tput setaf 2) $*$(safe_tput sgr0)"
 }
 
 
 # error($text...) prints an error log with red color.
 error() {
-  echo -en "$(safe_tput setaf 1)$(safe_tput rev) sub.sh $(safe_tput sgr0)"
-  echo -e "$(safe_tput setaf 1) $*$(safe_tput sgr0)"
+  >&2 echo -en "$(safe_tput setaf 1)$(safe_tput rev) sub.sh $(safe_tput sgr0)"
+  >&2 echo -e "$(safe_tput setaf 1) $*$(safe_tput sgr0)"
 }
 
 
@@ -162,7 +180,6 @@ link() {
 
   if [[ -e $dest || -L $dest ]]; then
     if [[ "$(readlink -f "$src")" == "$(readlink -f "$dest")" ]]; then
-      echo "Already linked '$dest'"
       return
     fi
 
