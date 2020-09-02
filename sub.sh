@@ -264,7 +264,8 @@ _install_ssh_client() {
 }
 
 _install_ssh_server() {
-  if executable sshd; then
+  if (PATH="$PATH:/sbin" executable sshd); then
+    #             └─ Some system does not append /sbin to $PATH.
     info "SSH server is already available."
     return
   fi
