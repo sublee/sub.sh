@@ -118,6 +118,7 @@ parse_opts() {
 # init() sets the static variables.
 # set: $lsb_dist, $timestamp, $bak_dir
 init() {
+  # shellcheck disable=SC1091
   readonly lsb_dist="$(source /etc/os-release && echo "$ID")"
   readonly timestamp="$(date +%s)"
   readonly bak_dir="$subsh_dir/.bak.$timestamp"
