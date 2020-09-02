@@ -8,6 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: x
+      run: |
+        pwd
+        ls
+
     - name: Too many arguments
       run: ./sub.sh one two; [[ $? -eq 2 ]]
 
