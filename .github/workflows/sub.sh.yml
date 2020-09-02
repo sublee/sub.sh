@@ -8,18 +8,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Errors
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Too many arguments
+      run: set +e; ./sub.sh one two; [[ $? -eq 2 ]]
+
+    - name: Unknown option
+      run: set +e; ./sub.sh --unknown-option; [[ $? -eq 2 ]]
+
+    - name: Non-directory exists
+      run: set +e; ./sub.sh "$(mktemp)"; [[ $? -eq 2 ]]
+
+    - name: Non-directory exists (symbolic link)
       run: |
-        # Too many arguments
-        ./sub.sh one two; [[ $? -eq 2 ]]
-
-        # Unknown option
-        ./sub.sh --unknown-option; [[ $? -eq 2 ]]
-
-        # Non-directory exists
-        ./sub.sh "$(mktemp)"; [[ $? -eq 2 ]]
-
-        # Non-directory exists (through a symbolic link)
+        set +e
         target="$(mktemp)"
         link="$(mktemp)"
         ln -sf "$target" "$link"
