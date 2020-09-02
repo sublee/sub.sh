@@ -11,6 +11,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: ShellCheck
+      run: |
+        sudo apt update -qqq
+        sudo apt install -qqq -y shellcheck
+        shellcheck sub.sh
+
     - name: Too many arguments
       run: set +e; ./sub.sh one two; [[ $? -eq 2 ]]
 
