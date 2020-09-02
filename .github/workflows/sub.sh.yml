@@ -3,8 +3,31 @@ name: sub.sh
 on: push
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Errors
+      run: |
+        # Too many arguments
+        ./sub.sh one two; [[ $? -eq 2 ]]
+
+        # Unknown option
+        ./sub.sh --unknown-option; [[ $? -eq 2 ]]
+
+        # Non-directory exists
+        ./sub.sh "$(mktemp)"; [[ $? -eq 2 ]]
+
+        # Non-directory exists (through a symbolic link)
+        target="$(mktemp)"
+        link="$(mktemp)"
+        ln -sf "$target" "$link"
+        ./sub.sh "$(mktemp)"; [[ $? -eq 2 ]]
+
   verify:
     name: Verify
+    needs: test
     runs-on: ubuntu-latest
 
     strategy:
