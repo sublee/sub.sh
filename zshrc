@@ -8,13 +8,10 @@ __git_files() {
 # Oh My ZSH!
 export ZSH=$HOME/.oh-my-zsh
 plugins=(git)
-if [[ -d "$ZSH" ]]
-then
-  for plugin_path in $ZSH/custom/plugins/*
-  do
+if [[ -d "$ZSH" ]]; then
+  for plugin_path in $ZSH/custom/plugins/*; do
     plugin="$(basename $plugin_path)"
-    if [[ -f "$plugin_path/$plugin.plugin.zsh" ]]
-    then
+    if [[ -f "$plugin_path/$plugin.plugin.zsh" ]]; then
       plugins+=("$plugin")
     fi
   done
@@ -51,14 +48,10 @@ export DISABLE_AUTO_UPDATE="true"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=6"
 
 # Include ~/.profile.
-if [[ -f "$HOME/.profile" ]]
-then
-  source "$HOME/.profile"
-fi
+[[ -f "$HOME/.profile" ]] && source "$HOME/.profile"
 
 # Alert after every commands to highlight inactive window in Tmux.
-if [[ -n "$TMUX" ]]
-then
+if [[ -n "$TMUX" ]]; then
   bell() { echo -ne "\a" }
   precmd_functions+=(bell)
 fi
