@@ -22,8 +22,12 @@ main() {
   cd ~
 
   setup_sudo
+  [[ "$lsb_dist" == ubuntu ]] && sudo -E apt update
+
   setup_ssh
-  setup_packages
+  setup_basic
+  setup_os_specific
+  setup_python3
   setup_tools
   setup_zsh
 
@@ -194,7 +198,7 @@ link() {
 
 
 # add_ppa($src) adds an APT repository at "ppa:$src". (Ubuntu-only)
-add_ppa() { [[ "$lsb_dist" = ubuntu ]]
+add_ppa() { [[ "$lsb_dist" == ubuntu ]]
   local src="$1"
   if ! grep -q "^deb.*$src" /etc/apt/sources.list.d/*.list; then
     sudo -E add-apt-repository -y "ppa:$src"
@@ -306,50 +310,65 @@ _authorize_localhost_ssh() {
 }
 
 
-# setup_packages() installs official packages from the standard package
-# manager.
-setup_packages() {
+# setup_basic() installs basic utilities.
+setup_basic() {
+  info "Installing basic utilities..."
+
   case $lsb_dist in
-    ubuntu) _install_apt_packages ;;
-    centos) _install_yum_packages ;;
+    ubuntu)
+      DEBIAN_FRONTEND=noninteractive sudo -E apt install -y \
+        cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
+        psmisc shellcheck software-properties-common telnet tree unzip wget
+    ;;
+    centos)
+      sudo -E yum install -y \
+        cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
+        psmisc shellcheck software-properties-common telnet tree unzip wget
+    ;;
   esac
 }
 
-_install_apt_packages() { [[ "$lsb_dist" = ubuntu ]]
-  info "Installing packages from APT..."
 
-  sudo -E apt update
-  sudo -E apt install -y aptitude
-
-  # Python 3
-  sudo -E apt install -y python python-dev python-setuptools
-
-  # etc.
-  DEBIAN_FRONTEND=noninteractive sudo -E apt install -y \
-    cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
-    psmisc shellcheck software-properties-common telnet tree unzip wget
+# setup_os_specific() installs packages only for the current OS.
+setup_os_specific() {
+  case $lsb_dist in
+    ubuntu) _install_ubuntu_specific ;;
+    centos) _install_centos_specific ;;
+  esac
 }
 
-_install_yum_packages() { [[ "$lsb_dist" = centos ]]
-  info "Installing packages from YUM..."
+_install_ubuntu_specific() { [[ "$lsb_dist" == ubuntu ]]
+  info "Installing packages for Ubuntu..."
+  sudo -E apt install -y aptitude
+}
 
-  # dnf: https://github.com/whamcloud/integrated-manager-for-lustre/issues/827
-  sudo -E yum update -y python*
-  sudo -E yum install -y \
-    dnf-data dnf-plugins-core libdnf-devel libdnf \
-    python2-dnf-plugin-migrate dnf-automatic
+_install_centos_specific() { [[ "$lsb_dist" == centos ]]
+  info "Installing packages from CentOS..."
 
   # End Point Package Repository
-  # https://packages.endpoint.com/rhel/7/os/x86_64/
-  sudo -E dnf install -y https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+  pushd "$(mktemp -d)"
+  wget https://packages.endpoint.com/endpoint-rpmsign-7.pub
+  rpm --import endpoint-rpmsign-7.pub
+  rpm -qi gpg-pubkey-703df089 | gpg --with-fingerprint
 
-  # Python 3
-  sudo -E yum install -y python3 python3-devel python3-setuptools
+  wget https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
+  sudo -E yum localinstall -y endpoint-repo-1.7-1.x86_64.rpm
+  #           └─ "localinstall" exits with 0 even if already
+  #              installed while "install" exits with 1.
+  popd
 
-  # etc.
-  sudo -E yum install -y \
-    cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
-    psmisc shellcheck software-properties-common telnet tree unzip wget
+  # COPR
+  sudo -E yum install -y yum-plugin-copr
+}
+
+
+# setup_python3() installs Python 3.6+.
+setup_python3() {
+  info "Installing Python 3..."
+  case $lsb_dist in
+    ubuntu) sudo -E apt install -y python python-dev python-setuptools ;;
+    centos) sudo -E yum install -y python3 python3-devel python3-setuptools ;;
+  esac
 }
 
 
@@ -395,7 +414,7 @@ _install_vim() {
       sudo -E apt install -y vim
     ;;
     centos)
-      sudo -E dnf copr -y enable hnakamur/vim
+      sudo -E yum copr -y enable hnakamur/vim
       sudo -E yum install -y vim
     ;;
   esac
@@ -412,7 +431,7 @@ _install_rg() {
       popd
     ;;
     centos)
-      sudo -E dnf copr -y enable carlwgeorge/ripgrep
+      sudo -E yum copr -y enable carlwgeorge/ripgrep
       sudo -E yum install -y ripgrep
     ;;
   esac
@@ -429,7 +448,7 @@ _install_fd() {
       popd
     ;;
     centos)
-      sudo -E dnf copr -y enable surkum/fd
+      sudo -E yum copr -y enable surkum/fd
       sudo -E yum install -y fd
     ;;
   esac
@@ -557,6 +576,7 @@ _print_versions() {
   vim_version="$(vim --version | awk '{ print $5; exit }')"
   rg_version="$(rg --version | tail -n +1 | head -n 1 | cut -d' ' -f2)"
   fd_version="$(fd --version | cut -d' ' -f2)"
+  python_version="$(python3 --version | awk '{ print $2 }')"
 
   echo "sub.sh: $subsh_version at $subsh_dir"
   echo -n "zsh-$zsh_version "
@@ -564,7 +584,8 @@ _print_versions() {
   echo -n "git-$git_version "
   echo -n "vim-$vim_version "
   echo -n "rg-$rg_version "
-  echo -n "fd-$fd_version"
+  echo -n "fd-$fd_version "
+  echo -n "python-$python_version"
   echo
 }
 
