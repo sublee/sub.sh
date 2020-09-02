@@ -211,6 +211,11 @@ add_ppa() { [[ "$lsb_dist" == ubuntu ]]
 
 # setup_sudo() ensures that the sudo command is executable without password. If
 # the password is required for the current user, exits with 1.
+#
+# NOTE: The system may rely on environment variables for sane functionality.
+# For example, $http_proxy and $no_proxy for HTTP. Always use "sudo -E" to keep
+# arbitrary environment variables.
+#
 setup_sudo() {
   _install_sudo
   _check_nopasswd_sudoer
