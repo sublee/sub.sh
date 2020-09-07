@@ -1,4 +1,4 @@
-#!/bin/env zsh
+#!/usr/bin/env zsh
 
 # Fast Git completion: https://superuser.com/questions/458906
 __git_files() {
@@ -72,4 +72,4 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 
 # kubectl autocomplete.
 # https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete
-[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+[[ -e $commands[kubectl] ]] && source <(kubectl completion zsh)
