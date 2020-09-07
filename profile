@@ -19,11 +19,6 @@ prepend-path "$HOME/.cargo/bin"
 # Don't quit by ^D.
 set -o ignoreeof
 
-# Include sub.sh tools.
-here="$(dirname "$(readlink -f "${BASH_SOURCE[0]-$0}")")"
-source "$here/tools"
-unset here
-
 # Python environment.
 if [[ -d "$HOME/.pyenv" ]]; then
   prepend-path "$HOME/.pyenv/bin"
@@ -58,3 +53,8 @@ if [[ -d "$HOME/.profile.d" ]]; then
     source "$f"
   done
 fi
+
+# Include sub.sh tools. Some command is available after ~/.profile.d included.
+here="$(dirname "$(readlink -f "${BASH_SOURCE[0]-$0}")")"
+source "$here/tools"
+unset here
