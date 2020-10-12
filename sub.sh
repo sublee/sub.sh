@@ -328,9 +328,9 @@ setup_basic() {
     ;;
     centos)
       sudo -E yum install -y epel-release
-      sudo -E yum install -y \
-        cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
-        psmisc shellcheck software-properties-common telnet tree unzip wget
+      sudo -E yum install -y --setopt=skip_missing_names_on_install=False \
+        cmake curl htop iftop iputils jq less lsof man net-tools ntpdate \
+        psmisc ShellCheck telnet tree unzip wget
     ;;
   esac
 }
