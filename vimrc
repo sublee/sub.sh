@@ -187,7 +187,6 @@ let g:ale_lint_on_text_changed = 'normal'
 let g:ale_fix_on_save          = 1
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines'],
-\   'go': ['goimports'],
 \}
 let g:ale_pattern_options = {'\.pyi$': {'ale_enabled': 0}}
 au VimEnter * nmap <silent> <C-k> <Plug>(ale_previous_wrap)
@@ -270,3 +269,4 @@ au VimEnter * nmap <F8> :TagbarToggle<CR>
 com W exec 'silent! undojoin | Neoformat | write'
 let g:neoformat_run_all_formatters = 1
 let g:neoformat_enabled_python = ['autopep8', 'isort']
+let g:neoformat_enabled_go = ['goimports']
