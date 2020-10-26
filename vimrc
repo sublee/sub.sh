@@ -249,6 +249,8 @@ inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
 " Go to the definition by `gd`.
 au VimEnter * nmap gd :LspDefinition<CR>
+" Find references by `gr`.
+au VimEnter * nmap gr :LspReferences<CR>
 
 " Mundo
 au VimEnter * nmap <F5> :MundoToggle<CR>
