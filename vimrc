@@ -17,6 +17,7 @@ Plug 'stephpy/vim-yaml'
 
 " function extensions
 Plug 'easymotion/vim-easymotion'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'hashivim/vim-terraform'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
