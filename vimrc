@@ -246,7 +246,12 @@ au VimEnter * nmap gr :LspRename<CR>
 " Show sign column if LSP is available.
 au User lsp_buffer_enabled setl signcolumn=yes
 
-" Use golangci-lint for Go projects.
+" Use gopls for hover informations, golangci-lint for respecting the project's
+" lint rules. Install the LSP servers with:
+"
+"   :LspInstallServer gopls
+"   :LspInstallServer golangci-lint-langserver
+"
 let g:lsp_settings_filetype_go = ['gopls', 'golangci-lint-langserver']
 let g:lsp_settings = {
 \  'golangci-lint-langserver': {
