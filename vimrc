@@ -1,7 +1,5 @@
 " vim:ft=vim:et:ts=2:sw=2:sts=2:
-
 call plug#begin('~/.vim/plugged')
-" plugins ---------------------------------------------------------------------
 
 " syntax highlighters
 Plug 'cakebaker/scss-syntax.vim'
@@ -22,7 +20,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'hotwatermorning/auto-git-diff'
-Plug 'majutsushi/tagbar'  " requires ctags
+Plug 'majutsushi/tagbar' " requires ctags
 Plug 'rhysd/committia.vim'
 Plug 'sbdchd/neoformat'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -33,15 +31,14 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
 
-" auto completion with language server protocol
+" auto completion with Language Server Protocol
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'mattn/vim-lsp-settings' " Run :LspInstallServer for a new language.
 
-Plug 'mattn/vim-lsp-settings'  " Run :LspInstallServer for a new language.
-
-" -----------------------------------------------------------------------------
+" ------------------------------------------------------------------------------
 call plug#end()
 
 " Syntax highlighting.
