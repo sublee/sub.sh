@@ -32,7 +32,6 @@ Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
-Plug 'w0rp/ale'
 
 " auto completion with language server protocol
 Plug 'prabirshrestha/async.vim'
@@ -172,6 +171,7 @@ au BufEnter *
 \|endif
 
 " ------------------------------------------------------------------------------
+" Development
 
 " English spelling checker.
 setlocal spelllang=en_us
@@ -179,81 +179,20 @@ setlocal spelllang=en_us
 " Change gutter color.
 hi SignColumn cterm=none ctermfg=none ctermbg=black
 
-" ALE
-let g:ale_sign_column_always   = 1
-let g:ale_statusline_format    = ['E%d', 'W%d', '']
-let g:ale_echo_msg_format      = '[%linter%] %s [%severity%]'
-let g:ale_lint_delay           = 500
-let g:ale_lint_on_text_changed = 'normal'
-let g:ale_fix_on_save          = 1
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines'],
-\}
-let g:ale_pattern_options = {'\.pyi$': {'ale_enabled': 0}}
-au VimEnter * nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-au VimEnter * nmap <silent> <C-j> <Plug>(ale_next_wrap)
-
-" It blocks editing.
-" \|  let g:ale_change_sign_column_color = 1
-
-" Customize status line.
-"
-" E1 works/project/main.c [c][+]                                      29:2/1232
-" │         └─ file path   │  └─ modified flag           current line ─┘ │  │
-" └─ ALE status line       └─ file type                  current column ─┘  │
-"                                                              total lines ─┘
-"
-function ALEGetStatusLine()
-  " Status line fallback when ALE is not available.
-  return ''
-endfunction
-set statusline=
-set statusline+=%1*%{ALEGetStatusLine()}%*  " ALE status line
-set statusline+=\ %f                        " file path
-set statusline+=\ %y                        " file type
-set statusline+=%m                          " modified flag
-set statusline+=%=
-set statusline+=%l                          " current line
-set statusline+=:%v                         " current column
-set statusline+=/%L                         " total lines
-hi User1 cterm=inverse ctermfg=red
-
-" Show the sign column if ALE enabled.
-fun! ShowOrHideSignColumn()
-  let l:ale_enabled = getbufvar(bufnr(''), 'ale_enabled', 1)
-  execute 'set scl='.(l:ale_enabled ? 'yes' : 'no')
-endfun
-
-au BufEnter * call ShowOrHideSignColumn()
-
-" Toggle ALE by F6.
-fun! ToggleALE()
-  let l:ale_enabled = getbufvar(bufnr(''), 'ale_enabled', 1)
-
-  if l:ale_enabled
-    ALEDisableBuffer
-    echo 'ALE disabled'
+" Toggle sign column by F6.
+fun! s:toggleSignColumn()
+  if &signcolumn == 'yes'
+    setl signcolumn=no
   else
-    ALEEnableBuffer
-    echo 'ALE enabled'
+    setl signcolumn=yes
   endif
-
-  call ShowOrHideSignColumn()
 endfunc
-
-au VimEnter * nmap <F6> :call ToggleALE()<CR>
+au VimEnter * nmap <F6> :call s:toggleSignColumn()<CR>
 
 " Tab completion for asyncomplete.
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
-
-" Go to the definition by `gd`.
-au VimEnter * nmap gd :LspDefinition<CR>
-" Find references by `gD`.
-au VimEnter * nmap gD :LspReferences<CR>
-" Rename by `gr`.
-au VimEnter * nmap gr :LspRename<CR>
 
 " Mundo
 au VimEnter * nmap <F5> :MundoToggle<CR>
@@ -275,3 +214,76 @@ com W exec 'silent! undojoin | Neoformat | write'
 let g:neoformat_run_all_formatters = 1
 let g:neoformat_enabled_python = ['autopep8', 'isort']
 let g:neoformat_enabled_go = ['goimports']
+
+" ------------------------------------------------------------------------------
+" Language Server Protocol
+
+" Display diagnostics.
+let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_diagnostics_echo_delay  = 0
+
+" Dark background for popup windows.
+highlight PopupWindow term=inverse
+au User lsp_float_opened call
+\ setwinvar(lsp#ui#vim#output#getpreviewwinid(), '&wincolor', 'PopupWindow')
+
+" Highlight references of the identifier under the cursor.
+let g:lsp_highlight_references_enabled = 1
+hi lspReference term=underline cterm=underline
+
+" ^j ^k: Navigate a diagnostic
+" ?: Popup for hover information
+au VimEnter * nmap <C-j> :LspNextDiagnostic<CR>
+au VimEnter * nmap <C-k> :LspPreviousDiagnostic<CR>
+au VimEnter * nmap ? :LspHover<CR>
+
+" gd: Go to the definition
+" gD: Find references
+" gi: Find interface implementations
+" gr: Rename
+au VimEnter * nmap gd :LspDefinition<CR>
+au VimEnter * nmap gD :LspReferences<CR>
+au VimEnter * nmap gi :LspImplementation<CR>
+au VimEnter * nmap gr :LspRename<CR>
+
+" Show sign column if LSP is available.
+au User lsp_buffer_enabled setl signcolumn=yes
+
+" Use golangci-lint for Go projects.
+let g:lsp_settings_filetype_go = ['gopls', 'golangci-lint-langserver']
+let g:lsp_settings = {
+\  'golangci-lint-langserver': {
+\    'initialization_options': {
+\      'command': ['golangci-lint', 'run', '--out-format', 'json']
+\    }
+\  }
+\}
+
+" ------------------------------------------------------------------------------
+" Status Line
+
+function! StatusLineErrors()
+  let l:errors   = lsp#get_buffer_diagnostics_counts()["error"]
+  return (l:errors ? printf('E%d', l:errors) : '')
+endfunction
+
+function! StatusLineWarnings()
+  let l:warnings = lsp#get_buffer_diagnostics_counts()["warning"]
+  return (l:warnings ? printf('W%d', l:warnings) : '')
+endfunction
+
+" E1W2 works/project/main.c [c][+]                                    29:2/1232
+" │           └─ file path   │  └─ modified flag         current line ─┘ │  │
+" └─ diagnostics             └─ file type                current column ─┘  │
+"                                                              total lines ─┘
+set statusline=
+set statusline+=%#Error#%{StatusLineErrors()}  " E42
+set statusline+=%#Todo#%{StatusLineWarnings()} " W42
+set statusline+=%#StatusLine#                  " reset color
+set statusline+=\ %f                           " file path
+set statusline+=\ %y                           " file type
+set statusline+=%m                             " modified flag
+set statusline+=%=                             " space
+set statusline+=%l                             " current line
+set statusline+=:%v                            " current column
+set statusline+=/%L                            " total lines
