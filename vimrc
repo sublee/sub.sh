@@ -5,8 +5,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'cespare/vim-toml'
 Plug 'ekalinin/Dockerfile.vim'
-Plug 'Glench/Vim-Jinja2-Syntax'
-if version < 704 | Plug 'JulesWang/css.vim' | endif
 Plug 'othree/html5.vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'posva/vim-vue', { 'do': 'sudo npm i -g eslint eslint-plugin-vue' }
@@ -20,7 +18,6 @@ Plug 'hashivim/vim-terraform'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'hotwatermorning/auto-git-diff'
-Plug 'majutsushi/tagbar' " requires ctags
 Plug 'rhysd/committia.vim'
 Plug 'sbdchd/neoformat'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -42,39 +39,26 @@ Plug 'mattn/vim-lsp-settings' " Run :LspInstallServer for a new language.
 call plug#end()
 
 " Syntax highlighting.
-syntax on
+syn on
 
-" Prefer "very magic" regex.
-nmap / /\v
-cnoremap %s/ %s/\v
+" Prevent autocmd duplication. (should be below 'syn on')
+augroup vimrc
+au!
 
-" Search for visually selected text by //.
-vnoremap // y/<C-R>"<CR>
-
-" I don't like CRLF.
-set fileformat=unix
-
-" Toggle paste mode by ^vv.
-nn <C-V><C-V> :set invpaste paste?<CR>
+" Detect modeline.
+set modeline
 
 " Make backspace works like most other applications.
 set backspace=2
 
-" Detect modeline hints.
-set modeline
+" ^vv: Toggle paste mode
+nn <C-V><C-V> :set invpaste paste?<CR>
 
 " Prefer UTF-8.
 set encoding=utf-8 fileencodings=ucs-bom,utf-8,cp949,korea,iso-2022-kr
 
-" Ignore case in searches.
-set ignorecase
-
-" Highlight searching keyword.
-set hlsearch
-hi Search term=inverse cterm=inverse ctermbg=none ctermfg=darkblue
-
-" Highlight matching parenthesis.
-hi MatchParen term=inverse cterm=inverse ctermbg=none ctermfg=darkcyan
+" I hate CRLF.
+set fileformat=unix
 
 " Softtab -- use spaces instead tabs by default.
 set et
@@ -84,34 +68,19 @@ set ai
 " Single space between sentences.
 set nojs
 
-" Some additional syntax highlighters.
-au! BufRead,BufNewFile *.wsgi setfiletype python
-au! BufRead,BufNewFile *.sass setfiletype sass
-au! BufRead,BufNewFile *.haml setfiletype haml
-au! BufRead,BufNewFile *.less setfiletype less
-au! BufRead,BufNewFile *go setfiletype golang
-au! BufRead,BufNewFile *rc setfiletype conf
-au! BufRead,BufNewFile *.*_t setfiletype jinja
-
 " Default guide column.
 au BufEnter * set colorcolumn=81
 
 " Set language-specific tab/indent/columns conventions.
 au FileType cpp        setl ts=2 sw=2 sts=2 et
 au FileType javascript setl ts=2 sw=2 sts=2 et
-au FileType ruby       setl ts=2 sw=2 sts=2 et
 au FileType xml        setl ts=2 sw=2 sts=2 et
 au FileType yaml       setl ts=2 sw=2 sts=2 et
 au FileType html       setl ts=2 sw=2 sts=2 et
-au FileType vue        setl ts=2 sw=2 sts=2 et
-au FileType htmldjango setl ts=2 sw=2 sts=2 et
-au FileType lua        setl ts=2 sw=2 sts=2 et
-au FileType haml       setl ts=2 sw=2 sts=2 et
 au FileType css        setl ts=2 sw=2 sts=2 et
 au FileType sass       setl ts=2 sw=2 sts=2 et
-au FileType less       setl ts=2 sw=2 sts=2 et
 au Filetype rst        setl ts=3 sw=3 sts=3 et
-au FileType go         setl noet
+au FileType go         setl ts=4 sw=4 sts=4 noet
 au FileType make       setl ts=4 sw=4 sts=4 noet
 au FileType sh         setl ts=2 sw=2 sts=2 et | let b:forcecolumn=80
 au FileType zsh        setl ts=2 sw=2 sts=2 et | let b:forcecolumn=80
@@ -134,6 +103,23 @@ endfunc
 
 au FileType python setl ts=4 sw=4 sts=4 et
 \| exec 'let b:forcecolumn=' . s:flake8_max_columns()
+
+" ------------------------------------------------------------------------------
+" Search
+
+" Prefer very magic regex.
+nn  /   /\v
+cno %s/ %s/\v
+
+" / on visual mode: Search for visually selected text.
+vn / y/<C-R>"<CR>
+
+" Highlight searching keyword.
+set hlsearch
+hi Search term=inverse cterm=inverse ctermbg=none ctermfg=darkblue
+
+" Ignore case in search.
+set ignorecase
 
 " ------------------------------------------------------------------------------
 " Matches
@@ -171,12 +157,15 @@ au BufEnter *
 " Development
 
 " English spelling checker.
-setlocal spelllang=en_us
+setl spelllang=en_us
 
-" Change gutter color.
-hi SignColumn cterm=none ctermfg=none ctermbg=black
+" Dark gutter color.
+hi SignColumn term=none cterm=none ctermfg=none ctermbg=black
 
-" Toggle sign column by F6.
+" Highlight matching parenthesis.
+hi MatchParen term=inverse cterm=inverse ctermbg=none ctermfg=darkcyan
+
+" [F6]: Toggle sign column.
 fun! s:toggleSignColumn()
   if &signcolumn == 'yes'
     setl signcolumn=no
@@ -184,36 +173,48 @@ fun! s:toggleSignColumn()
     setl signcolumn=yes
   endif
 endfunc
-au VimEnter * nmap <F6> :call s:toggleSignColumn()<CR>
+nm <F6> :call s:toggleSignColumn()<CR>
 
-" Tab completion for asyncomplete.
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+" [Tab]: Autocomplete
+ino <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+ino <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+ino <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
-" Mundo
-au VimEnter * nmap <F5> :MundoToggle<CR>
-
-" Explore the directory of the current file by `:E`.
-cabbrev E e %:p:h
+" [F5]: Undo History
+nm <F5> :MundoToggle<CR>
 
 " Disable Markdown folding.
 let g:vim_markdown_folding_disabled = 1
 
-" fzf
-au VimEnter * nmap <C-f> :FZF<CR>
+" [^f]: fzf
+nm <C-f> :FZF<CR>
 
-" Tagbar
-au VimEnter * nmap <F8> :TagbarToggle<CR>
-
-" Write with Neoformat by `:W` instead of `:w`.
+" [:W]: Write with Neoformat.
 com W exec 'silent! undojoin | Neoformat | write'
 let g:neoformat_run_all_formatters = 1
 let g:neoformat_enabled_python = ['autopep8', 'isort']
 let g:neoformat_enabled_go = ['goimports']
 
+" [:E]: Explore the directory where the current file exists.
+cabbrev E e %:p:h
+
 " ------------------------------------------------------------------------------
 " Language Server Protocol
+
+" [^j], [^k]: Navigate a diagnostic.
+nm <C-j> :LspNextDiagnostic<CR>
+nm <C-k> :LspPreviousDiagnostic<CR>
+
+" [?]:  Popup for hover information.
+" [gd]: Go to the definition.
+" [gD]: Find references.
+" [gi]: Find interface implementations.
+" [gr]: Rename.
+nm ?  :LspHover<CR>
+nm gd :LspDefinition<CR>
+nm gD :LspReferences<CR>
+nm gi :LspImplementation<CR>
+nm gr :LspRename<CR>
 
 " Display diagnostics.
 let g:lsp_diagnostics_echo_cursor = 1
@@ -227,21 +228,6 @@ au User lsp_float_opened call
 " Highlight references of the identifier under the cursor.
 let g:lsp_highlight_references_enabled = 1
 hi lspReference term=underline cterm=underline
-
-" ^j ^k: Navigate a diagnostic
-" ?: Popup for hover information
-au VimEnter * nmap <C-j> :LspNextDiagnostic<CR>
-au VimEnter * nmap <C-k> :LspPreviousDiagnostic<CR>
-au VimEnter * nmap ? :LspHover<CR>
-
-" gd: Go to the definition
-" gD: Find references
-" gi: Find interface implementations
-" gr: Rename
-au VimEnter * nmap gd :LspDefinition<CR>
-au VimEnter * nmap gD :LspReferences<CR>
-au VimEnter * nmap gi :LspImplementation<CR>
-au VimEnter * nmap gr :LspRename<CR>
 
 " Show sign column if LSP is available.
 au User lsp_buffer_enabled setl signcolumn=yes
@@ -289,3 +275,6 @@ set statusline+=%=                             " space
 set statusline+=%l                             " current line
 set statusline+=:%v                            " current column
 set statusline+=/%L                            " total lines
+
+" ------------------------------------------------------------------------------
+augroup END
