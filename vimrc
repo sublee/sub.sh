@@ -29,7 +29,7 @@ Plug 'junegunn/vim-pseudocl'
 Plug 'hotwatermorning/auto-git-diff'
 Plug 'rhysd/committia.vim'
 Plug 'sbdchd/neoformat'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'scrooloose/nerdtree'
 Plug 'simnalamburt/vim-mundo'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tmhedberg/matchit'
