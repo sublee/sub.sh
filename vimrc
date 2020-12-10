@@ -75,12 +75,12 @@ au FileType html       setl ts=2 sw=2 sts=2 et
 au FileType css        setl ts=2 sw=2 sts=2 et
 au FileType sass       setl ts=2 sw=2 sts=2 et
 au Filetype rst        setl ts=3 sw=3 sts=3 et
-au FileType go         setl ts=4 sw=4 sts=4 noet
+au FileType go         setl ts=4 sw=4 sts=4 noet | let b:forcecolumn=999
 au FileType make       setl ts=4 sw=4 sts=4 noet
-au FileType sh         setl ts=2 sw=2 sts=2 et | let b:forcecolumn=80
-au FileType zsh        setl ts=2 sw=2 sts=2 et | let b:forcecolumn=80
-au FileType vim        setl ts=2 sw=2 sts=2 et | let b:forcecolumn=80
-au FileType terraform  setl ts=2 sw=2 sts=2 et | let b:forcecolumn=999
+au FileType sh         setl ts=2 sw=2 sts=2 et   | let b:forcecolumn=80
+au FileType zsh        setl ts=2 sw=2 sts=2 et   | let b:forcecolumn=80
+au FileType vim        setl ts=2 sw=2 sts=2 et   | let b:forcecolumn=80
+au FileType terraform  setl ts=2 sw=2 sts=2 et   | let b:forcecolumn=999
 
 " Read Python max columns from its flake8 config.
 func! s:flake8_max_columns()
