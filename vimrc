@@ -48,19 +48,15 @@ au!
 " Detect modeline.
 set modeline
 
-" Make backspace works like most other applications.
-set backspace=2
-
 " Prefer UTF-8.
 set encoding=utf-8 fileencodings=ucs-bom,utf-8,cp949,korea,iso-2022-kr
 
-" I hate CRLF.
-set fileformat=unix
-
-" Softtab -- use spaces instead tabs by default.
+" Prefer Softtab.
 set et
 set ts=4 sw=4 sts=4
-set ai
+
+" I hate CRLF.
+set fileformat=unix
 
 " Single space between sentences.
 set nojs
