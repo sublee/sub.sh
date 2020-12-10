@@ -1,7 +1,7 @@
 " vim:ft=vim:et:ts=2:sw=2:sts=2:
 call plug#begin('~/.vim/plugged')
 
-" syntax highlighters
+" Syntax
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'cespare/vim-toml'
 Plug 'ekalinin/Dockerfile.vim'
@@ -11,7 +11,14 @@ Plug 'posva/vim-vue', { 'do': 'sudo npm i -g eslint eslint-plugin-vue' }
 Plug 'rust-lang/rust.vim'
 Plug 'stephpy/vim-yaml'
 
-" function extensions
+" Language Server Protocol
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'mattn/vim-lsp-settings' " Run :LspInstallServer for a new language.
+
+" Functions
 Plug 'easymotion/vim-easymotion'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'hashivim/vim-terraform'
@@ -29,13 +36,6 @@ Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
-
-" auto completion with Language Server Protocol
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'mattn/vim-lsp-settings' " Run :LspInstallServer for a new language.
 
 " ------------------------------------------------------------------------------
 call plug#end()
