@@ -17,6 +17,8 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'hashivim/vim-terraform'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-oblique'
+Plug 'junegunn/vim-pseudocl'
 Plug 'hotwatermorning/auto-git-diff'
 Plug 'rhysd/committia.vim'
 Plug 'sbdchd/neoformat'
@@ -100,19 +102,15 @@ au FileType python setl ts=4 sw=4 sts=4 et
 " ------------------------------------------------------------------------------
 " Search
 
-" Prefer very magic regex.
-nn  /   /\v
-cno %s/ %s/\v
-
-" / on visual mode: Search for visually selected text.
-vn / y/<C-R>"<CR>
-
 " Highlight searching keyword.
 set hlsearch
 hi Search term=inverse cterm=inverse ctermbg=none ctermfg=darkblue
 
 " Ignore case in search.
 set ignorecase
+
+" Highlight all incremental matches.
+let g:oblique#incsearch_highlight_all = 1
 
 " ------------------------------------------------------------------------------
 " Matches
@@ -201,16 +199,16 @@ cabbrev E e %:p:h
 nn <C-j> :LspNextDiagnostic<CR>
 nn <C-k> :LspPreviousDiagnostic<CR>
 
-" [?]:  Popup for hover information.
-" [gd]: Go to the definition.
-" [gD]: Find references.
-" [gi]: Find interface implementations.
-" [gr]: Rename.
-nn ?  :LspHover<CR>
-nn gd :LspDefinition<CR>
-nn gD :LspReferences<CR>
-nn gi :LspImplementation<CR>
-nn gr :LspRename<CR>
+" [Tab]: Popup for hover information.
+" [gd]:  Go to the definition.
+" [gD]:  Find references.
+" [gi]:  Find interface implementations.
+" [gr]:  Rename.
+nn <Tab> :LspHover<CR>
+nn gd    :LspDefinition<CR>
+nn gD    :LspReferences<CR>
+nn gi    :LspImplementation<CR>
+nn gr    :LspRename<CR>
 
 " Display diagnostics.
 let g:lsp_diagnostics_echo_cursor = 1
