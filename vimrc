@@ -177,8 +177,8 @@ nn <F5> :MundoToggle<CR>
 " Disable Markdown folding.
 let g:vim_markdown_folding_disabled = 1
 
-" [^f]: fzf
-nn <C-f> :FZF<CR>
+" [;]: fzf
+nn ; :Files<CR>
 
 " [^vv]: Toggle paste mode.
 nn <C-V><C-V> :set invpaste paste?<CR>
