@@ -51,9 +51,6 @@ set modeline
 " Make backspace works like most other applications.
 set backspace=2
 
-" ^vv: Toggle paste mode
-nn <C-V><C-V> :set invpaste paste?<CR>
-
 " Prefer UTF-8.
 set encoding=utf-8 fileencodings=ucs-bom,utf-8,cp949,korea,iso-2022-kr
 
@@ -173,7 +170,7 @@ fun! s:toggleSignColumn()
     setl signcolumn=yes
   endif
 endfunc
-nm <F6> :call s:toggleSignColumn()<CR>
+nn <F6> :call s:toggleSignColumn()<CR>
 
 " [Tab]: Autocomplete
 ino <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -181,13 +178,16 @@ ino <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 ino <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
 " [F5]: Undo History
-nm <F5> :MundoToggle<CR>
+nn <F5> :MundoToggle<CR>
 
 " Disable Markdown folding.
 let g:vim_markdown_folding_disabled = 1
 
 " [^f]: fzf
-nm <C-f> :FZF<CR>
+nn <C-f> :FZF<CR>
+
+" [^vv]: Toggle paste mode.
+nn <C-V><C-V> :set invpaste paste?<CR>
 
 " [:W]: Write with Neoformat.
 com W exec 'silent! undojoin | Neoformat | write'
@@ -202,19 +202,19 @@ cabbrev E e %:p:h
 " Language Server Protocol
 
 " [^j], [^k]: Navigate a diagnostic.
-nm <C-j> :LspNextDiagnostic<CR>
-nm <C-k> :LspPreviousDiagnostic<CR>
+nn <C-j> :LspNextDiagnostic<CR>
+nn <C-k> :LspPreviousDiagnostic<CR>
 
 " [?]:  Popup for hover information.
 " [gd]: Go to the definition.
 " [gD]: Find references.
 " [gi]: Find interface implementations.
 " [gr]: Rename.
-nm ?  :LspHover<CR>
-nm gd :LspDefinition<CR>
-nm gD :LspReferences<CR>
-nm gi :LspImplementation<CR>
-nm gr :LspRename<CR>
+nn ?  :LspHover<CR>
+nn gd :LspDefinition<CR>
+nn gD :LspReferences<CR>
+nn gi :LspImplementation<CR>
+nn gr :LspRename<CR>
 
 " Display diagnostics.
 let g:lsp_diagnostics_echo_cursor = 1
