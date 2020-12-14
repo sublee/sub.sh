@@ -245,13 +245,21 @@ let g:lsp_settings = {
 " Status Line
 
 function! StatusLineErrors()
-  let l:errors   = lsp#get_buffer_diagnostics_counts()["error"]
-  return (l:errors ? printf('E%d', l:errors) : '')
+  if exists('lsp#get_buffer_diagnostics_counts')
+    let l:n = lsp#get_buffer_diagnostics_counts()["error"]
+  else
+    let l:n = 0
+  endif
+  return (l:n ? printf('E%d', l:n) : '')
 endfunction
 
 function! StatusLineWarnings()
-  let l:warnings = lsp#get_buffer_diagnostics_counts()["warning"]
-  return (l:warnings ? printf('W%d', l:warnings) : '')
+  if exists('lsp#get_buffer_diagnostics_counts')
+    let l:n = lsp#get_buffer_diagnostics_counts()["warning"]
+  else
+    let l:n = 0
+  endif
+  return (l:n ? printf('W%d', l:n) : '')
 endfunction
 
 " E1W2 works/project/main.c [c][+]                                    29:2/1232
