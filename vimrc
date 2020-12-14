@@ -36,6 +36,7 @@ Plug 'tmhedberg/matchit'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-unimpaired'
+Plug 'vim-test/vim-test'
 
 " ------------------------------------------------------------------------------
 call plug#end()
@@ -182,6 +183,12 @@ nn ; :Files<CR>
 
 " [^vv]: Toggle paste mode.
 nn <C-V><C-V> :set invpaste paste?<CR>
+
+" [tt]: Run the current test file.
+nn tt :TestFile<CR>
+
+" [TT]: Run the current test suite.
+nn TT :TestSuite<CR>
 
 " [:W]: Write with Neoformat.
 com W exec 'silent! undojoin | Neoformat | write'
