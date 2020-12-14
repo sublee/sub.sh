@@ -238,6 +238,13 @@ let g:lsp_settings = {
 \    'initialization_options': {
 \      'command': ['golangci-lint', 'run', '--out-format', 'json']
 \    }
+\  },
+\  'pyls-all': {
+\    'workspace_config': {
+\      'pyls': {
+\        'configurationSources': ['flake8']
+\      }
+\    }
 \  }
 \}
 
