@@ -64,6 +64,10 @@ set ff=unix
 " Single space between sentences.
 set nojs
 
+" Do I need to hide buffers?
+" https://github.com/junegunn/fzf/issues/1166
+" set hid
+
 " Default guide column.
 set cc=81
 
