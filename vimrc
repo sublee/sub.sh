@@ -17,6 +17,8 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'mattn/vim-lsp-settings' " Run :LspInstallServer for a new language.
+" Use ALE only for Python. Python language servers are not useful yet.
+Plug 'dense-analysis/ale', { 'for': 'python' }
 
 " Functions
 Plug 'easymotion/vim-easymotion'
@@ -203,8 +205,14 @@ cabbrev E e %:p:h
 " Language Server Protocol
 
 " [^j], [^k]: Navigate a diagnostic.
-nn <C-j> :LspNextDiagnostic<CR>
-nn <C-k> :LspPreviousDiagnostic<CR>
+au BufEnter *
+\ if &ft == 'python'
+\|  exe 'nn <C-j> :ALENext<CR>'
+\|  exe 'nn <C-k> :ALEPrevious<CR>'
+\|else
+\|  exe 'nn <C-j> :LspNextDiagnostic<CR>'
+\|  exe 'nn <C-k> :LspPreviousDiagnostic<CR>'
+\|endif
 
 " [Tab]: Popup for hover information.
 " [gd]:  Go to the definition.
@@ -259,20 +267,34 @@ let g:lsp_settings = {
 " Status Line
 
 function! StatusLineErrors()
-  if exists('lsp#get_buffer_diagnostics_counts')
-    let l:n = lsp#get_buffer_diagnostics_counts()["error"]
-  else
-    let l:n = 0
-  endif
+  let l:n = 0
+
+  try
+    let l:n += lsp#get_buffer_diagnostics_counts()['error']
+  catch | endtry
+
+  try
+    let l:ale = ale#statusline#Count(bufnr(''))
+    let l:n += l:ale['error']
+    let l:n += l:ale['style_error']
+  catch | endtry
+
   return (l:n ? printf('E%d', l:n) : '')
 endfunction
 
 function! StatusLineWarnings()
-  if exists('lsp#get_buffer_diagnostics_counts')
-    let l:n = lsp#get_buffer_diagnostics_counts()["warning"]
-  else
-    let l:n = 0
-  endif
+  let l:n = 0
+
+  try
+    let l:n += lsp#get_buffer_diagnostics_counts()['warning']
+  catch | endtry
+
+  try
+    let l:ale = ale#statusline#Count(bufnr(''))
+    let l:n += l:ale['warning']
+    let l:n += l:ale['style_warning']
+  catch | endtry
+
   return (l:n ? printf('W%d', l:n) : '')
 endfunction
 
