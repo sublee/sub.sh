@@ -213,16 +213,17 @@ au FileType *      nn <buffer> <C-k> :LspPreviousDiagnostic<CR>
 au FileType python nn <buffer> <C-j> :ALENext<CR>
 au FileType python nn <buffer> <C-k> :ALEPrevious<CR>
 
-" [Tab]: Popup for hover information.
-" [gd]:  Go to the definition.
-" [gD]:  Find references.
-" [gi]:  Find interface implementations.
-" [gr]:  Rename.
-nn <Tab> :LspHover<CR>
-nn gd    :LspDefinition<CR>
-nn gD    :LspReferences<CR>
-nn gi    :LspImplementation<CR>
-nn gr    :LspRename<CR>
+" [Enter]: Popup for hover information.
+nn <CR> :LspHover<CR>
+
+" [gd]: Go to the definition.
+" [gD]: Find references.
+" [gi]: Find interface implementations.
+" [gr]: Rename.
+nn gd :LspDefinition<CR>
+nn gD :LspReferences<CR>
+nn gi :LspImplementation<CR>
+nn gr :LspRename<CR>
 
 " Display diagnostics.
 let g:lsp_diagnostics_echo_cursor = 1
