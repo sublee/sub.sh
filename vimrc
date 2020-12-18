@@ -52,14 +52,14 @@ au!
 set modeline
 
 " Prefer UTF-8.
-set encoding=utf-8 fileencodings=ucs-bom,utf-8,cp949,korea,iso-2022-kr
+set enc=utf-8 fencs=ucs-bom,utf-8,cp949,korea,iso-2022-kr
 
 " Prefer Softtab.
 set et
 set ts=4 sw=4 sts=4
 
 " I hate CRLF.
-set fileformat=unix
+set ff=unix
 
 " Single space between sentences.
 set nojs
