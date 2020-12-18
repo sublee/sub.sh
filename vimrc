@@ -17,7 +17,7 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'mattn/vim-lsp-settings' " Run :LspInstallServer for a new language.
-" Use ALE only for Python. Python language servers are not useful yet.
+" NOTE: Use ALE to lint Python code. There's no good lint LSP for Python yet.
 Plug 'dense-analysis/ale', { 'for': 'python' }
 
 " Functions
@@ -244,17 +244,17 @@ au User lsp_buffer_enabled setl signcolumn=yes
 "   :LspInstallServer golangci-lint-langserver
 "
 let g:lsp_settings_filetype_go = ['gopls', 'golangci-lint-langserver']
+
+" Use Jedi for Python. It is better than pyls or pyls-ms.
+"
+"   :LspInstallServer jedi-language-server
+"
+let g:lsp_settings_filetype_python = ['jedi-language-server']
+
 let g:lsp_settings = {
 \  'golangci-lint-langserver': {
 \    'initialization_options': {
 \      'command': ['golangci-lint', 'run', '--out-format', 'json']
-\    }
-\  },
-\  'pyls-all': {
-\    'workspace_config': {
-\      'pyls': {
-\        'configurationSources': ['flake8']
-\      }
 \    }
 \  }
 \}
