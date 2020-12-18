@@ -65,7 +65,7 @@ set ff=unix
 set nojs
 
 " Default guide column.
-au BufEnter * set colorcolumn=81
+set cc=81
 
 " Set language-specific tab/indent/columns conventions.
 au FileType cpp        setl ts=2 sw=2 sts=2 et
@@ -76,12 +76,12 @@ au FileType html       setl ts=2 sw=2 sts=2 et
 au FileType css        setl ts=2 sw=2 sts=2 et
 au FileType sass       setl ts=2 sw=2 sts=2 et
 au Filetype rst        setl ts=3 sw=3 sts=3 et
-au FileType go         setl ts=4 sw=4 sts=4 noet | let b:forcecolumn=999
+au FileType go         setl ts=4 sw=4 sts=4 noet cc=
 au FileType make       setl ts=4 sw=4 sts=4 noet
-au FileType sh         setl ts=2 sw=2 sts=2 et   | let b:forcecolumn=80
-au FileType zsh        setl ts=2 sw=2 sts=2 et   | let b:forcecolumn=80
-au FileType vim        setl ts=2 sw=2 sts=2 et   | let b:forcecolumn=80
-au FileType terraform  setl ts=2 sw=2 sts=2 et   | let b:forcecolumn=999
+au FileType sh         setl ts=2 sw=2 sts=2 et
+au FileType zsh        setl ts=2 sw=2 sts=2 et
+au FileType vim        setl ts=2 sw=2 sts=2 et
+au FileType terraform  setl ts=2 sw=2 sts=2 et cc=
 
 " Read Python max columns from its flake8 config.
 func! s:flake8_max_columns()
@@ -98,7 +98,7 @@ func! s:flake8_max_columns()
 endfunc
 
 au FileType python setl ts=4 sw=4 sts=4 et
-\| exec 'let b:forcecolumn=' . s:flake8_max_columns()
+\| exec 'setl cc=' . (s:flake8_max_columns()+1)
 
 " ------------------------------------------------------------------------------
 " Search
@@ -139,11 +139,7 @@ au BufEnter *
 
 " 3. Keep maximum columns.
 hi ColorColumn term=underline cterm=underline ctermbg=none
-au BufEnter *
-\ if exists('b:forcecolumn')
-\|  execute 'set colorcolumn='.(b:forcecolumn+1)
-\|  call matchadd('Error', '\%>'.(b:forcecolumn).'v.\+', 0, 8903)
-\|endif
+au BufEnter * call matchadd('Error', '\%>'.(&cc-1).'v.\+', 0, 8903)
 
 " ------------------------------------------------------------------------------
 " Development
