@@ -205,14 +205,10 @@ cabbrev E e %:p:h
 " Language Server Protocol
 
 " [^j], [^k]: Navigate a diagnostic.
-au BufEnter *
-\ if &ft == 'python'
-\|  exe 'nn <C-j> :ALENext<CR>'
-\|  exe 'nn <C-k> :ALEPrevious<CR>'
-\|else
-\|  exe 'nn <C-j> :LspNextDiagnostic<CR>'
-\|  exe 'nn <C-k> :LspPreviousDiagnostic<CR>'
-\|endif
+au FileType *      nn <buffer> <C-j> :LspNextDiagnostic<CR>
+au FileType *      nn <buffer> <C-k> :LspPreviousDiagnostic<CR>
+au FileType python nn <buffer> <C-j> :ALENext<CR>
+au FileType python nn <buffer> <C-k> :ALEPrevious<CR>
 
 " [Tab]: Popup for hover information.
 " [gd]:  Go to the definition.
