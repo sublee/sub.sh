@@ -163,14 +163,7 @@ hi SignColumn term=none cterm=none ctermfg=none ctermbg=black
 hi MatchParen term=inverse cterm=inverse ctermbg=none ctermfg=darkcyan
 
 " [F6]: Toggle sign column.
-fun! s:toggleSignColumn()
-  if &signcolumn == 'yes'
-    setl signcolumn=no
-  else
-    setl signcolumn=yes
-  endif
-endfunc
-nn <F6> :call s:toggleSignColumn()<CR>
+nn <F6> :exe 'setl scl='.(&scl=='yes' ? 'no' : 'yes')<CR>
 
 " [Tab]: Autocomplete
 ino <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
