@@ -1,18 +1,22 @@
 " [:LspInstall]: Install preferred LSP implementations.
-func! s:confirm_and_run(cmd)
-  echo '$ '.a:cmd
-  echo 'Execute? [y/N]'
+func! s:lsp_install_run(cmd)
+  echo 'Install LSP servers for '.&ft.':'
 
-  if nr2char(getchar()) ==? 'y'
+  echohl WarningMsg
+  echo '$ '.a:cmd
+  echohl None
+
+  let answer = input('Execute? [y/N] ')
+  if answer ==? 'y'
     exe '!' a:cmd
   endif
 endfunc
 
 func! s:lsp_install()
   if &ft == 'python'
-    call s:confirm_and_run('pip install python-language-server pyls-mypy flake8')
+    call s:lsp_install_run('pip install python-language-server pyls-mypy flake8')
   elseif &ft == 'go'
-    call s:confirm_and_run('go get golang.org/x/tools/gopls github.com/nametake/golangci-lint-langserver')
+    call s:lsp_install_run('go get golang.org/x/tools/gopls github.com/nametake/golangci-lint-langserver')
   else
     echo 'no requirements for '.&ft
   endif
