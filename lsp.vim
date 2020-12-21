@@ -1,15 +1,24 @@
-" [:LspRequirements]: Print how to install LSP implementations.
-func! s:lsp_requirements()
+" [:LspInstall]: Install preferred LSP implementations.
+func! s:confirm_and_run(cmd)
+  echo '$ '.a:cmd
+  echo 'Execute? [y/N]'
+
+  if nr2char(getchar()) ==? 'y'
+    exe '!' a:cmd
+  endif
+endfunc
+
+func! s:lsp_install()
   if &ft == 'python'
-    echo 'pip install python-language-server pyls-mypy flake8'
+    call s:confirm_and_run('pip install python-language-server pyls-mypy flake8')
   elseif &ft == 'go'
-    echo 'go get golang.org/x/tools/gopls'
-    echo 'go get github.com/nametake/golangci-lint-langserver'
+    call s:confirm_and_run('go get golang.org/x/tools/gopls github.com/nametake/golangci-lint-langserver')
   else
     echo 'no requirements for '.&ft
   endif
 endfunc
-com LspRequirements call s:lsp_requirements()
+
+com LspInstall call s:lsp_install()
 
 " pyls: https://github.com/palantir/python-language-server
 if executable('pyls')
