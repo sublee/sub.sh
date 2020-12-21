@@ -1,3 +1,5 @@
+" vim:ft=vim:et:ts=2:sw=2:sts=2:cc=:
+
 " [:LspInstall]: Install preferred LSP implementations.
 func! s:lsp_install_run(cmd)
   echo 'Install LSP servers for '.&ft.':'
@@ -14,7 +16,8 @@ endfunc
 
 func! s:lsp_install()
   if &ft == 'python'
-    call s:lsp_install_run('pip install python-language-server pyls-mypy flake8')
+    " pyls-mypy requires future: https://github.com/tomv564/pyls-mypy/issues/44
+    call s:lsp_install_run('pip install python-language-server pyls-mypy future flake8')
   elseif &ft == 'go'
     call s:lsp_install_run('go get golang.org/x/tools/gopls github.com/nametake/golangci-lint-langserver')
   else
