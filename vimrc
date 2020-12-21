@@ -16,9 +16,6 @@ Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'mattn/vim-lsp-settings' " Run :LspInstallServer for a new language.
-" NOTE: Use ALE to lint Python code. There's no good lint LSP for Python yet.
-Plug 'dense-analysis/ale', { 'for': 'python' }
 
 " Functions
 Plug 'easymotion/vim-easymotion'
@@ -163,7 +160,7 @@ hi SignColumn term=none cterm=none ctermfg=none ctermbg=black
 hi MatchParen term=inverse cterm=inverse ctermbg=none ctermfg=darkcyan
 
 " [F6]: Toggle sign column.
-nn <F6> :exe 'setl scl='.(&scl=='yes' ? 'no' : 'yes')<CR>
+nn <F6> :exe 'setl scl='.(&scl=='no' ? 'yes' : 'no')<CR>
 
 " [Tab]: Autocomplete
 ino <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -201,10 +198,8 @@ cabbrev E e %:p:h
 " Language Server Protocol
 
 " [^j], [^k]: Navigate a diagnostic.
-au FileType *      nn <buffer> <C-j> :LspNextDiagnostic<CR>
-au FileType *      nn <buffer> <C-k> :LspPreviousDiagnostic<CR>
-au FileType python nn <buffer> <C-j> :ALENext<CR>
-au FileType python nn <buffer> <C-k> :ALEPrevious<CR>
+nn <C-j> :LspNextDiagnostic<CR>
+nn <C-k> :LspPreviousDiagnostic<CR>
 
 " [Enter]: Popup for hover information.
 nn <CR> :LspHover<CR>
@@ -232,64 +227,34 @@ let g:lsp_highlight_references_enabled = 1
 hi lspReference term=underline cterm=underline
 
 " Show sign column if LSP is available.
-au User lsp_buffer_enabled setl signcolumn=yes
+au User lsp_buffer_enabled setl scl=yes
 
-" Use gopls for hover informations, golangci-lint for respecting the project's
-" lint rules. Install the LSP servers with:
-"
-"   :LspInstallServer gopls
-"   :LspInstallServer golangci-lint-langserver
-"
-let g:lsp_settings_filetype_go = ['gopls', 'golangci-lint-langserver']
-
-" Use Jedi for Python. It is better than pyls or pyls-ms.
-"
-"   :LspInstallServer jedi-language-server
-"
-let g:lsp_settings_filetype_python = ['jedi-language-server']
-
-let g:lsp_settings = {
-\  'golangci-lint-langserver': {
-\    'initialization_options': {
-\      'command': ['golangci-lint', 'run', '--out-format', 'json']
-\    }
-\  }
-\}
+" Include "~/.sub.sh/lsp.vim".
+" To get dirname where this script is: https://stackoverflow.com/a/18734557
+exe 'so' fnamemodify(resolve(expand('<sfile>:p')), ':h').'/lsp.vim'
 
 " ------------------------------------------------------------------------------
 " Status Line
 
-function! StatusLineErrors()
+func! StatusLineErrors()
   let l:n = 0
 
   try
     let l:n += lsp#get_buffer_diagnostics_counts()['error']
   catch | endtry
 
-  try
-    let l:ale = ale#statusline#Count(bufnr(''))
-    let l:n += l:ale['error']
-    let l:n += l:ale['style_error']
-  catch | endtry
-
   return (l:n ? printf('E%d', l:n) : '')
-endfunction
+endfunc
 
-function! StatusLineWarnings()
+func! StatusLineWarnings()
   let l:n = 0
 
   try
     let l:n += lsp#get_buffer_diagnostics_counts()['warning']
   catch | endtry
 
-  try
-    let l:ale = ale#statusline#Count(bufnr(''))
-    let l:n += l:ale['warning']
-    let l:n += l:ale['style_warning']
-  catch | endtry
-
   return (l:n ? printf('W%d', l:n) : '')
-endfunction
+endfunc
 
 " E1W2 works/project/main.c [c][+]                                    29:2/1232
 " │           └─ file path   │  └─ modified flag         current line ─┘ │  │
