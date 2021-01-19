@@ -20,6 +20,8 @@ func! s:lsp_install()
     call s:lsp_install_run('pip install python-language-server pyls-mypy future flake8')
   elseif &ft == 'go'
     call s:lsp_install_run('go get golang.org/x/tools/gopls github.com/nametake/golangci-lint-langserver')
+  elseif &ft == 'yaml'
+    call s:lsp_install_run('npm install yaml-language-server')
   else
     echo 'no requirements for '.&ft
   endif
@@ -79,6 +81,23 @@ if executable('golangci-lint-langserver')
 \   'root_uri': {server_info->s:root_uri(['go.mod', '.git/'])},
 \   'initialization_options': {
 \     'command': ['golangci-lint', 'run', '--out-format', 'json']
+\   }
+\ })
+endif
+
+" yaml-language-server: https://github.com/redhat-developer/yaml-language-server
+if executable('yaml-language-server')
+  au User lsp_setup call lsp#register_server({
+\   'name': 'yaml-language-server',
+\   'cmd': {server_info->['yaml-language-server', '--stdio']},
+\   'allowlist': ['yaml'],
+\   'root_uri': {server_info->s:root_uri(['.git/'])},
+\   'workspace_config': {
+\     'yaml': {
+\       'schemas': {
+\         'kubernetes': 'k8s/*'
+\       }
+\     }
 \   }
 \ })
 endif
