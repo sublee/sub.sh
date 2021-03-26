@@ -347,6 +347,10 @@ setup_os_specific() {
 _install_ubuntu_specific() { [[ "$lsb_dist" == ubuntu ]]
   info "Installing packages for Ubuntu..."
   sudo -E apt install -y aptitude
+
+  # Generate en_US.UTF-8 locale to fix setlocale warnings.
+  sudo -E apt install -y locales
+  sudo locale-gen en_US.UTF-8
 }
 
 _install_centos_specific() { [[ "$lsb_dist" == centos ]]
