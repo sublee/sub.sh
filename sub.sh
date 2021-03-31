@@ -481,7 +481,7 @@ _install_pyenv() { [[ "$install_pyenv" = true ]]
 setup_zsh() {
   _install_zsh
   _install_ohmyzsh
-  sudo -E chsh -s "$(which zsh)" "$(whoami)"
+  sudo -E chsh -s "$(command -v zsh)" "$(whoami)"
 }
 
 _install_zsh() {
