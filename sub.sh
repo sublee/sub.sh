@@ -454,13 +454,16 @@ _install_fd() {
     ubuntu)
       # sudo -E apt install -y fd-find  # available in Ubuntu 19.04
       pushd "$(mktemp -d)"
-      curl -LO https://github.com/sharkdp/fd/releases/download/v8.1.1/fd_8.1.1_amd64.deb
+      curl -LO "https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_$(dpkg --print-architecture).deb"
       sudo dpkg -i ./*.deb
       popd
     ;;
     centos)
-      sudo -E yum copr -y enable surkum/fd
-      sudo -E yum install -y fd
+      pushd "$(mktemp -d)"
+      curl -LO "https://github.com/sharkdp/fd/releases/download/v8.2.1/fd-v8.2.1-$(arch)-unknown-linux-musl.tar.gz"
+      tar xzf ./*.tar.gz
+      sudo cp fd-*/fd /usr/local /usr/local/bin/fd
+      popd
     ;;
   esac
 }
