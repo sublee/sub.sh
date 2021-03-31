@@ -282,7 +282,7 @@ _install_ssh_server() {
 
   info "Installing SSH server..."
   case $lsb_dist in
-    ubuntu) sudo -E apt install -y openssh-server ;;
+    ubuntu) DEBIAN_FRONTEND=noninteractive sudo -E apt install -y openssh-server ;;
     centos) sudo -E yum install -y openssh-server ;;
   esac
 }
@@ -462,7 +462,7 @@ _install_fd() {
       pushd "$(mktemp -d)"
       curl -LO "https://github.com/sharkdp/fd/releases/download/v8.2.1/fd-v8.2.1-$(arch)-unknown-linux-musl.tar.gz"
       tar xzf ./*.tar.gz
-      sudo cp fd-*/fd /usr/local /usr/local/bin/fd
+      sudo cp fd-*/fd /usr/local/bin/fd
       popd
     ;;
   esac
