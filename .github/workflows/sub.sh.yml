@@ -41,7 +41,7 @@ jobs:
 
     strategy:
       matrix:
-        image: ['ubuntu:18.04', 'centos:7.4.1708']
+        image: ['ubuntu:20.04', 'ubuntu:18.04', 'centos:7.4.1708']
 
     steps:
     - name: Checkout
