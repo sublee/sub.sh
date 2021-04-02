@@ -286,7 +286,7 @@ _install_ssh_server() {
 
   info "Installing SSH server..."
   case $lsb_dist in
-    ubuntu) sudo -E apt install -y openssh-server ;;
+    ubuntu) DEBIAN_FRONTEND=noninteractive sudo -E apt install -y openssh-server ;;
     centos) sudo -E yum install -y openssh-server ;;
   esac
 }
@@ -351,6 +351,10 @@ setup_os_specific() {
 _install_ubuntu_specific() { [[ "$lsb_dist" == ubuntu ]]
   info "Installing packages for Ubuntu..."
   sudo -E apt install -y aptitude
+
+  # Generate en_US.UTF-8 locale to fix setlocale warnings.
+  sudo -E apt install -y locales
+  sudo locale-gen en_US.UTF-8
 }
 
 _install_centos_specific() { [[ "$lsb_dist" == centos ]]
@@ -454,13 +458,16 @@ _install_fd() {
     ubuntu)
       # sudo -E apt install -y fd-find  # available in Ubuntu 19.04
       pushd "$(mktemp -d)"
-      curl -LO https://github.com/sharkdp/fd/releases/download/v8.1.1/fd_8.1.1_amd64.deb
+      curl -LO "https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_$(dpkg --print-architecture).deb"
       sudo dpkg -i ./*.deb
       popd
     ;;
     centos)
-      sudo -E yum copr -y enable surkum/fd
-      sudo -E yum install -y fd
+      pushd "$(mktemp -d)"
+      curl -LO "https://github.com/sharkdp/fd/releases/download/v8.2.1/fd-v8.2.1-$(arch)-unknown-linux-musl.tar.gz"
+      tar xzf ./*.tar.gz
+      sudo cp fd-*/fd /usr/local/bin/fd
+      popd
     ;;
   esac
 }
@@ -481,7 +488,7 @@ _install_pyenv() { [[ "$install_pyenv" = true ]]
 setup_zsh() {
   _install_zsh
   _install_ohmyzsh
-  sudo -E chsh -s "$(which zsh)" "$(whoami)"
+  sudo -E chsh -s "$(command -v zsh)" "$(whoami)"
 }
 
 _install_zsh() {
