@@ -21,21 +21,9 @@ set -o ignoreeof
 
 # Python environment.
 if [[ -d "$HOME/.pyenv" ]]; then
-  prepend-path "$HOME/.pyenv/bin"
-
-  old_path="$PATH"
-  eval "$(pyenv init - --no-rehash)"
-  if [[ ":$old_path:" == *":$(pyenv root)/shims:"* ]]; then
-    export PATH="$old_path"
-    unset old_path
-  fi
-
-  old_path="$PATH"
-  eval "$(pyenv virtualenv-init -)"
-  if [[ ":$old_path:" == *":$(pyenv root)/plugins/pyenv-virtualenv/shims:"* ]]; then
-    export PATH="$old_path"
-    unset old_path
-  fi
+  export PYENV_ROOT="$HOME/.pyenv"
+  prepend-path "$PYENV_ROOT/bin"
+  eval "$(pyenv init --path)"
 fi
 
 if [[ -f "$HOME/.python-startup" ]]; then
