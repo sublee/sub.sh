@@ -426,6 +426,7 @@ _install_vim() {
     ;;
     centos)
       sudo -E yum copr -y enable hnakamur/vim
+      sudo -E yum update -y vim-common vim-minimal
       sudo -E yum install -y vim
     ;;
   esac
