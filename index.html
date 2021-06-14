@@ -363,7 +363,7 @@ _install_centos_specific() { [[ "$lsb_dist" == centos ]]
   # End Point Package Repository
   pushd "$(mktemp -d)"
   wget https://packages.endpoint.com/endpoint-rpmsign-7.pub
-  rpm --import endpoint-rpmsign-7.pub
+  sudo -E rpm --import endpoint-rpmsign-7.pub
   rpm -qi gpg-pubkey-703df089 | gpg --with-fingerprint
 
   wget https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
@@ -430,6 +430,7 @@ _install_vim() {
     ;;
     centos)
       sudo -E yum copr -y enable hnakamur/vim
+      sudo -E yum update -y vim-common vim-minimal
       sudo -E yum install -y vim
     ;;
   esac
@@ -555,8 +556,7 @@ _install_vim_plugins() {
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   fi
 
-  vim --noplugin -c PlugInstall -c qa
-  stty -F /dev/stdout sane || true
+  vim --noplugin -c PlugInstall -c qa &>/dev/null
 }
 
 _install_tmux_plugins() {
@@ -587,6 +587,7 @@ _print_emblem() {
 _print_versions() {
   local subsh_version git_version vim_version rg_version fd_version
 
+  PATH="$PATH:/usr/local/bin"
   subsh_version="$(git -C "$subsh_dir" rev-parse --short HEAD)"
   zsh_version="$(zsh --version | awk '{ print $2 }')"
   tmux_version="$(tmux -V | awk '{ print $2 }')"
