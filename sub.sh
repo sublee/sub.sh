@@ -583,6 +583,7 @@ _print_emblem() {
 _print_versions() {
   local subsh_version git_version vim_version rg_version fd_version
 
+  PATH="$PATH:/usr/local/bin"
   subsh_version="$(git -C "$subsh_dir" rev-parse --short HEAD)"
   zsh_version="$(zsh --version | awk '{ print $2 }')"
   tmux_version="$(tmux -V | awk '{ print $2 }')"
