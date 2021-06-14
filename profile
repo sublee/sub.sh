@@ -34,6 +34,9 @@ fi
 if [[ -d "/usr/local/go" ]]; then
   prepend-path "/usr/local/go/bin"
 fi
+if [[ -d "$HOME/go" ]]; then
+  prepend-path "$HOME/go/bin"
+fi
 
 # Include files in ~/.profile.d.
 if [[ -d "$HOME/.profile.d" ]]; then
