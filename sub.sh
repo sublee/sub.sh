@@ -552,8 +552,7 @@ _install_vim_plugins() {
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   fi
 
-  vim --noplugin -c PlugInstall -c qa
-  stty -F /dev/stdout sane || true
+  vim --noplugin -c PlugInstall -c qa &>/dev/null
 }
 
 _install_tmux_plugins() {
