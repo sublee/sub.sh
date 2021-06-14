@@ -359,7 +359,7 @@ _install_centos_specific() { [[ "$lsb_dist" == centos ]]
   # End Point Package Repository
   pushd "$(mktemp -d)"
   wget https://packages.endpoint.com/endpoint-rpmsign-7.pub
-  rpm --import endpoint-rpmsign-7.pub
+  sudo -E rpm --import endpoint-rpmsign-7.pub
   rpm -qi gpg-pubkey-703df089 | gpg --with-fingerprint
 
   wget https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
