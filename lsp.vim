@@ -19,7 +19,8 @@ func! s:lsp_install()
     " pyls-mypy requires future: https://github.com/tomv564/pyls-mypy/issues/44
     call s:lsp_install_run('pip install python-language-server pyls-mypy future flake8')
   elseif &ft == 'go'
-    call s:lsp_install_run('go get golang.org/x/tools/gopls github.com/nametake/golangci-lint-langserver')
+    call s:lsp_install_run('go install golang.org/x/tools/gopls@latest')
+    call s:lsp_install_run('go install github.com/nametake/golangci-lint-langserver@latest')
   elseif &ft == 'yaml'
     call s:lsp_install_run('npm install yaml-language-server')
   else
