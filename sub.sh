@@ -576,7 +576,7 @@ result() {
 
 _print_emblem() {
   if [[ -n "$TERM" ]]; then
-    curl -sL https://subl.ee/~emblem || true
+    cat "$subsh_dir/emblem.txt"
   fi
 }
 
