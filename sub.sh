@@ -377,7 +377,7 @@ _install_centos_specific() { [[ "$lsb_dist" == centos ]]
 setup_python3() {
   info "Installing Python 3..."
   case $lsb_dist in
-    ubuntu) sudo -E apt-get install -y python2-dev python2 python-dev-is-python3 ;;
+    ubuntu) sudo -E apt-get install -y python3 python3-dev python3-setuptools python-dev-is-python3 ;;
     centos) sudo -E yum install -y python3 python3-devel python3-setuptools ;;
   esac
 }
