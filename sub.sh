@@ -358,12 +358,12 @@ _install_centos_specific() { [[ "$lsb_dist" == centos ]]
 
   # End Point Package Repository
   pushd "$(mktemp -d)"
-  wget https://packages.endpoint.com/endpoint-rpmsign-7.pub
+  wget https://packages.endpointdev.com/endpoint-rpmsign-7.pub
   sudo -E rpm --import endpoint-rpmsign-7.pub
   rpm -qi gpg-pubkey-703df089 | gpg --with-fingerprint
 
-  wget https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.7-1.x86_64.rpm
-  sudo -E yum localinstall -y endpoint-repo-1.7-1.x86_64.rpm
+  wget https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo-1.10-1.x86_64.rpm
+  sudo -E yum localinstall -y endpoint-repo-1.10-1.x86_64.rpm
   #           └─ "localinstall" exits with 0 even if already
   #              installed while "install" exits with 1.
   popd
