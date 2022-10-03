@@ -42,8 +42,8 @@ jobs:
     strategy:
       matrix:
         image:
+        - 'ubuntu:22.04'
         - 'ubuntu:20.04'
-        - 'ubuntu:18.04'
         - 'centos:7.9.2009'
         - 'centos:7.4.1708'
 

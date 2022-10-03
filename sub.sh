@@ -22,7 +22,7 @@ main() {
   cd ~
 
   setup_sudo
-  [[ "$lsb_dist" == ubuntu ]] && sudo -E apt update
+  [[ "$lsb_dist" == ubuntu ]] && sudo -E apt-get update
 
   setup_ssh
   setup_basic
@@ -230,7 +230,7 @@ _install_sudo() {
 
   info "Installing sudo..."
   case $lsb_dist in
-    ubuntu) apt update && apt install -y sudo ;;
+    ubuntu) apt-get update && apt-get install -y sudo ;;
     centos) yum install -y sudo ;;
   esac
 }
@@ -268,7 +268,7 @@ _install_ssh_client() {
 
   info "Installing SSH client..."
   case $lsb_dist in
-    ubuntu) sudo -E apt install -y openssh-client  ;;
+    ubuntu) sudo -E apt-get install -y openssh-client  ;;
     centos) sudo -E yum install -y openssh-clients ;;
   esac
 }
@@ -282,7 +282,7 @@ _install_ssh_server() {
 
   info "Installing SSH server..."
   case $lsb_dist in
-    ubuntu) DEBIAN_FRONTEND=noninteractive sudo -E apt install -y openssh-server ;;
+    ubuntu) DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y openssh-server ;;
     centos) sudo -E yum install -y openssh-server ;;
   esac
 }
@@ -322,7 +322,7 @@ setup_basic() {
 
   case $lsb_dist in
     ubuntu)
-      DEBIAN_FRONTEND=noninteractive sudo -E apt install -y \
+      DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y \
         cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
         psmisc shellcheck software-properties-common telnet tree unzip wget
     ;;
@@ -346,10 +346,10 @@ setup_os_specific() {
 
 _install_ubuntu_specific() { [[ "$lsb_dist" == ubuntu ]]
   info "Installing packages for Ubuntu..."
-  sudo -E apt install -y aptitude
+  sudo -E apt-get install -y aptitude
 
   # Generate en_US.UTF-8 locale to fix setlocale warnings.
-  sudo -E apt install -y locales
+  sudo -E apt-get install -y locales
   sudo locale-gen en_US.UTF-8
 }
 
@@ -377,7 +377,7 @@ _install_centos_specific() { [[ "$lsb_dist" == centos ]]
 setup_python3() {
   info "Installing Python 3..."
   case $lsb_dist in
-    ubuntu) sudo -E apt install -y python python-dev python-setuptools ;;
+    ubuntu) sudo -E apt-get install -y python2-dev python2 python-dev-is-python3 ;;
     centos) sudo -E yum install -y python3 python3-devel python3-setuptools ;;
   esac
 }
@@ -397,7 +397,7 @@ setup_tools() {
 _install_tmux() {
   info "Installing tmux..."
   case $lsb_dist in
-    ubuntu) sudo -E apt install -y tmux ;;
+    ubuntu) sudo -E apt-get install -y tmux ;;
     centos) sudo -E yum install -y tmux ;;  # tmux 2.9a from End Point
   esac
 }
@@ -407,8 +407,8 @@ _install_git() {
   case $lsb_dist in
     ubuntu)
       add_ppa git-core/ppa
-      sudo -E apt update
-      sudo -E apt install -y git
+      sudo -E apt-get update
+      sudo -E apt-get install -y git
     ;;
     centos)
       sudo -E yum install -y git  # git 2.24.1 from End Point
@@ -421,8 +421,8 @@ _install_vim() {
   case $lsb_dist in
     ubuntu)
       add_ppa jonathonf/vim
-      sudo -E apt update
-      sudo -E apt install -y vim
+      sudo -E apt-get update
+      sudo -E apt-get install -y vim
     ;;
     centos)
       sudo -E yum copr -y enable hnakamur/vim
@@ -436,7 +436,7 @@ _install_rg() {
   info "Installing ripgrep..."
   case $lsb_dist in
     ubuntu)
-      # sudo -E apt install -y ripgrep  # available in Ubuntu 18.10
+      # sudo -E apt-get install -y ripgrep  # available in Ubuntu 18.10
       pushd "$(mktemp -d)"
       curl -LO https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb
       sudo dpkg -i ./*.deb
@@ -453,7 +453,7 @@ _install_fd() {
   info "Installing fd..."
   case $lsb_dist in
     ubuntu)
-      # sudo -E apt install -y fd-find  # available in Ubuntu 19.04
+      # sudo -E apt-get install -y fd-find  # available in Ubuntu 19.04
       pushd "$(mktemp -d)"
       curl -LO "https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_$(dpkg --print-architecture).deb"
       sudo dpkg -i ./*.deb
@@ -491,7 +491,7 @@ setup_zsh() {
 _install_zsh() {
   info "Installing ZSH..."
   case $lsb_dist in
-    ubuntu) sudo -E apt install -y zsh ;;
+    ubuntu) sudo -E apt-get install -y zsh ;;
     centos) sudo -E yum install -y zsh ;;
   esac
 }
