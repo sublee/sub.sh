@@ -111,13 +111,18 @@ parse_opts() {
 }
 
 
-# init() sets the static variables.
-# set: $lsb_dist, $timestamp, $bak_dir
+# init() sets the static variables and environment variables.
+# set: $lsb_dist, $timestamp, $bak_dir, $DEBIAN_FRONTEND
 init() {
   # shellcheck disable=SC1091
   readonly lsb_dist="$(source /etc/os-release && echo "$ID")"
   readonly timestamp="$(date +%s)"
   readonly bak_dir="$subsh_dir/.bak.$timestamp"
+
+  # Disable interactive messages from apt-get.
+  if [[ "$lsb_dist" == ubuntu ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+  fi
 }
 
 
@@ -282,7 +287,7 @@ _install_ssh_server() {
 
   info "Installing SSH server..."
   case $lsb_dist in
-    ubuntu) DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y openssh-server ;;
+    ubuntu) sudo -E apt-get install -y openssh-server ;;
     centos) sudo -E yum install -y openssh-server ;;
   esac
 }
@@ -322,7 +327,7 @@ setup_basic() {
 
   case $lsb_dist in
     ubuntu)
-      DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y \
+      sudo -E apt-get install -y \
         cmake curl htop iftop iputils-ping jq less lsof man net-tools ntpdate \
         psmisc shellcheck software-properties-common telnet tree unzip wget
     ;;
