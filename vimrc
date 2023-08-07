@@ -145,10 +145,6 @@ au BufEnter *
 
 " 3. Keep maximum columns.
 hi ColorColumn term=underline cterm=underline ctermbg=none
-au BufEnter *
-\ if &cc
-\|  call matchadd('Error', '\%>'.(&cc-1).'v.\+', 0, 8903)
-\|endif
 
 " ------------------------------------------------------------------------------
 " Development
