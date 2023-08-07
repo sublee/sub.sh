@@ -58,7 +58,7 @@ fi
 
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
-# Fast paste.
+# Fast paste
 # https://gist.github.com/magicdude4eva/2d4748f8ef3e6bf7b1591964c201c1ab
 pasteinit() {
   OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
@@ -70,6 +70,9 @@ pastefinish() {
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 
-# kubectl autocomplete.
+# Load pyenv.
+[[ -e $commands[pyenv] ]] && eval "$(pyenv init -)"
+
+# Enable kubectl autocomplete.
 # https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-autocomplete
 [[ -e $commands[kubectl] ]] && source <(kubectl completion zsh)
