@@ -12,6 +12,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'stephpy/vim-yaml'
 
 " Language Server Protocol
+Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
@@ -71,20 +72,22 @@ set nojs
 set cc=81
 
 " Set language-specific tab/indent/columns conventions.
-au FileType cpp        setl ts=2 sw=2 sts=2 et
-au FileType javascript setl ts=2 sw=2 sts=2 et
-au FileType xml        setl ts=2 sw=2 sts=2 et
-au FileType yaml       setl ts=2 sw=2 sts=2 et
-au FileType html       setl ts=2 sw=2 sts=2 et
-au FileType css        setl ts=2 sw=2 sts=2 et
-au FileType sass       setl ts=2 sw=2 sts=2 et
-au Filetype rst        setl ts=3 sw=3 sts=3 et
-au FileType go         setl ts=4 sw=4 sts=4 noet cc=
-au FileType make       setl ts=4 sw=4 sts=4 noet
-au FileType sh         setl ts=2 sw=2 sts=2 et
-au FileType zsh        setl ts=2 sw=2 sts=2 et
-au FileType vim        setl ts=2 sw=2 sts=2 et
-au FileType terraform  setl ts=2 sw=2 sts=2 et cc=
+au FileType cpp             setl ts=2 sw=2 sts=2 et
+au FileType javascript      setl ts=2 sw=2 sts=2 et
+au FileType typescript      setl ts=2 sw=2 sts=2 et ai ci si
+au FileType typescriptreact setl ts=2 sw=2 sts=2 et ai ci si
+au FileType xml             setl ts=2 sw=2 sts=2 et
+au FileType yaml            setl ts=2 sw=2 sts=2 et
+au FileType html            setl ts=2 sw=2 sts=2 et
+au FileType css             setl ts=2 sw=2 sts=2 et
+au FileType sass            setl ts=2 sw=2 sts=2 et
+au Filetype rst             setl ts=3 sw=3 sts=3 et
+au FileType go              setl ts=4 sw=4 sts=4 noet cc=
+au FileType make            setl ts=4 sw=4 sts=4 noet
+au FileType sh              setl ts=2 sw=2 sts=2 et
+au FileType zsh             setl ts=2 sw=2 sts=2 et
+au FileType vim             setl ts=2 sw=2 sts=2 et
+au FileType terraform       setl ts=2 sw=2 sts=2 et cc=
 
 " Read Python max columns from its flake8 config.
 func! s:flake8_max_columns()
@@ -190,6 +193,7 @@ com W exec 'silent! undojoin | Neoformat | write'
 let g:neoformat_run_all_formatters = 1
 let g:neoformat_enabled_python = ['autopep8', 'isort']
 let g:neoformat_enabled_go = ['goimports']
+let g:neoformat_try_node_exe = 1
 
 " [:E]: Explore the directory where the current file exists.
 cabbrev E e %:p:h
@@ -216,6 +220,7 @@ nn gr :LspRename<CR>
 " Display diagnostics.
 let g:lsp_diagnostics_echo_cursor = 1
 let g:lsp_diagnostics_echo_delay  = 0
+let g:lsp_diagnostics_virtual_text_enabled = 0
 
 " Dark background for popup windows.
 highlight PopupWindow term=inverse
@@ -229,9 +234,11 @@ hi lspReference term=underline cterm=underline
 " Show sign column if LSP is available.
 au User lsp_buffer_enabled setl scl=yes
 
+let g:lsp_settings_filetype_javascript = ['eslint-language-server']
+
 " Include "~/.sub.sh/lsp.vim".
 " To get dirname where this script is: https://stackoverflow.com/a/18734557
-exe 'so' fnamemodify(resolve(expand('<sfile>:p')), ':h').'/lsp.vim'
+" exe 'so' fnamemodify(resolve(expand('<sfile>:p')), ':h').'/lsp.vim'
 
 " ------------------------------------------------------------------------------
 " Status Line

@@ -21,8 +21,6 @@ func! s:lsp_install()
   elseif &ft == 'go'
     call s:lsp_install_run('go install golang.org/x/tools/gopls@latest')
     call s:lsp_install_run('go install github.com/nametake/golangci-lint-langserver@latest')
-  elseif &ft == 'yaml'
-    call s:lsp_install_run('npm install yaml-language-server')
   else
     echo 'no requirements for '.&ft
   endif
@@ -87,10 +85,10 @@ if executable('golangci-lint-langserver')
 endif
 
 " yaml-language-server: https://github.com/redhat-developer/yaml-language-server
-if executable('yaml-language-server')
+if executable('npx')
   au User lsp_setup call lsp#register_server({
 \   'name': 'yaml-language-server',
-\   'cmd': {server_info->['yaml-language-server', '--stdio']},
+\   'cmd': {server_info->['npx', 'yaml-language-server', '--stdio']},
 \   'allowlist': ['yaml'],
 \   'root_uri': {server_info->s:root_uri(['.git/'])},
 \   'workspace_config': {
