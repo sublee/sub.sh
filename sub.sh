@@ -115,9 +115,14 @@ parse_opts() {
 # set: $lsb_dist, $timestamp, $bak_dir, $DEBIAN_FRONTEND
 init() {
   # shellcheck disable=SC1091
-  readonly lsb_dist="$(source /etc/os-release && echo "$ID")"
-  readonly timestamp="$(date +%s)"
-  readonly bak_dir="$subsh_dir/.bak.$timestamp"
+  lsb_dist="$(source /etc/os-release && echo "$ID")"
+  readonly lsb_dist
+
+  timestamp="$(date +%s)"
+  readonly timestamp
+
+  bak_dir="$subsh_dir/.bak.$timestamp"
+  readonly bak_dir
 
   # Disable interactive messages from apt-get.
   if [[ "$lsb_dist" == ubuntu ]]; then
